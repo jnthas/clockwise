@@ -1,7 +1,7 @@
 
 #include "ui.h"
 
-uint8_t hour = 10;
+uint8_t hour = 23;
 uint8_t minute = 0;
 
 EventBus eventBus;
@@ -20,10 +20,6 @@ Block minuteBlock(32, 8);
 
 
 unsigned long lastMillis = 0;
-
-
-
-
 
 
 UI::UI(Display* display) {

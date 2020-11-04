@@ -2,11 +2,11 @@
 #define MarioSprite_h
 
 #include <Arduino.h>
-#include "../engine/Game.h"
-#include "../engine/Locator.h"
-#include "../engine/EventBus.h"
+#include <Game.h>
+#include <Locator.h>
+#include <EventBus.h>
+#include <ImageUtils.h>
 #include "../gfx/mario.h"
-#include "../engine/ImageUtils.h"
 
 
 const uint8_t MARIO_PACE = 3;

@@ -2,12 +2,12 @@
 #define UI_h
 
 #include <Arduino.h>
-#include "../engine/Display.h"
-#include "../engine/Tile.h"
-#include "../engine/Locator.h"
-#include "../engine/Game.h"
-#include "../engine/Object.h"
-#include "../engine/ImageUtils.h"
+#include <Display.h>
+#include <Tile.h>
+#include <Locator.h>
+#include <Game.h>
+#include <Object.h>
+#include <ImageUtils.h>
 #include "../gfx/elems.h"
 #include "mario.h"
 #include "block.h"

@@ -2,9 +2,9 @@
 #define BlockSprite_h
 
 #include <Arduino.h>
-#include "../engine/Game.h"
-#include "../engine/Locator.h"
-#include "engine/EventTask.h"
+#include <Game.h>
+#include <Locator.h>
+#include <EventTask.h>
 #include "../gfx/elems.h"
 
 const uint8_t MOVE_PACE = 2;
