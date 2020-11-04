@@ -15,6 +15,7 @@ class Display {
     void setTextColor(uint16_t c);
     void setCursor(int16_t x, int16_t y);
     void print(String str);
+    void setFont(const GFXfont *f);
 
     void refresh();
     

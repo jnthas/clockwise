@@ -75,7 +75,7 @@ void Block::update() {
       Serial.print("BLOCK Y = ");
       Serial.println(_y);
       
-      Locator::getDisplay()->fillRect(_x, _y, _width, _height, 0x000E);
+      Locator::getDisplay()->fillRect(_x, _y, _width, _height, SKY_COLOR);
       
       _y = _y + (MOVE_PACE * (direction == UP ? -1 : 1));
  

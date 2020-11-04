@@ -44,6 +44,10 @@ void Display::setTextColor(uint16_t c) {
   _display->setTextColor(c);
 }
 
+void Display::setFont(const GFXfont *f) {
+  _display->setFont(f);
+}
+
 void Display::refresh() {
   //_display->refresh();
 }

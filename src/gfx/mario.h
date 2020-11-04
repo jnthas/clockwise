@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+const unsigned short SKY_COLOR = 0x000E;
+
 const unsigned short _MASK = 0xf81f;
 
 const unsigned short RED = 0xF801;

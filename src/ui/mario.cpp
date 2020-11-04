@@ -26,7 +26,7 @@ void Mario::jump() {
     _lastState = _state;
     _state = JUMPING;
 
-    Locator::getDisplay()->fillRect(_x, _y, _width, _height, 0x000E);
+    Locator::getDisplay()->fillRect(_x, _y, _width, _height, SKY_COLOR);
 
     _width = MARIO_JUMP_SIZE[0];
     _height = MARIO_JUMP_SIZE[1];
@@ -46,7 +46,7 @@ void Mario::idle() {
     _lastState = _state;
     _state = IDLE;
 
-    Locator::getDisplay()->fillRect(_x, _y, _width, _height, 0x000E);
+    Locator::getDisplay()->fillRect(_x, _y, _width, _height, SKY_COLOR);
 
     _width = MARIO_IDLE_SIZE[0];
     _height = MARIO_IDLE_SIZE[1];
@@ -75,7 +75,7 @@ void Mario::update() {
 
       //Serial.println(_y);
       
-      Locator::getDisplay()->fillRect(_x, _y, _width, _height, 0x000E);
+      Locator::getDisplay()->fillRect(_x, _y, _width, _height, SKY_COLOR);
       
 
       _y = _y + (MARIO_PACE * (direction == UP ? -1 : 1));

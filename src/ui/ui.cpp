@@ -30,6 +30,10 @@ UI::UI(Display* display) {
 }
 
 void UI::init() {
+  Locator::getDisplay()->setFont(&Super_Mario_Bros__24pt7b);
+  Locator::getDisplay()->fillRect(0, 0, 64, 64, SKY_COLOR);
+  
+
   ground.fillRow(DISPLAY_HEIGHT - ground._height);
 
   bush.draw(43, 47);

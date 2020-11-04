@@ -2,6 +2,9 @@
 #define UI_h
 
 #include <Arduino.h>
+
+#include "../gfx/Super_Mario_Bros__24pt7b.h"
+
 #include <Display.h>
 #include <Tile.h>
 #include <Locator.h>
