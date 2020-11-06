@@ -1,8 +1,8 @@
 #include "mario.h"
 
 
-uint16_t FLIPPED_MARIO_IDLE[13*16];
-uint16_t FLIPPED_MARIO_JUMP[17*16];
+// uint16_t FLIPPED_MARIO_IDLE[13*16];
+// uint16_t FLIPPED_MARIO_JUMP[17*16];
 
 Mario::Mario(int x, int y) {
   _x = x;
@@ -30,7 +30,7 @@ void Mario::jump() {
 
     _width = MARIO_JUMP_SIZE[0];
     _height = MARIO_JUMP_SIZE[1];
-    _sprite = FLIPPED_MARIO_JUMP;
+    _sprite = MARIO_JUMP;
 
     direction = UP;
 
@@ -50,25 +50,25 @@ void Mario::idle() {
 
     _width = MARIO_IDLE_SIZE[0];
     _height = MARIO_IDLE_SIZE[1];
-    _sprite = FLIPPED_MARIO_IDLE;
+    _sprite = MARIO_IDLE;
   }
 }
 
 
 void Mario::init() {
-  ImageUtils::flipHorizontallyClone(MARIO_IDLE, FLIPPED_MARIO_IDLE, 13, 16);
-  ImageUtils::flipHorizontallyClone(MARIO_JUMP, FLIPPED_MARIO_JUMP, 17, 16);
+  // ImageUtils::flipHorizontallyClone(MARIO_IDLE, FLIPPED_MARIO_IDLE, 13, 16);
+  // ImageUtils::flipHorizontallyClone(MARIO_JUMP, FLIPPED_MARIO_JUMP, 17, 16);
 
 
   Locator::getEventBus()->subscribe(this);
-  Locator::getDisplay()->draw(FLIPPED_MARIO_IDLE, _x, _y, MARIO_IDLE_SIZE[0], MARIO_IDLE_SIZE[1]);
+  Locator::getDisplay()->draw(MARIO_IDLE, _x, _y, MARIO_IDLE_SIZE[0], MARIO_IDLE_SIZE[1]);
 }
 
 void Mario::update() {
   
 
   if (_state == IDLE && _state != _lastState) {
-    Locator::getDisplay()->draw(FLIPPED_MARIO_IDLE, _x, _y, MARIO_IDLE_SIZE[0], MARIO_IDLE_SIZE[1]);
+    Locator::getDisplay()->draw(MARIO_IDLE, _x, _y, MARIO_IDLE_SIZE[0], MARIO_IDLE_SIZE[1]);
   } else if (_state == JUMPING) {
     
     if (millis() - lastMillis >= 50) {

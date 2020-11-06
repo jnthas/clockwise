@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <PxMatrix.h>
 
-#include "ui/ui.h"
+#include "mario/mariocf.h"
 
 
 #ifdef ESP32
@@ -26,8 +26,6 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 #define matrix_height 64
 
 
-
-
 // This defines the 'on' time of the display is us. The larger this number,
 // the brighter the display. If too large the ESP will crash
 uint8_t display_draw_time=50; //10-50 is usually fine
@@ -47,6 +45,10 @@ uint16_t myMAGENTA = display.color565(255, 0, 255);
 uint16_t myBLACK = display.color565(0, 0, 0);
 
 uint16_t myCOLORS[8]={myRED,myGREEN,myBLUE,myWHITE,myYELLOW,myCYAN,myMAGENTA,myBLACK};
+
+
+Display engine_display(&display);
+MarioClockface marioClock(&engine_display);
 
 
 #ifdef ESP32
@@ -80,9 +82,6 @@ void display_update_enable(bool is_enable)
 }
 
 
-Display engine_display(&display);
-UI marioClock(&engine_display);
-
 
 void setup() {
   Serial.begin(9600);
@@ -94,7 +93,7 @@ void setup() {
 
   display.setBrightness(20);
 
-  marioClock.init();
+  marioClock.setup();
 }
 
 

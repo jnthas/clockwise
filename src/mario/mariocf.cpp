@@ -1,5 +1,5 @@
 
-#include "ui.h"
+#include "mariocf.h"
 
 uint8_t hour = 23;
 uint8_t minute = 0;
@@ -14,7 +14,7 @@ Object cloud2(CLOUD2, 13, 12);
 Object hill(HILL, 20, 22);
 
 
-Mario mario(30, 40);
+Mario mario(23, 40);
 Block hourBlock(13, 8);
 Block minuteBlock(32, 8);
 
@@ -22,14 +22,14 @@ Block minuteBlock(32, 8);
 unsigned long lastMillis = 0;
 
 
-UI::UI(Display* display) {
+MarioClockface::MarioClockface(Display* display) {
   _display = display;
 
   Locator::provide(display);
   Locator::provide(&eventBus);
 }
 
-void UI::init() {
+void MarioClockface::setup() {
   Locator::getDisplay()->setFont(&Super_Mario_Bros__24pt7b);
   Locator::getDisplay()->fillRect(0, 0, 64, 64, SKY_COLOR);
   
@@ -51,32 +51,11 @@ void UI::init() {
   mario.init();
 }
 
-void UI::update() {
+void MarioClockface::update() {
   hourBlock.update();
   minuteBlock.update();
-  
   mario.update();
     
-
-
-  // uint16_t test[] = {0,1,2,3,4,5,6,7,8,9,1,2};
-
-  // for (int i = 0; i < 12; i++) {
-  //   Serial.print(test[i]);
-  // }
-
-  // ImageUtils::flipHorizontally(test, 4, 3);
-  // Serial.println("");
-
-  // for (int i = 0; i < 12; i++) {
-  //   Serial.print(test[i]);
-  // }
-
-  // Serial.println("");
-
-  
-
-
 
   if (millis() - lastMillis > 3000) {
     mario.jump();
@@ -98,11 +77,6 @@ void UI::update() {
 
     lastMillis = millis();
   }
-
-
-  // if (millis() - lastMillis > 3000) {
-  //   Locator::getDisplay()->refresh();
-  // }
 
 }
 

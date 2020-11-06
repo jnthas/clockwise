@@ -1,16 +1,16 @@
-#ifndef MarioSprite_h
-#define MarioSprite_h
+#ifndef Mario_h
+#define Mario_h
 
 #include <Arduino.h>
 #include <Game.h>
 #include <Locator.h>
 #include <EventBus.h>
 #include <ImageUtils.h>
-#include "../gfx/mario.h"
+#include "assets.h"
 
 
 const uint8_t MARIO_PACE = 3;
-const uint8_t MARIO_JUMP_HEIGHT = 15;
+const uint8_t MARIO_JUMP_HEIGHT = 14;
 
 
 class Mario: public Sprite, public EventTask {
