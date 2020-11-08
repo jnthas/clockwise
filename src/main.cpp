@@ -3,7 +3,12 @@
 #include <Arduino.h>
 #include <PxMatrix.h>
 
-#include "mario/mariocf.h"
+#include "common/WiFiConnect.h"
+#include "common/DateTime.h"
+
+#include "mario/Clockface.h"
+//#include "words/wordscf.h"
+
 
 
 #ifdef ESP32
@@ -24,6 +29,7 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 #define matrix_width 64
 #define matrix_height 64
+
 
 
 // This defines the 'on' time of the display is us. The larger this number,
@@ -48,7 +54,10 @@ uint16_t myCOLORS[8]={myRED,myGREEN,myBLUE,myWHITE,myYELLOW,myCYAN,myMAGENTA,myB
 
 
 Display engine_display(&display);
-MarioClockface marioClock(&engine_display);
+Clockface marioClock(&engine_display);
+
+WiFiConnect wifi;
+DateTime dateTime;
 
 
 #ifdef ESP32
@@ -81,23 +90,29 @@ void display_update_enable(bool is_enable)
 #endif
 }
 
-
-
-void setup() {
+void setup() 
+{
   Serial.begin(9600);
-  display.begin(32);
-  
+
+  wifi.connect();
+  dateTime.begin();
+
+  display.begin(32);  
   display.clearDisplay();
 
   display_update_enable(true);
 
   display.setBrightness(20);
 
-  marioClock.setup();
+  marioClock.setup(&dateTime);  
 }
 
-
-void loop() {  
+void loop() 
+{  
   marioClock.update();
+
+  
+  // Serial.println(dateTime.getFormattedTime());
+  // delay(1000);
 }
 

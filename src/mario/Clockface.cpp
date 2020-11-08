@@ -1,11 +1,12 @@
 
-#include "mariocf.h"
-
-uint8_t hour = 23;
-uint8_t minute = 0;
+#include "Clockface.h"
 
 EventBus eventBus;
 
+const char* FORMAT_TWO_DIGITS = "%02d";
+
+
+// Graphical
 Tile ground(GROUND, 8, 8); 
 
 Object bush(BUSH, 21, 9);
@@ -22,17 +23,18 @@ Block minuteBlock(32, 8);
 unsigned long lastMillis = 0;
 
 
-MarioClockface::MarioClockface(Display* display) {
+Clockface::Clockface(Display* display) {
   _display = display;
 
   Locator::provide(display);
   Locator::provide(&eventBus);
 }
 
-void MarioClockface::setup() {
+void Clockface::setup(DateTime *dateTime) {
+  _dateTime = dateTime;
+
   Locator::getDisplay()->setFont(&Super_Mario_Bros__24pt7b);
   Locator::getDisplay()->fillRect(0, 0, 64, 64, SKY_COLOR);
-  
 
   ground.fillRow(DISPLAY_HEIGHT - ground._height);
 
@@ -41,42 +43,29 @@ void MarioClockface::setup() {
   cloud1.draw(0, 21);
   cloud2.draw(51, 7);
 
-  String strMin = String(minute);    
-  hourBlock.setText(String(hour));
-  minuteBlock.setText((minute < 10 ? "0" : "") + strMin);
-    
+  updateTime();
+
+
   hourBlock.init();
   minuteBlock.init();
-
   mario.init();
 }
 
-void MarioClockface::update() {
+void Clockface::update() {
   hourBlock.update();
   minuteBlock.update();
   mario.update();
-    
 
-  if (millis() - lastMillis > 3000) {
+  if (_dateTime->getSecond() == 0 && millis() - lastMillis > 1000) {
     mario.jump();
-
-    
-    minute++;
-    if (minute >= 60) {
-      hour++;
-      minute = 0;
-
-      if (hour >= 24) {
-        hour = 0;
-      }
-    }
-
-    String strMin = String(minute);    
-    hourBlock.setText(String(hour));
-    minuteBlock.setText((minute < 10 ? "0" : "") + strMin);
-
+    updateTime();
     lastMillis = millis();
-  }
 
+    Serial.println(_dateTime->getFormattedTime());
+  }
 }
 
+void Clockface::updateTime() {
+  hourBlock.setText(String(_dateTime->getHour()));
+  minuteBlock.setText(String(_dateTime->getMinute(FORMAT_TWO_DIGITS)));
+}

@@ -14,16 +14,19 @@
 #include "gfx/assets.h"
 #include "gfx/mario.h"
 #include "gfx/block.h"
-#include "../Clockface.h"
+#include "../common/IClockface.h"
+#include "../common/DateTime.h"
 
 
-class MarioClockface: public Clockface {
+class Clockface: public IClockface {
   private:
     Display* _display;
+    DateTime* _dateTime;
+    void updateTime();
 
   public:
-    MarioClockface(Display* display);
-    void setup();
+    Clockface(Display* display);
+    void setup(DateTime *dateTime);
     void update();
 };
 
