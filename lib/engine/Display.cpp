@@ -30,6 +30,15 @@ void Display::fillRect(int x, int y, int w, int h, uint16_t color)
   _display->fillRect(x, y, w, h, color);
 }
 
+void Display::drawRect(int x, int y, int w, int h, uint16_t color) 
+{
+  _display->drawRect(x, y, w, h, color);
+}
+
+void Display::drawCircle(int32_t x0, int32_t y0, int32_t r, uint32_t color) {
+  _display->drawCircle(x0, y0, r, color);
+}
+
 void Display::setCursor(int16_t x, int16_t y) 
 {
   _display->setCursor(x, y);
@@ -40,6 +49,16 @@ void Display::print(String str)
   _display->print(str);
 }
 
+void Display::println(String str) 
+{
+  _display->println(str);
+}
+
+void Display::setTextWrap(boolean wrapX, boolean wrapY)
+{
+  _display->setTextWrap(wrapX);
+}
+
 void Display::setTextColor(uint16_t c) {
   _display->setTextColor(c);
 }
@@ -47,6 +66,22 @@ void Display::setTextColor(uint16_t c) {
 void Display::setFont(const GFXfont *f) {
   _display->setFont(f);
 }
+
+
+void Display::setTextSize(uint8_t size) {
+  _display->setTextSize(size);
+}
+
+void Display::drawHLine(int32_t x, int32_t y, int32_t w, uint32_t color) {
+  _display->drawFastHLine(x, y, w, color);
+}
+
+void Display::drawVLine(int32_t x, int32_t y, int32_t w, uint32_t color) {
+  _display->drawFastVLine(x, y, w, color);
+}
+
+
+
 
 void Display::refresh() {
   //_display->refresh();

@@ -1,6 +1,8 @@
 
 #include "DateTime.h"
 
+const char* weekDayWords[] = {"DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"};
+
 
 DateTime::DateTime() {
   this->ntp = new NTPClient(udp, "a.st1.ntp.br", -3 * 3600, 3600000);
@@ -36,11 +38,15 @@ char* DateTime::getMinute(const char *format)
   return buffer;
 }
 
-char* DateTime::getSeconds(const char *format)
+char* DateTime::getSecond(const char *format)
 {
   static char buffer[3] = {'\0'};
   snprintf(buffer, sizeof(buffer), format, ntp->getSeconds());
   return buffer;
+}
+
+const char* DateTime::getWeekdayName() {
+  return weekDayWords[weekday(ntp->getEpochTime())-1];
 }
 
 
@@ -54,4 +60,16 @@ int DateTime::getMinute() {
 
 int DateTime::getSecond() {
   return ntp->getSeconds();
+}
+
+int DateTime::getWeekday() {
+  return weekday(ntp->getEpochTime())-1;
+}
+
+int DateTime::getDay() {
+  return day(ntp->getEpochTime());
+}
+
+int DateTime::getMonth() {
+  return month(ntp->getEpochTime());
 }

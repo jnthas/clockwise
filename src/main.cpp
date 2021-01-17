@@ -6,10 +6,7 @@
 #include "common/WiFiConnect.h"
 #include "common/DateTime.h"
 
-#include "mario/Clockface.h"
-//#include "words/wordscf.h"
-
-
+#include "words/Clockface.h"
 
 #ifdef ESP32
 
@@ -29,7 +26,6 @@ portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 #define matrix_width 64
 #define matrix_height 64
-
 
 
 // This defines the 'on' time of the display is us. The larger this number,
@@ -94,6 +90,9 @@ void setup()
 {
   Serial.begin(9600);
 
+
+  pinMode(2, OUTPUT);
+
   wifi.connect();
   dateTime.begin();
 
@@ -107,12 +106,17 @@ void setup()
   marioClock.setup(&dateTime);  
 }
 
+
+bool led = false;
 void loop() 
 {  
   marioClock.update();
 
   
-  // Serial.println(dateTime.getFormattedTime());
-  // delay(1000);
+  Serial.println(dateTime.getFormattedTime());
+  delay(1000);
+  
+  digitalWrite(2, led ? HIGH : LOW);
+  led = !led;  
 }
 
