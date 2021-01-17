@@ -6,7 +6,7 @@
 #include "common/WiFiConnect.h"
 #include "common/DateTime.h"
 
-#include "words/Clockface.h"
+#include "mario/Clockface.h"
 
 #ifdef ESP32
 
@@ -106,12 +106,10 @@ void setup()
   marioClock.setup(&dateTime);  
 }
 
-
 bool led = false;
-void loop() 
-{  
+void loop()
+{
   marioClock.update();
-
   
   Serial.println(dateTime.getFormattedTime());
   delay(1000);
