@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name clockwise)(type Legacy)(uri ${KIPRJMOD}/clockwise.lib)(options "")(descr ""))
+)
