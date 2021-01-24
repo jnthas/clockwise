@@ -14,17 +14,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L RF_Module:ESP32-WROOM-32 U2
-U 1 1 5FDF73F4
-P 6350 3050
-F 0 "U2" H 6350 4631 50  0000 C CNN
-F 1 "ESP32-WROOM-32" H 6350 4540 50  0000 C CNN
-F 2 "RF_Module:ESP32-WROOM-32" H 6350 1550 50  0001 C CNN
-F 3 "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf" H 6050 3100 50  0001 C CNN
-	1    6350 3050
-	1    0    0    -1  
-$EndComp
-$Comp
 L Device:CP C2
 U 1 1 5FDF9C5D
 P 3550 1650
@@ -410,14 +399,10 @@ Wire Wire Line
 	1800 1300 1800 1550
 Text GLabel 3500 6800 2    50   Input ~ 0
 USB_VCC
-Text GLabel 7150 4050 2    50   Input ~ 0
+Text GLabel 7100 2150 2    50   Input ~ 0
 RX
-Text GLabel 7150 4150 2    50   Input ~ 0
+Text GLabel 7100 1950 2    50   Input ~ 0
 TX
-Wire Wire Line
-	6950 4050 7150 4050
-Wire Wire Line
-	6950 4150 7150 4150
 Text Notes 2650 6150 0    100  ~ 0
 Flash Interface
 $Comp
@@ -459,17 +444,6 @@ F 3 "" H 7750 2200 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	7750 2050 7750 2200
-$Comp
-L Switch:SW_MEC_5E SW3
-U 1 1 6004B41F
-P 9500 1850
-F 0 "SW3" H 9500 2235 50  0000 C CNN
-F 1 "RESET" H 9500 2144 50  0000 C CNN
-F 2 "clockwise1:SW_PUSH" H 9500 2150 50  0001 C CNN
-F 3 "http://www.apem.com/int/index.php?controller=attachment&id_attachment=1371" H 9500 2150 50  0001 C CNN
-	1    9500 1850
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3400 2000 3400 2050
 Wire Wire Line
@@ -653,12 +627,6 @@ G2
 Text Notes 3550 4700 0    50   ~ 0
 B1
 Wire Wire Line
-	9300 1750 9300 1850
-Connection ~ 9300 1850
-Wire Wire Line
-	9700 1750 9700 1850
-Connection ~ 9700 1850
-Wire Wire Line
 	1300 7200 1300 7300
 Connection ~ 1300 7300
 Wire Wire Line
@@ -726,10 +694,10 @@ Wire Wire Line
 Wire Wire Line
 	3100 4300 3300 4300
 $Comp
-L power:GNDREF #PWR?
+L power:GNDREF #PWR0114
 U 1 1 600C02D6
 P 3000 4900
-F 0 "#PWR?" H 3000 4650 50  0001 C CNN
+F 0 "#PWR0114" H 3000 4650 50  0001 C CNN
 F 1 "GNDREF" H 3005 4727 50  0000 C CNN
 F 2 "" H 3000 4900 50  0001 C CNN
 F 3 "" H 3000 4900 50  0001 C CNN
@@ -742,4 +710,36 @@ Wire Wire Line
 	3000 4800 3300 4800
 Text Notes 3550 4800 0    50   ~ 0
 GND
+$Comp
+L Switch:SW_MEC_5E SW3
+U 1 1 6004B41F
+P 9500 1850
+F 0 "SW3" H 9500 2235 50  0000 C CNN
+F 1 "RESET" H 9500 2144 50  0000 C CNN
+F 2 "clockwise1:SW_PUSH" H 9500 2150 50  0001 C CNN
+F 3 "http://www.apem.com/int/index.php?controller=attachment&id_attachment=1371" H 9500 2150 50  0001 C CNN
+	1    9500 1850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9300 1850 9300 1750
+Connection ~ 9300 1850
+Connection ~ 9700 1850
+Wire Wire Line
+	9700 1750 9700 1850
+Wire Wire Line
+	6950 1950 7100 1950
+$Comp
+L RF_Module:ESP32-WROOM-32 U2
+U 1 1 5FDF73F4
+P 6350 3050
+F 0 "U2" H 6350 4631 50  0000 C CNN
+F 1 "ESP32-WROOM-32" H 6350 4540 50  0000 C CNN
+F 2 "RF_Module:ESP32-WROOM-32" H 6350 1550 50  0001 C CNN
+F 3 "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf" H 6050 3100 50  0001 C CNN
+	1    6350 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6950 2150 7100 2150
 $EndSCHEMATC
