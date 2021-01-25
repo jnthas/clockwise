@@ -11,7 +11,7 @@ char hInWords[20];
 char mInWords[20]; 
 char formattedDate[20];
 
-int temperature = 26;
+int temperature = 8;
 
 DateI18n_PT i18n;
 
@@ -93,13 +93,15 @@ void Clockface::updateTemperature() {
 
   // Temperature
   // TODO get temperature
-  //temperature++;
+  temperature++;
   Locator::getDisplay()->setFont(&minute7pt7b);
   Locator::getDisplay()->setCursor(temperature < 10 ? 52 : 46, 52);
   Locator::getDisplay()->setTextColor(0xffff);
   Locator::getDisplay()->print(String(temperature));
   Locator::getDisplay()->println("~");
   //Locator::getDisplay()->drawCircle(59, 46, 1, 0xffff);
+
+
     
   Locator::getDisplay()->draw(WIFI, 1, 55, 8, 8);
   Locator::getDisplay()->draw(MAIL, 12, 55, 8, 8);

@@ -1,7 +1,9 @@
-#ifndef WordsClockFace_h
-#define WordsClockFace_h
+#ifndef MarioClockface_h
+#define MarioClockface_h
 
 #include <Arduino.h>
+
+#include "gfx/Super_Mario_Bros__24pt7b.h"
 
 #include <Display.h>
 #include <Tile.h>
@@ -9,24 +11,18 @@
 #include <Game.h>
 #include <Object.h>
 #include <ImageUtils.h>
-
+#include "gfx/assets.h"
+#include "gfx/mario.h"
+#include "gfx/block.h"
 #include "../common/IClockface.h"
-
-#include "hour8pt7b.h"
-#include "minute7pt7b.h"
-#include "small4pt7b.h"
-#include "DateI18n_PT.h"
-#include "../common/Icons.h"
+#include "../common/DateTime.h"
 
 
 class Clockface: public IClockface {
   private:
     Display* _display;
     DateTime* _dateTime;
-    void timeInWords(int h, int m, char* hWords, char* mWords);
     void updateTime();
-    void updateDate();
-    void updateTemperature();
 
   public:
     Clockface(Display* display);
