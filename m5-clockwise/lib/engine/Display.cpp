@@ -46,15 +46,15 @@ void Display::setCursor(int16_t x, int16_t y)
 
 void Display::print(String str) 
 {
-  Serial.print("Display.print -> ");
-  Serial.println(str);
+  // Serial.print("Display.print -> ");
+  // Serial.println(str);
   _display->print(str);
 }
 
 void Display::println(String str) 
 {
-  Serial.print("Display.println -> ");
-  Serial.println(str);
+  // Serial.print("Display.println -> ");
+  // Serial.println(str);
   _display->println(str);
 }
 
@@ -62,7 +62,6 @@ void Display::setTextWrap(boolean wrapX, boolean wrapY)
 {
   _display->setTextWrap(wrapX, wrapY);
   _display->setTextPadding(0); 
-  
 }
 
 void Display::setTextColor(uint16_t c) {
@@ -73,9 +72,12 @@ void Display::setFont(const GFXfont *f) {
   _display->setFont(f);
 }
 
-
 void Display::setTextSize(uint8_t size) {
   _display->setTextSize(size);
+}
+
+int16_t Display::getTextWidth(const char *string) {  
+  return _display->textWidth(string);
 }
 
 void Display::drawHLine(int32_t x, int32_t y, int32_t w, uint32_t color) {

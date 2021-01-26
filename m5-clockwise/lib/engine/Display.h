@@ -22,8 +22,13 @@ class Display {
     void setTextWrap(boolean wrapX, boolean wrapY);
     void setFont(const GFXfont *f);
     void setTextSize(uint8_t size);
+    int16_t getTextWidth(const char *string);
+    
     void drawHLine(int32_t x, int32_t y, int32_t w, uint32_t color);
     void drawVLine(int32_t x, int32_t y, int32_t w, uint32_t color);
+
+
+    
     
 
     void refresh();

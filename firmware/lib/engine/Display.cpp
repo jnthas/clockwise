@@ -67,9 +67,19 @@ void Display::setFont(const GFXfont *f) {
   _display->setFont(f);
 }
 
-
 void Display::setTextSize(uint8_t size) {
   _display->setTextSize(size);
+}
+
+int16_t Display::getTextWidth(const char *string) {  
+
+  int16_t  x, y = 0;
+  int16_t  x1, y1 = 0;
+  uint16_t w, h = 0;
+
+  _display->getTextBounds(string, x, y, &x1, &y1, &w, &h);
+  
+  return w;
 }
 
 void Display::drawHLine(int32_t x, int32_t y, int32_t w, uint32_t color) {
