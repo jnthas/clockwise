@@ -25,6 +25,12 @@ void Display::draw(const unsigned short frame[], int x, int y, int w, int h)
   }
 }
 
+
+void Display::drawPixel(int32_t x, int32_t y, uint32_t color)
+{ 
+  _display->drawPixel(x, y, color);  
+}
+
 void Display::fillRect(int x, int y, int w, int h, uint16_t color) 
 {
   _display->fillRect(x, y, w, h, color);

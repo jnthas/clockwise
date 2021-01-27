@@ -6,6 +6,7 @@ const char* weekDayWords[] = {"DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"};
 
 DateTime::DateTime() {
   this->ntp = new NTPClient(udp, "a.st1.ntp.br", -3 * 3600, 3600000);
+  setTime(ntp->getEpochTime());
 }
 
 void DateTime::begin()
@@ -49,7 +50,6 @@ const char* DateTime::getWeekdayName() {
   return weekDayWords[weekday(ntp->getEpochTime())-1];
 }
 
-
 int DateTime::getHour() {
   return ntp->getHours();
 }
@@ -66,7 +66,7 @@ int DateTime::getWeekday() {
   return weekday(ntp->getEpochTime())-1;
 }
 
-int DateTime::getDay() {
+int DateTime::getDay() {  
   return day(ntp->getEpochTime());
 }
 

@@ -13,8 +13,6 @@ void DateTime::begin()
 {
   ntp->begin();
   ntp->forceUpdate();
-
-  ///Serial.println("End 2");
 }
 
 void DateTime::update()
@@ -48,11 +46,9 @@ char* DateTime::getSecond(const char *format)
   return buffer;
 }
 
-
 const char* DateTime::getWeekdayName() {
   return weekDayWords[weekday(ntp->getEpochTime())-1];
 }
-
 
 int DateTime::getHour() {
   return ntp->getHours();
@@ -70,7 +66,7 @@ int DateTime::getWeekday() {
   return weekday(ntp->getEpochTime())-1;
 }
 
-int DateTime::getDay() {
+int DateTime::getDay() {  
   return day(ntp->getEpochTime());
 }
 

@@ -13,7 +13,7 @@ char formattedDate[20];
 
 int temperature = 26;
 
-DateI18n_PT i18n;
+DateI18nPT i18n;
 
 Clockface::Clockface(Display* display) {
   _display = display;
@@ -35,14 +35,17 @@ void Clockface::setup(DateTime *dateTime) {
 
 void Clockface::update() 
 {  
-  if (_dateTime->getSecond() == 0 && millis() - lastMillis > 1000) {
-    updateTime();
+  if (millis() - lastMillis >= 1000) {
 
-    if (_dateTime->getMinute() == 0 && _dateTime->getSecond() < 2) {
+    if (_dateTime->getSecond() == 0) {
+      updateTime();
+    }
+
+    if (_dateTime->getMinute() == 0 && _dateTime->getSecond() == 0) {
       updateDate();    
     }
 
-    if (_dateTime->getMinute() % 15 == 0 && _dateTime->getSecond() < 2) {
+    if (_dateTime->getMinute() % 15 == 0 && _dateTime->getSecond() == 0) {
       updateTemperature();
     }
     
@@ -82,11 +85,11 @@ void Clockface::updateDate() {
   Locator::getDisplay()->setCursor(0, 52);
   Locator::getDisplay()->setTextColor(0x2589);
     
-  i18n.formatDate(_dateTime->getDay(), _dateTime->getMonth(), formattedDate);
+  const char* fmt = i18n.formatDate(_dateTime->getDay(), _dateTime->getMonth());
 
-  Locator::getDisplay()->print(formattedDate);
+  Locator::getDisplay()->print(fmt);
 
-  const int dateWidth = Locator::getDisplay()->getTextWidth(formattedDate);
+  const int dateWidth = Locator::getDisplay()->getTextWidth(fmt);
 
   // Weekday
   Locator::getDisplay()->setFont(&small4pt7b);
@@ -115,7 +118,6 @@ void Clockface::updateTemperature() {
   Locator::getDisplay()->setCursor(63-tempWidth, 52);
   Locator::getDisplay()->setTextColor(0xffff);
   Locator::getDisplay()->println(buffer);
-
 
 
   Locator::getDisplay()->draw(WIFI, 1, 55, 8, 8);

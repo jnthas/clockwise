@@ -11,6 +11,7 @@ class Display {
   public:
     Display(M5Display* display);
     void draw(const unsigned short frame[], int x, int y, int w, int h);
+    void drawPixel(int32_t x, int32_t y, uint32_t color);
     void fillRect(int x, int y, int w, int h, uint16_t color);
     void drawRect(int x, int y, int w, int h, uint16_t color);
     void drawCircle(int32_t x0, int32_t y0, int32_t r, uint32_t color);

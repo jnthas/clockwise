@@ -15,7 +15,7 @@
 #include "hour8pt7b.h"
 #include "minute7pt7b.h"
 #include "small4pt7b.h"
-#include "DateI18n_PT.h"
+#include "DateI18nPT.h"
 #include "../common/Icons.h"
 
 
