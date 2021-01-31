@@ -1,5 +1,5 @@
-#ifndef WordsClockFace_h
-#define WordsClockFace_h
+#ifndef WorldClockClockFace_h
+#define WorldClockClockFace_h
 
 #include <Arduino.h>
 
@@ -9,13 +9,13 @@
 #include <Game.h>
 #include <Object.h>
 #include <ImageUtils.h>
+#include <Scroll.h>
 
 #include "../common/IClockface.h"
 
-#include "hour8pt7b.h"
-#include "minute7pt7b.h"
 #include "small4pt7b.h"
-#include "DateI18nPT.h"
+#include "worldmap.h"
+
 #include "../common/Icons.h"
 
 
@@ -23,6 +23,7 @@ class Clockface: public IClockface {
   private:
     Display* _display;
     DateTime* _dateTime;
+
     void timeInWords(int h, int m, char* hWords, char* mWords);
     void updateTime();
     void updateDate();

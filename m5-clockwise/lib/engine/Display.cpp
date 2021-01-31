@@ -11,17 +11,38 @@ Display::Display(M5Display* display) {
 
 void Display::draw(const unsigned short frame[], int x, int y, int w, int h)
 {  
-  int counter = 0;
-  for (int yy = 0; yy < h; yy++)
-  {
+  relativeDraw(frame, x, y, 0, 0, w, h);
+}
+
+void Display::relativeDraw(const unsigned short frame[], int x, int y, int anchorX, int anchorY, int w, int h)
+{  
+  int anchor = anchorX;
+  for (int yy = anchorY; yy < h; yy++)
+  {    
     for (int xx = 0; xx < w; xx++)
     {
-      if (frame[counter] != MASK) {
-        _display->drawPixel(xx + x , yy + y, frame[counter]);
+      if (frame[anchor] != MASK) {
+        _display->drawPixel(xx + x , yy + y, frame[anchor]);
       }
-      counter++;
-
+      anchor++;
     }
+  }
+}
+
+void Display::croppedDraw(const unsigned short frame[], int x, int y, int anchorX, int anchorY, int cropX, int cropY, int w, int h)
+{  
+  int anchor = anchorX;
+  for (int yy = anchorY; yy < cropY; yy++)
+  {    
+    for (int xx = 0; xx < cropX; xx++)
+    {
+      if (frame[anchor] != MASK) {
+        _display->drawPixel(xx + x , yy + y, frame[anchor]);
+      }
+
+      anchor++;
+    }
+    anchor = anchor + (w - cropX);
   }
 }
 
