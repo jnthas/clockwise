@@ -6,7 +6,7 @@
 #include "common/WiFiConnect.h"
 #include "common/DateTime.h"
 
-#include "worldclock/Clockface.h"
+#include "words/Clockface.h"
 
 #ifdef ESP32
 
@@ -109,15 +109,24 @@ void setup()
 
 
 bool led = false;
+unsigned long mainLastMillis = 0;
+
 void loop() 
 {  
   marioClock.update();
 
+
+  if (millis() - mainLastMillis > 1000) {
+    digitalWrite(2, led ? HIGH : LOW);
+    led = !led;  
+
+    mainLastMillis = millis();
+  }
+
   
-  Serial.println(dateTime.getFormattedTime());
-  delay(1000);
+  // Serial.println(dateTime.getFormattedTime());
+  // delay(1000);
   
-  digitalWrite(2, led ? HIGH : LOW);
-  led = !led;  
+  
 }
 

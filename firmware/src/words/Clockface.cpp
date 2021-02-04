@@ -62,13 +62,13 @@ void Clockface::updateTime() {
 
   // Hour
   Locator::getDisplay()->setFont(&hour8pt7b);  
-  Locator::getDisplay()->setCursor(0, 10);
+  Locator::getDisplay()->setCursor(1, 14);
   Locator::getDisplay()->setTextColor(0x2589);
   Locator::getDisplay()->println(hInWords);
   
   // Minute
   Locator::getDisplay()->setFont(&minute7pt7b);
-  Locator::getDisplay()->setCursor(0, 22);
+  Locator::getDisplay()->setCursor(0, 25);
   Locator::getDisplay()->setTextColor(0xffff);
   Locator::getDisplay()->println(mInWords);
 
@@ -115,7 +115,7 @@ void Clockface::updateTemperature() {
    
   const int tempWidth = Locator::getDisplay()->getTextWidth(buffer);
  
-  Locator::getDisplay()->setCursor(63-tempWidth, 52);
+  Locator::getDisplay()->setCursor(62-tempWidth, 52);
   Locator::getDisplay()->setTextColor(0xffff);
   Locator::getDisplay()->println(buffer);
 
