@@ -12,7 +12,7 @@ Scroll::Scroll(int startX, int startY, int w, int h)
     this->_height = h;
 }
 
-void Scroll::horizontalScroll(const unsigned short frame[], Display* display, int step)
+void Scroll::horizontalScroll(const unsigned short frame[], const byte mask[], Display* display, int step)
 { 
   _anchorX++;
 
@@ -26,13 +26,12 @@ void Scroll::horizontalScroll(const unsigned short frame[], Display* display, in
     _anchorX = 0;
   }
 
-  Serial.println(limit);
+  // Serial.println(limit);
 
-  display->croppedDraw(frame, 0, 0, _anchorX, _anchorY, limit, _height, _width, _height);
+  display->croppedDrawMask(frame, mask, 0, 0, _anchorX, _anchorY, limit, _height, _width, _height);
 
   if (limit < 64) {
-
-    display->croppedDraw(frame, limit+1, 0, 0, _anchorY, 64-limit, _height, _width, _height);
+    display->croppedDrawMask(frame, mask, limit+1, 0, 0, _anchorY, 64-limit, _height, _width, _height);
   }
   
 
