@@ -17,7 +17,7 @@ class Scroll {
   
   public:
     Scroll(int startX, int startY, int w, int h);
-    void horizontalScroll(const unsigned short frame[], Display* display, int step);
+    void horizontalScroll(const unsigned short frame[], const byte mask[], Display* display, int step);
     void render();
 
 };

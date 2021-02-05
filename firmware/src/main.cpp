@@ -6,7 +6,7 @@
 #include "common/WiFiConnect.h"
 #include "common/DateTime.h"
 
-#include "words/Clockface.h"
+#include "mario/Clockface.h"
 
 #ifdef ESP32
 
@@ -74,7 +74,7 @@ void display_update_enable(bool is_enable)
 #ifdef ESP32
   if (is_enable)
   {
-    timer = timerBegin(0, 80, true);
+    timer = timerBegin(0, 40, true);
     timerAttachInterrupt(timer, &display_updater, true);
     timerAlarmWrite(timer, 4000, true);
     timerAlarmEnable(timer);

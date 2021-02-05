@@ -9,35 +9,61 @@ Display::Display(M5Display* display) {
 }
 
 
-void Display::draw(const unsigned short frame[], int x, int y, int w, int h)
+void Display::draw(const unsigned short* image_array, int x, int y, int w, int h)
 {  
-  relativeDraw(frame, x, y, 0, 0, w, h);
+  relativeDraw(image_array, x, y, 0, 0, w, h);
 }
 
-void Display::relativeDraw(const unsigned short frame[], int x, int y, int anchorX, int anchorY, int w, int h)
+void Display::drawMask(const unsigned short* image_array, const byte* mask_array, int x, int y, int w, int h)
+{  
+  int anchor = 0;
+  for (int yy = 0; yy < h; yy++)
+  {    
+    //Serial.printf("Line %d\n", yy);
+    for (int xx = 0; xx < w; xx++)
+    {
+      if (image_array[anchor] != MASK) {
+
+        if (xx < 64 && mask_array[xx + (yy*64)] != 0) {
+          //Serial.printf("%d,", xx + (yy*64));
+          
+          _display->drawPixel(xx + x , yy + y, COLOR_UTIL.brighter(image_array[anchor], mask_array[xx + (yy*64)]));
+        } else {
+          
+          _display->drawPixel(xx + x , yy + y, image_array[anchor]);
+        }
+        
+      }
+      anchor++;
+    }
+  }
+
+}
+
+void Display::relativeDraw(const unsigned short* image_array, int x, int y, int anchorX, int anchorY, int w, int h)
 {  
   int anchor = anchorX;
   for (int yy = anchorY; yy < h; yy++)
   {    
     for (int xx = 0; xx < w; xx++)
     {
-      if (frame[anchor] != MASK) {
-        _display->drawPixel(xx + x , yy + y, frame[anchor]);
+      if (image_array[anchor] != MASK) {
+        _display->drawPixel(xx + x , yy + y, image_array[anchor]);
       }
       anchor++;
     }
   }
 }
 
-void Display::croppedDraw(const unsigned short frame[], int x, int y, int anchorX, int anchorY, int cropX, int cropY, int w, int h)
+void Display::croppedDraw(const unsigned short* image_array, int x, int y, int anchorX, int anchorY, int cropX, int cropY, int w, int h)
 {  
   int anchor = anchorX;
   for (int yy = anchorY; yy < cropY; yy++)
   {    
     for (int xx = 0; xx < cropX; xx++)
     {
-      if (frame[anchor] != MASK) {
-        _display->drawPixel(xx + x , yy + y, frame[anchor]);
+      if (image_array[anchor] != MASK) {
+        this->drawPixel(xx + x , yy + y, image_array[anchor]);
       }
 
       anchor++;
@@ -47,9 +73,50 @@ void Display::croppedDraw(const unsigned short frame[], int x, int y, int anchor
 }
 
 
-void Display::drawPixel(int32_t x, int32_t y, uint32_t color)
+void Display::croppedDrawMask(const unsigned short* image_array, const byte* mask_array, int x, int y, int anchorX, int anchorY, int cropX, int cropY, int w, int h)
+{  
+  int anchor = anchorX;
+  for (int yy = anchorY; yy < cropY; yy++)
+  {    
+    for (int xx = 0; xx < cropX; xx++)
+    {
+      if (image_array[anchor] != MASK) {
+
+        if (xx+x < 64) { 
+                   
+          this->drawPixel(xx + x , yy + y, COLOR_UTIL.brighter(image_array[anchor], mask_array[xx+x+((yy+y)*64)]));
+        } else {
+          this->drawPixel(xx + x , yy + y, image_array[anchor]);
+        }
+      }
+
+      anchor++;
+    }
+    anchor = anchor + (w - cropX);
+  }
+
+}
+
+
+void Display::drawPixel(int32_t x, int32_t y, uint16_t color)
 { 
-  _display->drawPixel(x, y, color);  
+  _display->drawPixel(x, y, color);   
+
+  // //Serial.println(color);
+
+  // if (color > 0) {
+  //   uint16_t newColor = COLOR_UTIL.brighter(color, 250);
+
+  //   //Serial.println(newColor);
+
+
+    
+
+  //   _display->drawPixel(x, y, newColor);  
+  // } else {
+   
+  // }
+
 }
 
 void Display::fillRect(int x, int y, int w, int h, uint16_t color) 
@@ -62,7 +129,7 @@ void Display::drawRect(int x, int y, int w, int h, uint16_t color)
   _display->drawRect(x, y, w, h, color);
 }
 
-void Display::drawCircle(int32_t x0, int32_t y0, int32_t r, uint32_t color) {
+void Display::drawCircle(int32_t x0, int32_t y0, int32_t r, uint16_t color) {
   _display->drawCircle(x0, y0, r, color);
 }
 

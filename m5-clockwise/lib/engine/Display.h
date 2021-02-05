@@ -3,22 +3,26 @@
 
 #include <Arduino.h>
 #include "M5Display.h"
+#include "ColorUtil.h"
 
 class Display {
   private:
     M5Display* _display;
 
   public:
-    Display(M5Display* display);
-    void draw(const unsigned short frame[], int x, int y, int w, int h);
-    void relativeDraw(const unsigned short frame[], int x, int y, int anchorX, int anchorY, int w, int h);
-    void croppedDraw(const unsigned short frame[], int x, int y, int anchorX, int anchorY, int cropX, int cropY, int w, int h);
+    Display(M5Display* display);    
+    void draw(const unsigned short* image_array, int x, int y, int w, int h);
+    void drawMask(const unsigned short* image_array, const byte* mask_array, int x, int y, int w, int h);
     
-    void drawPixel(int32_t x, int32_t y, uint32_t color);
+    void relativeDraw(const unsigned short* image_array, int x, int y, int anchorX, int anchorY, int w, int h);
+    void croppedDraw(const unsigned short* image_array, int x, int y, int anchorX, int anchorY, int cropX, int cropY, int w, int h);
+    void croppedDrawMask(const unsigned short* image_array, const byte* mask_array, int x, int y, int anchorX, int anchorY, int cropX, int cropY, int w, int h);
+    
+    void drawPixel(int32_t x, int32_t y, uint16_t color);
        
     void fillRect(int x, int y, int w, int h, uint16_t color);
     void drawRect(int x, int y, int w, int h, uint16_t color);
-    void drawCircle(int32_t x0, int32_t y0, int32_t r, uint32_t color);
+    void drawCircle(int32_t x0, int32_t y0, int32_t r, uint16_t color);
 
     void setTextColor(uint16_t c);
     void setCursor(int16_t x, int16_t y);
