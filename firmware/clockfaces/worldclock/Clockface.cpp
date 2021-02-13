@@ -15,8 +15,6 @@ Scroll _scroll(0, 0, 108, 54);
 Clockface::Clockface(Display* display) {
   _display = display;
 
-  ///this->_scroll->horizontalScroll(1);
-
   Locator::provide(display);
   Locator::provide(&eventBus);
 }
@@ -25,17 +23,22 @@ void Clockface::setup(DateTime *dateTime) {
   this->_dateTime = dateTime;
   Locator::getDisplay()->setTextWrap(true, true);
   Locator::getDisplay()->fillRect(0, 0, 64, 64, 0x0000);  
-  ///Locator::getDisplay()->draw(_WORLD_MAP, 0, 0, 108, 54);
 }
 
 void Clockface::update() 
 {  
   if (millis() - lastMillis >= 100) {
+   
+    _scroll.horizontalScroll(_WORLD_MAP, _WORLDMAP_MASK, _display, 1);
+      
+    Locator::getDisplay()->fillRect(0, 55, 64, 9, 0x0000);  
 
-    //Serial.println(this->_dateTime->getFormattedTime());
-    
-    _scroll.horizontalScroll(_WORLD_MAP, _display, 1);
-        
+    Locator::getDisplay()->setFont(&small4pt7b);  
+    Locator::getDisplay()->setTextColor(0xffff);    
+    Locator::getDisplay()->setCursor(1, 62);    
+    Locator::getDisplay()->println(this->_dateTime->getFormattedTime());
+
     lastMillis = millis();
   }  
 }
+

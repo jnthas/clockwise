@@ -26,10 +26,8 @@ class Clockface: public IClockface {
     Display* _display;
     DateTime* _dateTime;
 
-    void timeInWords(int h, int m, char* hWords, char* mWords);
-    void updateTime();
-    void updateDate();
-    void updateTemperature();
+    void updateMap();
+    
 
   public:
     Clockface(Display* display);

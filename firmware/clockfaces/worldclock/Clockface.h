@@ -10,11 +10,13 @@
 #include <Object.h>
 #include <ImageUtils.h>
 #include <Scroll.h>
+#include <ColorUtil.h>
 
 #include "../common/IClockface.h"
 
 #include "small4pt7b.h"
 #include "worldmap.h"
+#include "worldmap_mask.h"
 
 #include "../common/Icons.h"
 
