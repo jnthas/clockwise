@@ -1,12 +1,10 @@
-//#define PxMATRIX_SPI_FREQUENCY 10000000
-
 #include <Arduino.h>
 #include <PxMatrix.h>
-
-#include "common/WiFiConnect.h"
-#include "common/DateTime.h"
-
-#include "worldclock/Clockface.h"
+// Clockface
+#include <Clockface.h>
+// Commons
+#include <WiFiConnect.h>
+#include <DateTime.h>
 
 #ifdef ESP32
 
@@ -51,7 +49,7 @@ uint16_t myCOLORS[8]={myRED,myGREEN,myBLUE,myWHITE,myYELLOW,myCYAN,myMAGENTA,myB
 
 
 Display engine_display(&display);
-Clockface marioClock(&engine_display);
+Clockface clockface(&engine_display);
 
 WiFiConnect wifi;
 DateTime dateTime;
@@ -104,7 +102,7 @@ void setup()
 
   display.setBrightness(20);
 
-  marioClock.setup(&dateTime);  
+  clockface.setup(&dateTime);  
 }
 
 
@@ -113,20 +111,13 @@ unsigned long mainLastMillis = 0;
 
 void loop() 
 {  
-  marioClock.update();
-
+  clockface.update();
 
   if (millis() - mainLastMillis > 1000) {
     digitalWrite(2, led ? HIGH : LOW);
     led = !led;  
 
     mainLastMillis = millis();
-  }
-
-  
-  // Serial.println(dateTime.getFormattedTime());
-  // delay(1000);
-  
-  
+  }  
 }
 

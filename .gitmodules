@@ -1,0 +1,15 @@
+[submodule "firmware/lib/cw-gfx-engine"]
+	path = firmware/lib/cw-gfx-engine
+	url = https://github.com/jnthas/cw-gfx-engine.git
+[submodule "firmware/lib/cw-commons"]
+	path = firmware/lib/cw-commons
+	url = https://github.com/jnthas/cw-commons.git
+[submodule "firmware/clockfaces/cw-cf-0x01"]
+	path = firmware/clockfaces/cw-cf-0x01
+	url = https://github.com/jnthas/cw-cf-0x01.git
+[submodule "firmware/clockfaces/cw-cf-0x02"]
+	path = firmware/clockfaces/cw-cf-0x02
+	url = https://github.com/jnthas/cw-cf-0x02.git
+[submodule "firmware/clockfaces/cw-cf-0x03"]
+	path = firmware/clockfaces/cw-cf-0x03
+	url = https://github.com/jnthas/cw-cf-0x03.git
