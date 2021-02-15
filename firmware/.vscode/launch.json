@@ -12,12 +12,12 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "/home/jonathas/projects/clockwise/firmware/.pio/build/esp32dev/firmware.elf",
-            "projectEnvName": "esp32dev",
+            "executable": "/home/jonathas/projects/clockwise/firmware/.pio/build/m5stack/firmware.elf",
+            "projectEnvName": "m5stack",
             "toolchainBinDir": "/home/jonathas/.platformio/packages/toolchain-xtensa32/bin",
             "preLaunchTask": {
                 "type": "PlatformIO",
-                "task": "Pre-Debug (esp32dev)"
+                "task": "Pre-Debug (m5stack)"
             },
             "internalConsoleOptions": "openOnSessionStart"
         },
@@ -25,8 +25,8 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "/home/jonathas/projects/clockwise/firmware/.pio/build/esp32dev/firmware.elf",
-            "projectEnvName": "esp32dev",
+            "executable": "/home/jonathas/projects/clockwise/firmware/.pio/build/m5stack/firmware.elf",
+            "projectEnvName": "m5stack",
             "toolchainBinDir": "/home/jonathas/.platformio/packages/toolchain-xtensa32/bin",
             "internalConsoleOptions": "openOnSessionStart"
         }
