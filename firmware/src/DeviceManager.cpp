@@ -5,22 +5,32 @@ namespace DeviceManager
     Clockface clockface;
 
     void setup() 
-    {
+    {        
+        Serial.begin(9600);  
+
         DeviceStatus::setup();
+        WiFiConnection::setup();
         Display::setup();        
-        WiFiConnection::connect();
+
         DateTime::setup();
-        Display::println("Done.");
-        delay(1000);
+        OTAUpdate::setup();
 
         clockface.setup();       
-        DeviceStatus::setStatus(DeviceStatus::State::RUNNING);       
+        
+        delay(1000);
+        
+        DeviceStatus::setState(DeviceStatus::State::RUNNING);       
     }
 
     void loop() 
     {
         DeviceStatus::loop();
-        clockface.update();        
-    }
+        OTAUpdate::loop();
 
-}
+        if (DeviceStatus::getCurrentState() == DeviceStatus::State::RUNNING) {
+            clockface.update();
+        }
+    }
+    
+
+};

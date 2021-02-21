@@ -4,9 +4,10 @@
 #include <Display.hpp>
 #include <WiFiConnection.hpp>
 #include <DateTime.hpp>
+#include <OTAUpdate.hpp>
 #include <Clockface.h>
+#include <DeviceStatus.hpp>
 
-#include "DeviceStatus.hpp"
 
 namespace DeviceManager
 {
@@ -19,6 +20,7 @@ namespace DeviceManager
     - Display      
     - Wifi Manager        
     - Date/Time
+    - OTA-
     
 
     - Sensors/Modules (temperature, humidity, rtc, etc)
@@ -37,4 +39,4 @@ namespace DeviceManager
     void setup();
     void loop();
 
-}
+};
