@@ -1,7 +1,5 @@
 #include <Arduino.h>
 
-//#define IS_I2S 1
-
 #ifdef IS_I2S
 #include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
 #elif ARDUINO_ESP32_DEV
