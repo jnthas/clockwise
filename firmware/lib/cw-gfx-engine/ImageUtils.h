@@ -1,6 +1,4 @@
-
-#ifndef ImageUtils_h
-#define ImageUtils_h
+#pragma once
 
 #include <Arduino.h>
 
@@ -48,6 +46,3 @@ struct ImageUtils {
       memcpy(dst, src, sizeof(src[0])*len);
     }
 };
-
-
-#endif

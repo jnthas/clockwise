@@ -1,6 +1,4 @@
-
-#ifndef Sprite_h
-#define Sprite_h
+#pragma once
 
 #include <Arduino.h>
 
@@ -18,6 +16,3 @@ class Sprite {
 
     virtual const char* name();
 };
-
-
-#endif

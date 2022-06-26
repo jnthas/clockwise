@@ -1,6 +1,4 @@
-#ifndef ColorUtil_h
-#define ColorUtil_h
-
+#pragma once
 #include <Arduino.h>
 #include "Macros.h"
 
@@ -46,6 +44,3 @@ const struct
         return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
     }
 } COLOR_UTIL;
-
-
-#endif

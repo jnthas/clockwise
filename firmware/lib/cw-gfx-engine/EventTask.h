@@ -1,6 +1,4 @@
-
-#ifndef EventTask_h
-#define EventTask_h
+#pragma once
 
 #include <Arduino.h>
 #include "Sprite.h"
@@ -14,9 +12,6 @@ class EventTask {
   public:
     virtual void execute(EventType event, Sprite* caller) = 0;
 };
-
-
-#endif
 
 
 

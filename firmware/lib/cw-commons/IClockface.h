@@ -1,14 +1,11 @@
-#ifndef IClockface_h
-#define IClockface_h
+#pragma once
 
-#include "DateTime.h"
+#include "CWDateTime.h"
 
 class IClockface {
 
     //virtual void setup(DateTime *dateTime) = 0;
-    virtual void setup(DateTime *dateTime) = 0;
+    virtual void setup(CWDateTime *dateTime) = 0;
     virtual void update() = 0;
 
 };
-
-#endif

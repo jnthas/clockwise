@@ -1,6 +1,4 @@
-
-#ifndef Tile_h
-#define Tile_h
+#pragma once
 
 #include "Locator.h"
 #include "Game.h"
@@ -25,9 +23,5 @@ struct Tile {
       draw(xx, y);      
     }    
   }
-  
 
 };
-
-
-#endif

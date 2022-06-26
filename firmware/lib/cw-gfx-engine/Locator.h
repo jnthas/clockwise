@@ -1,5 +1,4 @@
-#ifndef Locator_h
-#define Locator_h
+#pragma once
 
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
@@ -16,6 +15,3 @@ class Locator {
     static void provide(Adafruit_GFX* display);
     static void provide(EventBus* eventBus);
 };
-
-
-#endif

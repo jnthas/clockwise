@@ -5,10 +5,7 @@
 #include <Clockface.h>
 // Commons
 #include <WiFiConnect.h>
-#include <DateTime.h>
-
-#include <Display.h>
-
+#include <CWDateTime.h>
 
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 
@@ -23,11 +20,10 @@ uint16_t myMAGENTA = dma_display->color565(255, 0, 255);
 
 uint16_t myCOLORS[8] = {myRED, myGREEN, myBLUE, myWHITE, myYELLOW, myCYAN, myMAGENTA, myBLACK};
 
-Display *engine_display;
 Clockface *clockface;
 
 WiFiConnect wifi;
-DateTime dateTime;
+CWDateTime cwDateTime;
 
 
 byte displayBright = 32;
@@ -60,8 +56,9 @@ void setup()
   clockface = new Clockface(dma_display);
 
   wifi.connect();
-  dateTime.begin();
-  clockface->setup(&dateTime);
+  cwDateTime.begin();
+  
+  clockface->setup(&cwDateTime);
 }
 
 void loop()

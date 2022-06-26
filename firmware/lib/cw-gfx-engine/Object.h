@@ -1,7 +1,4 @@
-
-#ifndef Object_h
-#define Object_h
-
+#pragma once
 #include "Locator.h"
 
 struct Object {
@@ -19,6 +16,3 @@ struct Object {
     Locator::getDisplay()->drawRGBBitmap(x, y, _image, _width, _height);  
   }
 };
-
-
-#endif

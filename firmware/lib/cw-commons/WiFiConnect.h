@@ -1,38 +1,57 @@
-#ifndef WiFiConnect_h
-#define WiFiConnect_h
+#pragma once
 
-#include <WiFi.h>
+#include <WiFiManager.h>
+#include "ezTime.h"
 
-const char* ssid = "HUAWEI-2.4G-gsuF";
-const char* password =  "07627983";
+WiFiManager wifiManager;
+Timezone myTZ;
 
 struct WiFiConnect 
 {
+    std::vector<const char *> _menu = {"wifi","exit"};
+    char timezone[40]="0";
+    bool shouldSaveConfig = false;
+
+    void saveTimezone(const char* value) {
+      Serial.print("Save: ");
+      Serial.println(value);
+      myTZ.setCache(0);
+      myTZ.setLocation(value);
+      shouldSaveConfig = false;
+    }
+
+    String loadTimezone() {
+      myTZ.setCache(0);
+      String tz = myTZ.getTimezoneName();
+      Serial.print("Load: ");
+      Serial.println(tz);
+      return tz;
+    }
+    
     void connect() 
     {
-        delay(1000);
-        WiFi.mode(WIFI_MODE_STA);
-        WiFi.disconnect();
+      bool resp; 
+      //wifiManager.resetSettings(); 
+      wifiManager.setSaveConfigCallback([&](){ shouldSaveConfig = true; });
+      
+      sprintf(timezone, "%s", loadTimezone());
+      WiFiManagerParameter timezoneParam("tz", "Inform your timezone (e.g. America/Lima)", timezone, 36);
 
-        WiFi.begin(ssid, password);
-        
-        Serial.print("Connecting");
-        while (WiFi.status() != WL_CONNECTED)
-        {
-            delay(500);
-            Serial.print(".");
+      wifiManager.setTitle("Clockwise Wifi Setup");
+      wifiManager.setMenu(_menu);
+      wifiManager.addParameter(&timezoneParam);
+      
+      resp = wifiManager.autoConnect("Clockwise-Wifi", "12345678");
+      
+      if (!resp) {
+        Serial.println("Failed to connect");
+        delay(3000);
+        ESP.restart();
+      } else {
+        Serial.println("connected!");
+        if (shouldSaveConfig) {
+          saveTimezone(timezoneParam.getValue());
         }
-        Serial.println("");
-        Serial.print("Connected to ");
-        Serial.println(ssid);
-        Serial.print("IP address: ");
-        Serial.println(WiFi.localIP());
-    }
-
-    boolean isConnected() 
-    {
-        return WiFi.status() == WL_CONNECTED;
+      }
     }
 };
-
-#endif

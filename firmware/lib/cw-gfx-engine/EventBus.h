@@ -1,6 +1,4 @@
-
-#ifndef EventBus_h
-#define EventBus_h
+#pragma once
 
 #include <Arduino.h>
 #include "EventTask.h"
@@ -16,8 +14,5 @@ class EventBus {
     void subscribe(EventTask* task);
     
 };
-
-
-#endif
 
 

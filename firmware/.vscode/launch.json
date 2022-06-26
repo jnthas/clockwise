@@ -18,7 +18,7 @@
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
-                "task": "Pre-Debug (esp32dev)"
+                "task": "Pre-Debug"
             }
         },
         {
