@@ -1,5 +1,6 @@
 # Clockwise
-DIY smart wall clock device
+
+> The DIY smart wall clock device
 
 Clockwise was an idea I had while working with 64x64 LED matrices.
 These displays are about the size of a wall clock and with the ESP32, besides controlling the content presented on the display we also gain the functionality of 
@@ -17,18 +18,18 @@ https://github.com/jnthas/cw-cf-0x01
 
 ## Time in Words
 
-Time in Words Clockface](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg "Time in Words Clockface")
+![Time in Words Clockface](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg "Time in Words Clockface")
 
 https://github.com/jnthas/cw-cf-0x02
 
 ## World Map Clock
 
-World Map Clockface](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg "World Map Clockface")
+![World Map Clockface](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg "World Map Clockface")
 
 https://github.com/jnthas/cw-cf-0x03
 
 
-## Change a clockface
+## How to change the clockface?
 
 Use PlatformIO to run Clockwise. The Clockwise structure consists mainly of three folders
 - clockfaces: contains the collection of available clockfaces. This folder is not included when compiling
