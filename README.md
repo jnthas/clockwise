@@ -1,12 +1,12 @@
 # Clockwise
 DIY smart wall clock device
 
-Clockwise foi uma ideia que tive enquanto trabalhava com matrizes de LED de 64x64.
-Essas matrizes tem mais ou menos o tamanho de um relógio de parede e com o ESP32, além de controlar o conteúdo apresentado no display ainda ganhamos as funcionalidades de 
-WiFi, Bluetooth, touch buttons e os mais diversos sensores o que nos leva a ter em mãos basicamente um relógio inteligente de parede. 
-A partir daí, comecei a desenvolver uma plataforma para que sejam criadas as _Clockfaces_, ou skins que o relógio pode ter. As possibilidades são muitas e espero que com ajuda de contribuidores, podemos crescer ainda mais as opções.
+Clockwise was an idea I had while working with 64x64 LED arrays.
+These arrays are about the size of a wall clock and with the ESP32, besides controlling the content presented on the display we also gain the functionality of 
+WiFi, Bluetooth, touch buttons and several sensors, which gives us basically a wall clock. 
+From there I started to develop a platform to create the _Clockfaces_, or skins that the clock can have. The possibilities are many and I hope that with help from contributors, we can grow the options even more.
 
-Atualmente são três opção de clockfaces:
+Currently there are three clockface options:
 
 ## Mario Bros. Clock
 
@@ -17,43 +17,40 @@ https://github.com/jnthas/cw-cf-0x01
 
 ## Time in Words
 
-![Time in Words Clockface](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg "Time in Words Clockface")
+Time in Words Clockface](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg "Time in Words Clockface")
 
 https://github.com/jnthas/cw-cf-0x02
 
 ## World Map Clock
 
-![World Map Clockface](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg "World Map Clockface")
+World Map Clockface](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg "World Map Clockface")
 
 https://github.com/jnthas/cw-cf-0x03
 
 
-## Mudar um clockface
+## Change a clockface
 
-Use o PlatformIO para executar o Clockwise. A estrutura do Clockwise é composta por principalmente três pastas
-- clockfaces: contém a coleção de clockfaces disponiveis. Essa pasta não é incluida na compilação
-- lib: contém o código básico para o Clockwise funcionar e além disso um link simbólico para o clockface atual
-- src: contém o ponto de entrada do código do relógio
+Use PlatformIO to run Clockwise. The Clockwise structure consists mainly of three folders
+- clockfaces: contains the collection of available clockfaces. This folder is not included when compiling
+- lib: contains the basic code for Clockwise to work and in addition a symbolic link to the current clockface
+- src: contains the entry point for the clock code
 
 ```
 .
 ├── clockfaces
-│   ├── cw-cf-0x01
-│   ├── cw-cf-0x02
-│   └── cw-cf-0x03
+│   ├── cw-cf-0x01
+│   ├── cw-cf-0x02
+│   └── cw-cf-0x03
 ├── lib
-│   ├── cw-commons
-│   ├── cw-gfx-engine
-│   └── timeinwords -> ../clockfaces/cw-cf-0x02/
+│   ├── cw-commons
+│   ├── cw-gfx-engine
+│   └── timeinwords -> ../clockfaces/cw-cf-0x02/
 └── src
     └── main.cpp
 
 ```
-Para criar o link simbólico execute o comando na raiz do projeto:
+To create the symbolic link run the command in the project root:
 
-`ln -s firmware/clockfaces/cw-cf-0x02/ firmware/lib/timeinwords`
+``ln -s firmware/clockfaces/cw-cf-0x02/ firmware/lib/timeinwords``
 
-Ou, se preferir, é possivel chegar no mesmo resultado apenas copiando a pasta do clockface desejado para lib/
-
-
-
+Or, if you prefer, you can get the same result by copying the desired clockface folder into lib/
