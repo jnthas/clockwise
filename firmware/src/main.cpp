@@ -25,9 +25,7 @@ Clockface *clockface;
 WiFiConnect wifi;
 CWDateTime cwDateTime;
 
-
 byte displayBright = 32;
-
 
 void displaySetup() 
 {
