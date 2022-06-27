@@ -50,8 +50,8 @@ Use PlatformIO to run Clockwise. The Clockwise structure consists mainly of thre
     └── main.cpp
 
 ```
-To create the symbolic link run the command in the project root:
+To create the symbolic link run the following command inside lib/ folder:
 
-``ln -s firmware/clockfaces/cw-cf-0x02/ firmware/lib/timeinwords``
+``clockwise/firmware/lib$ ln -s ../clockfaces/cw-cf-0x02/ timeinwords``
 
 Or, if you prefer, you can get the same result by copying the desired clockface folder into lib/
