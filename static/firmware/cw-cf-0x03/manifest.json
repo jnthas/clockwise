@@ -10,7 +10,7 @@
                     "offset": 57344
                 },
                 {
-                    "path": "bootloader_qio_40m.bin",
+                    "path": "bootloader_dio_40m.bin",
                     "offset": 4096
                 },
                 {
