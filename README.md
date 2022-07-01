@@ -1,4 +1,5 @@
-# Clockwise
+![Logo](images/clockwise_logo.png "Logo")
+
 
 > The DIY smart wall clock device
 
