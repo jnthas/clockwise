@@ -1,4 +1,4 @@
-![Logo](images/clockwise_logo.png "Logo")
+![Logo](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/clockwise_logo.png "Logo")
 
 
 > The DIY smart wall clock device
