@@ -30,7 +30,20 @@ https://github.com/jnthas/cw-cf-0x02
 https://github.com/jnthas/cw-cf-0x03
 
 
-## How to change the clockface?
+## Driving the led matrix
+
+To control the LED matrix, you only need an ESP32, which must follow the wiring instructions according to the library used, by default Clockwise uses [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrfaptastic /ESP32-HUB75-MatrixPanel-I2S-DMA#2-wiring-esp32-with-the-led-matrix-panel) but any Adafruit GFX compatible library should work.
+
+![ESP32-HUB75-MatrixPanel-I2S-DMA wiring](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/display_esp32_wiring_thumb.png "ESP32-HUB75-MatrixPanel-I2S-DMA wiring")
+
+[Full size](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/display_esp32_wiring_bb.png)
+
+
+
+In case you want something ready to use, I recommend Brian Lough's [ESP32 Trinity](https://github.com/witnessmenow/ESP32-Trinity), basically it's connecting the board and uploading the firmware, as simple as that.
+
+
+## How to change the clockface
 
 Use PlatformIO to run Clockwise. The Clockwise structure consists mainly of three folders
 - clockfaces: contains the collection of available clockfaces. This folder is not included when compiling
