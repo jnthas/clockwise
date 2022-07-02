@@ -2,3 +2,30 @@
 ---
 
 @import "{{ site.theme }}";
+
+[type=radio] { 
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* IMAGE STYLES */
+  [type=radio] + img {
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  /* CHECKED STYLES */
+  [type=radio]:checked + img {
+    outline: 2px solid #159957;
+  }
+
+  fieldset {
+    padding: 20px;
+  }
+
+  #esp-web-tool-widget {
+    text-align: center;
+    margin: 20px;
+  }
