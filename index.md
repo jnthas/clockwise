@@ -1,5 +1,5 @@
 ## Flash self-service
-Here in this section you can upload the desired clockface. If you have questions about how it works, click [here](https://github.com/jnthas/clockwise/blob/main/README.md#how-to-change-the-clockface-web-flashing). This feature uses the [ESP Web Tools](https://esphome.github.io/esp-web-tools/) library.
+Here in this section you can upload the desired clockface. A step-by-step how to flash your device can be seen [here](https://github.com/jnthas/clockwise/blob/main/README.md#how-to-change-the-clockface-web-flashing). This feature uses the [ESP Web Tools](https://esphome.github.io/esp-web-tools/) library.
 
 <fieldset>
   <legend>Clockface library</legend>
