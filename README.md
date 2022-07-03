@@ -32,7 +32,7 @@ https://github.com/jnthas/cw-cf-0x03
 
 ## Driving the led matrix
 
-To control the LED matrix, you only need an ESP32, which must follow the wiring instructions according to the library used, by default Clockwise uses [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrfaptastic /ESP32-HUB75-MatrixPanel-I2S-DMA#2-wiring-esp32-with-the-led-matrix-panel) but any Adafruit GFX compatible library should work.
+To control the LED matrix, you only need an ESP32, which must follow the wiring instructions according to the library used, by default Clockwise uses [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA#2-wiring-esp32-with-the-led-matrix-panel) but any Adafruit GFX compatible library should work.
 
 ![ESP32-HUB75-MatrixPanel-I2S-DMA wiring](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/display_esp32_wiring_thumb.png "ESP32-HUB75-MatrixPanel-I2S-DMA wiring")
 
