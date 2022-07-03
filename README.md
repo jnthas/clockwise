@@ -46,9 +46,19 @@ With these components in hand, just follow the wiring instructions according to 
 In case you want something ready to use, I recommend Brian Lough's [ESP32 Trinity](https://github.com/witnessmenow/ESP32-Trinity), basically it's connecting the board and uploading the firmware, as simple as that.
 
 
-## How to change the clockface
+## How to change the clockface (web flashing)
 
-Use PlatformIO to run Clockwise. The Clockwise structure consists mainly of three folders
+1) Go to https://jnthas.github.io/clockwise/ and select the desired clockface
+2) Connect the ESP32 device on your computer's USB port 
+3) Click on the Flash button
+4) A dialog will appear, select the correct USB port and click in Connect ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step1.png))
+5) Select the INSTALL and INSTALL again ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step2.png))
+6) Wait while the flash tool uploads the firmware and finish ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step3.png))
+
+
+## How to change the clockface (PlatformIO)
+
+Clockwise uses PlatformIO as IDE, so the configuration is already done if you use the same. The Clockwise structure consists mainly of three folders
 - clockfaces: contains the collection of available clockfaces. This folder is not included when compiling
 - lib: contains the basic code for Clockwise to work and in addition a symbolic link to the current clockface
 - src: contains the entry point for the clock code
