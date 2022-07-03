@@ -27,3 +27,13 @@ Clockwise was an idea I had while working with 64x64 LED matrices. These display
     <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
   </esp-web-install-button>
 </div>
+
+
+<script>
+  function handleClick(radio) {
+    document.getElementById("esp-web").setAttribute("manifest", "static/firmware/" + radio.value + "/manifest.json"); 
+    document.getElementById("flash-button").textContent = "Flash '" + document.getElementById(radio.value).alt + "'"; 
+  }
+
+  handleClick(document.querySelector('input[name="clockface"]:checked'));
+</script>
