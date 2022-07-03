@@ -27,7 +27,7 @@ Here in this section you can upload the desired clockface. A step-by-step how to
 </div>
 
 ## Hardware
-In order to make the Clockwise, you will need only three components that are easily found on stores like Amazon and Aliexpress. More details [here](https://github.com/jnthas/clockwise/tree/main#driving-the-led-matrix).
+You will need only three components to make a Clockwise device, they are easily found on stores like Amazon and Aliexpress. More details [here](https://github.com/jnthas/clockwise/tree/main#driving-the-led-matrix).
 
 
 ## About
