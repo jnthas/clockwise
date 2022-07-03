@@ -11,14 +11,5 @@
   src="https://unpkg.com/esp-web-tools@8.0.3/dist/web/install-button.js?module">
 </script>
 
-<script>
-  function handleClick(radio) {
-    document.getElementById("esp-web").setAttribute("manifest", "static/firmware/" + radio.value + "/manifest.json"); 
-    document.getElementById("flash-button").textContent = "Flash '" + document.getElementById(radio.value).alt + "'"; 
-  }
-
-  handleClick(document.querySelector('input[name="clockface"]:checked'));
-</script>
-
 
 <!-- end custom head snippets -->
