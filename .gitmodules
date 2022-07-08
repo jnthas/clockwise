@@ -7,3 +7,6 @@
 [submodule "firmware/clockfaces/cw-cf-0x03"]
 	path = firmware/clockfaces/cw-cf-0x03
 	url = https://github.com/jnthas/cw-cf-0x03.git
+[submodule "firmware/clockfaces/cw-cf-0x04"]
+	path = firmware/clockfaces/cw-cf-0x04
+	url = https://github.com/jnthas/cw-cf-0x04
