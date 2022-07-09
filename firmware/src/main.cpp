@@ -7,6 +7,8 @@
 #include <WiFiConnect.h>
 #include <CWDateTime.h>
 
+#include <IOManager.h>
+
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 
 uint16_t myBLACK = dma_display->color565(0, 0, 0);
@@ -24,6 +26,7 @@ Clockface *clockface;
 
 WiFiConnect wifi;
 CWDateTime cwDateTime;
+IOManager io;
 
 byte displayBright = 32;
 
@@ -50,10 +53,12 @@ void setup()
   Serial.begin(115200);
 
   displaySetup();
-
   clockface = new Clockface(dma_display);
 
+  io.clockwiseLogo();
+  io.wifiConnecting();
   wifi.connect();
+  io.ntpConnecting();
   cwDateTime.begin();
   
   clockface->setup(&cwDateTime);

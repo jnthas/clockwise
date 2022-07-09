@@ -1,7 +1,9 @@
 #pragma once
 
 #include <WiFiManager.h>
-#include "ezTime.h"
+#include <ezTime.h>
+#include "IOManager.h"
+
 
 WiFiManager wifiManager;
 Timezone myTZ;
@@ -27,12 +29,19 @@ struct WiFiConnect
       Serial.println(tz);
       return tz;
     }
-    
+
+ 
     void connect() 
     {
+      IOManager io;
+
       bool resp; 
       //wifiManager.resetSettings(); 
       wifiManager.setSaveConfigCallback([&](){ shouldSaveConfig = true; });
+
+      wifiManager.setAPCallback([&](WiFiManager *myWiFiManager){ 
+        io.wifiConnectionFailed();
+      });
       
       sprintf(timezone, "%s", loadTimezone());
       WiFiManagerParameter timezoneParam("tz", "Inform your timezone (e.g. America/Lima)", timezone, 36);
