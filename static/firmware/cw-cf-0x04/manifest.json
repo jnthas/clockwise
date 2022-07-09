@@ -1,0 +1,27 @@
+{
+    "name": "Clockwise",
+    "builds": [
+        {
+            "chipFamily": "ESP32",
+            "improv": false,
+            "parts": [
+                {
+                    "path": "boot_app0.bin",
+                    "offset": 57344
+                },
+                {
+                    "path": "bootloader_dio_40m.bin",
+                    "offset": 4096
+                },
+                {
+                    "path": "firmware.bin",
+                    "offset": 65536
+                },
+                {
+                    "path": "partitions.bin",
+                    "offset": 32768
+                }
+            ]
+        }
+    ]
+}

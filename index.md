@@ -4,7 +4,7 @@ Here in this section you can upload the desired clockface to your device. A step
 <fieldset>
   <legend>Clockface library</legend>
   <label>
-    <input type="radio" name="clockface" value="cw-cf-0x01" checked onclick="handleClick(this);">
+    <input type="radio" name="clockface" value="cw-cf-0x01" onclick="handleClick(this);" checked>
     <img id="cw-cf-0x01" src="https://github.com/jnthas/cw-cf-0x01/raw/main/cf_0x01_thumb.jpg" width="128" alt="Mario Bros.">
   </label>
   <label>
@@ -14,6 +14,10 @@ Here in this section you can upload the desired clockface to your device. A step
   <label>
     <input type="radio" name="clockface" value="cw-cf-0x03" onclick="handleClick(this);">
     <img id="cw-cf-0x03" src="https://github.com/jnthas/cw-cf-0x03/raw/main/cf_0x03_thumb.jpg" width="128" alt="World map">
+  </label>
+  <label>
+    <input type="radio" name="clockface" value="cw-cf-0x04" onclick="handleClick(this);">
+    <img id="cw-cf-0x04" src="https://github.com/jnthas/cw-cf-0x04/raw/main/cf_0x04_thumb.jpg" width="128" alt="Castlevania">
   </label>
 </fieldset>
 
