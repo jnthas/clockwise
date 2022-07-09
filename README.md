@@ -29,6 +29,12 @@ https://github.com/jnthas/cw-cf-0x02
 
 https://github.com/jnthas/cw-cf-0x03
 
+## Castlevania Clock Tower
+
+![Castlevania Clockface](https://github.com/jnthas/cw-cf-0x04/blob/main/cf_0x04_thumb.jpg "Castlevania Clockface")
+
+https://github.com/jnthas/cw-cf-0x04
+
 
 ## Driving the led matrix
 
