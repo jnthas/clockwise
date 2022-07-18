@@ -34,7 +34,7 @@ jobs:
         pip install --upgrade platformio
     - name: Build cw-cf-0x01
       run: |
-        ln -s ../clockfaces/cw-cf-0x01 firmware/lib/cwcf0x01
+        ln -s ../clockfaces/cw-cf-0x01 $GITHUB_WORKSPACE/firmware/lib/cwcf0x01
         pio run --project-dir firmware/
     - name: Publish new version
       run: |
