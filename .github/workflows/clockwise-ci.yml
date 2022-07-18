@@ -39,8 +39,8 @@ jobs:
         pio run --project-dir firmware/
     - name: Publish new version
       run: |
-          ls -l $GITHUB_WORKSPACE
-          cp --force $GITHUB_WORKSPACE/.pio/build/esp32dev/firmware.bin $GITHUB_WORKSPACE/gh-pages/static/firmware/cw-cf-0x01/firmware.bin
+          find . -name gh-pages 
+          cp --force $GITHUB_WORKSPACE/firmware/.pio/build/esp32dev/firmware.bin $GITHUB_WORKSPACE/gh-pages/static/firmware/cw-cf-0x01/firmware.bin
           #git config user.name github-actions
           #git config user.email github-actions@github.com
           #git add .
