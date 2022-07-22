@@ -8,6 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 2
       matrix:
         clockfaces:
           - cw-cf-0x01
