@@ -8,13 +8,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    
+    
+    - name: Checkout
+      uses: actions/checkout@v3
       with:
-        ref: gh-pages
-        path: gh-pages
-    - uses: actions/checkout@v3
-      with:
+        path: main
         submodules: recursive
+
+    - name: Checkout tools repo
+      uses: actions/checkout@v3
+      with:
+        repository: jnthas/clockwise
+        ref: gh-pages
+        path: github-pages
+
 #     - name: Cache pip
 #       uses: actions/cache@v3
 #       with:
