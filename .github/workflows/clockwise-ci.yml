@@ -49,9 +49,10 @@ jobs:
     - name: Publish new version
       run: |
           cd $GITHUB_WORKSPACE/github-pages
-          cp --force $GITHUB_WORKSPACE/clockwise/firmware/.pio/build/esp32dev/firmware.bin static/firmware/${{ matrix.clockfaces }}/firmware.bin
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git pull origin gh-pages
+          cp --force $GITHUB_WORKSPACE/clockwise/firmware/.pio/build/esp32dev/firmware.bin static/firmware/${{ matrix.clockfaces }}/firmware.bin
           git add .
           git commit -m "new version published - ${{ matrix.clockfaces }}"
           git push
