@@ -14,6 +14,7 @@ jobs:
           - cw-cf-0x01
           - cw-cf-0x02
           - cw-cf-0x03
+          - cw-cf-0x04
     steps:
     - name: Checkout clockwise
       uses: actions/checkout@v3
