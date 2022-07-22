@@ -19,39 +19,34 @@ jobs:
         repository: jnthas/clockwise
         ref: gh-pages
         path: github-pages
-
-#     - name: Cache pip
-#       uses: actions/cache@v3
-#       with:
-#         path: ~/.cache/pip
-#         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-#         restore-keys: |
-#           ${{ runner.os }}-pip-
-#     - name: Cache PlatformIO
-#       uses: actions/cache@v3
-#       with:
-#         path: ~/.platformio
-#         key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-#     - name: Set up Python
-#       uses: actions/setup-python@v4
-#     - name: Install PlatformIO
-#       run: |
-#         python -m pip install --upgrade pip
-#         pip install --upgrade platformio
-#     - name: Build cw-cf-0x01
-#       run: |
-#         ln -s ../clockfaces/cw-cf-0x01 $GITHUB_WORKSPACE/firmware/lib/cwcf0x01
-#         pio run --project-dir firmware/
+    - name: Cache pip
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v3
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v4
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install --upgrade platformio
+    - name: Build cw-cf-0x01
+      run: |
+        ln -s ../clockfaces/cw-cf-0x01 $GITHUB_WORKSPACE/firmware/lib/cwcf0x01
+        pio run --project-dir firmware/
     - name: Publish new version
       run: |
-          cd clockwise
-          ls .
-          cd ../github-pages
-          ls .
-          #cp --force $GITHUB_WORKSPACE/firmware/.pio/build/esp32dev/firmware.bin $GITHUB_WORKSPACE/gh-pages/static/firmware/cw-cf-0x01/firmware.bin
-          #git config user.name github-actions
-          #git config user.email github-actions@github.com
-          #git add .
-          #git commit -m "new version published"
-          #git push
+          cp --force $GITHUB_WORKSPACE/clockwise/firmware/.pio/build/esp32dev/firmware.bin $GITHUB_WORKSPACE/github-pages/static/firmware/cw-cf-0x01/firmware.bin
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "new version published"
+          git push
 
