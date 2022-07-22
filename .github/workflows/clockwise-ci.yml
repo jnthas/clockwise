@@ -1,7 +1,9 @@
-name: Clockwise CI
+name: Clockwise CI/CD
 
-on: [push]
-
+on:
+  push:
+    branches:
+      - 'releases/**'
 jobs:    
   build:
     runs-on: ubuntu-latest
