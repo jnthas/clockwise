@@ -2,11 +2,16 @@ name: Clockwise CI
 
 on: [push]
 
-jobs:
+jobs:    
   build:
-
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        clockfaces:
+          - cw-cf-0x01
+          - cw-cf-0x02
+          - cw-cf-0x03
+          - cw-cf-0x04
     steps:
     - name: Checkout clockwise
       uses: actions/checkout@v3
@@ -37,17 +42,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade platformio
-    - name: Build cw-cf-0x01
+    - name: Building ${{ matrix.clockfaces }}
       run: |
-        ln -s ../clockfaces/cw-cf-0x01 $GITHUB_WORKSPACE/clockwise/firmware/lib/cwcf0x01
+        ln -s ../clockfaces/${{ matrix.clockfaces }} $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
         pio run --project-dir clockwise/firmware/
     - name: Publish new version
       run: |
           cd $GITHUB_WORKSPACE/github-pages
-          cp --force $GITHUB_WORKSPACE/clockwise/firmware/.pio/build/esp32dev/firmware.bin static/firmware/cw-cf-0x01/firmware.bin
+          cp --force $GITHUB_WORKSPACE/clockwise/firmware/.pio/build/esp32dev/firmware.bin static/firmware/${{ matrix.clockfaces }}/firmware.bin
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "new version published"
+          git commit -m "new version published - ${{ matrix.clockfaces }}"
           git push
 
