@@ -6,11 +6,11 @@
             "improv": false,
             "parts": [
                 {
-                    "path": "boot_app0.bin",
+                    "path": "../base_firmware/boot_app0.bin",
                     "offset": 57344
                 },
                 {
-                    "path": "bootloader_dio_40m.bin",
+                    "path": "../base_firmware/bootloader_dio_40m.bin",
                     "offset": 4096
                 },
                 {
@@ -18,7 +18,7 @@
                     "offset": 65536
                 },
                 {
-                    "path": "partitions.bin",
+                    "path": "../base_firmware/partitions.bin",
                     "offset": 32768
                 }
             ]
