@@ -49,6 +49,7 @@ jobs:
       run: |
         ln -s ../clockfaces/${{ matrix.clockfaces }} $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
         pio run --project-dir clockwise/firmware/
+        rm $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
     - name: Publish new version
       run: |
           cd $GITHUB_WORKSPACE/github-pages
