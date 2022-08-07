@@ -36,6 +36,12 @@ https://github.com/jnthas/cw-cf-0x03
 
 https://github.com/jnthas/cw-cf-0x04
 
+## Pacman
+
+![Pacman Clockface](https://github.com/jnthas/cw-cf-0x05/blob/main/cf_0x05_thumb.jpg "Pacman Clockface")
+
+https://github.com/jnthas/cw-cf-0x05
+
 
 ## Driving the led matrix
 
