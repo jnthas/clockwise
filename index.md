@@ -19,6 +19,10 @@ Here in this section you can upload the desired clockface to your device. A step
     <input type="radio" name="clockface" value="cw-cf-0x04" onclick="handleClick(this);">
     <img id="cw-cf-0x04" src="https://github.com/jnthas/cw-cf-0x04/raw/main/cf_0x04_thumb.jpg" width="128" alt="Castlevania">
   </label>
+  <label>
+    <input type="radio" name="clockface" value="cw-cf-0x05" onclick="handleClick(this);">
+    <img id="cw-cf-0x05" src="https://github.com/jnthas/cw-cf-0x05/raw/main/cf_0x05_thumb.jpg" width="128" alt="Pacman">
+  </label>
 </fieldset>
 
 <!-- Flash button -->
