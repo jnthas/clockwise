@@ -31,7 +31,7 @@ String CWDateTime::getFormattedTime()
 char *CWDateTime::getHour(const char *format)
 {
   static char buffer[3] = {'\0'};
-  snprintf(buffer, sizeof(buffer), format, myTZ.dateTime("H"));
+  strncpy(buffer, myTZ.dateTime("H").c_str(), sizeof(buffer));
   return buffer;
 }
 
@@ -69,3 +69,10 @@ int CWDateTime::getWeekday()
 {
   return myTZ.dateTime("w").toInt()-1;
 }
+
+long CWDateTime::getMilliseconds() 
+{
+  return myTZ.ms(TIME_NOW);
+}
+
+

@@ -21,6 +21,7 @@ public:
   int getHour();
   int getMinute();
   int getSecond();
+  long getMilliseconds();
 
   int getDay();
   int getMonth();
