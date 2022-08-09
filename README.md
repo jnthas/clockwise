@@ -61,13 +61,15 @@ In case you want something ready to use, I recommend Brian Lough's [ESP32 Trinit
 
 ## How to change the clockface (web flashing)
 
-1) Go to https://jnthas.github.io/clockwise/ and select the desired clockface
+1) Go to https://clockwise.page/ and select the desired clockface
 2) Connect the ESP32 device on your computer's USB port 
 3) Click on the Flash button
 4) A dialog will appear, select the correct USB port and click in Connect ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step1.png))
 5) Select the INSTALL and INSTALL again ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step2.png))
 6) Wait while the flash tool uploads the firmware and finish ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step3.png))
 
+### Configuring WiFi
+The first time you run it, you need to configure the WiFi, for that connect to the `Clockwise-Wifi` access point using the password `12345678` via your smartphone or laptop, click “Configure WiFi” and select your AP, put in your password and your timezone and save it. The timezone must be one of the listed here e.g. America/New_York, America/Sao_Paulo, Europe/Paris, Asia/Dubai, etc. so that the clock can connect to an NTP server to get the correct time. It is important to use a 2.4GHz WiFi, it will not work on 5GHz.
 
 ## How to change the clockface (PlatformIO)
 
@@ -95,3 +97,5 @@ To create the symbolic link run the following command inside lib/ folder:
 ``clockwise/firmware/lib$ ln -s ../clockfaces/cw-cf-0x02/ timeinwords``
 
 Or, if you prefer, you can get the same result by copying the desired clockface folder into lib/
+
+The same way as web flashing, when connecting for the first time you will have to configure the wifi, follow the instructions in Configuring WiFi section above. 
