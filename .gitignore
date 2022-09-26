@@ -1,0 +1,8 @@
+# Ignore the "build" directory created by esp-idf
+build
+
+# Ignore the user-customized project configuration file.
+# (https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html)
+sdkconfig*
+# Unignore the default project configuration file.
+!sdkconfig.defaults
