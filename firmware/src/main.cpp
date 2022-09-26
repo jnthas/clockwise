@@ -38,6 +38,14 @@ void displaySetup()
     1    // Chain length
   );
 
+#if HUB75_BLUE_GREEN_SWAP
+  // Swap Blue and Green pins because the panel is RBG instead of RGB.
+  mxconfig.gpio.b1 = 26;
+  mxconfig.gpio.b2 = 12;
+  mxconfig.gpio.g1 = 27;
+  mxconfig.gpio.g2 = 13;
+#endif
+
   mxconfig.gpio.e = 18;
   mxconfig.clkphase = false;
 

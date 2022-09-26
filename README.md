@@ -99,3 +99,20 @@ To create the symbolic link run the following command inside lib/ folder:
 Or, if you prefer, you can get the same result by copying the desired clockface folder into lib/
 
 The same way as web flashing, when connecting for the first time you will have to configure the wifi, follow the instructions in Configuring WiFi section above. 
+
+## How to change the clockface (esp-idf)
+
+You can use the [official Esspressif IoT Development Framekwork (aka esp-idf)](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/) to build and upload this project to an ESP32 device, including the [ESP32-Trinity board](https://esp32trinity.com/).
+
+### Install esp-idf
+Follow the [Step By Step installation instructions](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/#installation-step-by-step).
+
+### Setup the environment variables
+Follow the [instructions here](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/#step-4-set-up-the-environment-variables).
+
+### Clone and build this project
+* `git clone --recurse-submodules https://github.com/jnthas/clockwise.git`
+* `idf.py reconfigure`
+* `idf.py menuconfig` (select `Clockwise Configuration` and choose the clockface)
+* `idf.py flash`
+* `idf.py monitor`

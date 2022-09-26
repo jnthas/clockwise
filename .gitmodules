@@ -13,3 +13,21 @@
 [submodule "firmware/clockfaces/cw-cf-0x05"]
 	path = firmware/clockfaces/cw-cf-0x05
 	url = https://github.com/jnthas/cw-cf-0x05
+[submodule "components/WiFiManager"]
+	path = components/WiFiManager
+	url = https://github.com/tzapu/WiFiManager.git
+[submodule "components/ezTime"]
+	path = components/ezTime
+	url = https://github.com/ropg/ezTime.git
+[submodule "components/ESP32-HUB75-MatrixPanel-I2S-DMA"]
+	path = components/ESP32-HUB75-MatrixPanel-I2S-DMA
+	url = https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA.git
+[submodule "components/Adafruit_BusIO"]
+	path = components/Adafruit_BusIO
+	url = https://github.com/adafruit/Adafruit_BusIO.git
+[submodule "components/Adafruit-GFX-Library"]
+	path = components/Adafruit-GFX-Library
+	url = https://github.com/adafruit/Adafruit-GFX-Library.git
+[submodule "components/arduino"]
+	path = components/arduino
+	url = https://github.com/espressif/arduino-esp32.git

@@ -1,0 +1,30 @@
+menu "Clockwise Configuration"
+
+  config HUB75_BLUE_GREEN_SWAP
+    bool "Swap blue and green colors"
+    help
+        Some 64x64 HUB75 displays have the green and blue pins reversed. Enable this option to swap these pins.
+
+  choice CLOCKFACE
+      prompt "Clockwise display"
+      default  CLOCKFACE_MARIO
+
+  config CLOCKFACE_MARIO
+    bool "Mario"
+
+  config CLOCKFACE_TIME_IN_WORDS
+    bool "Time in words"
+
+  config CLOCKFACE_WORLDMAP
+    bool "World map"
+
+  config CLOCKFACE_CASTLEVANIA
+    bool "Castlevania"
+
+  config CLOCKFACE_PACMAN
+    bool "Pacman"
+
+
+  endchoice # CLOCKFACE
+
+endmenu
