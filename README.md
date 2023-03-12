@@ -9,7 +9,7 @@ These displays are about the size of a wall clock and with the ESP32, besides co
 WiFi, Bluetooth, touch buttons and other sensors, which gives us basically a smart wall clock. 
 From there I started to develop a platform to create the _Clockfaces_, or skins that the clock can have. The possibilities are many and I hope that with help from contributors, we can grow the options even more.
 
-Currently there are three clockface options:
+Currently, the clockfaces available are:
 
 ## Mario Bros. Clock
 
