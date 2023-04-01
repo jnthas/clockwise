@@ -4,22 +4,18 @@
 // Clockface
 #include <Clockface.h>
 // Commons
-#include <WiFiConnect.h>
+#include <WiFiController.h>
 #include <CWDateTime.h>
 #include <CWPreferences.h>
 #include <CWWebServer.h>
-#include <IOManager.h>
+#include <StatusController.h>
 
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 
 Clockface *clockface;
 
-WiFiConnect wifi;
+WiFiController wifi;
 CWDateTime cwDateTime;
-IOManager io;
-
-ClockwiseWebServer webserver;
-
 
 void displaySetup(bool swapBlueGreen, uint8_t displayBright)
 {
@@ -51,14 +47,15 @@ void displaySetup(bool swapBlueGreen, uint8_t displayBright)
 void setup()
 {
   Serial.begin(115200);
-
   pinMode(2, OUTPUT);
 
-  webserver.begin();
+  StatusController::getInstance()->blink_led(5, 100);
 
+  wifi.begin();
   Serial.println(ClockwiseParams::getInstance()->swapBlueGreen);
   Serial.println(ClockwiseParams::getInstance()->use24hFormat);
   Serial.println(ClockwiseParams::getInstance()->displayBright);
+  Serial.println(ClockwiseParams::getInstance()->timeZone);
   Serial.println(ClockwiseParams::getInstance()->wifiSsid);
   Serial.println(ClockwiseParams::getInstance()->wifiPwd);
 
@@ -76,7 +73,12 @@ void setup()
 
 void loop()
 {
+  wifi.handleImprovWiFi();
 
-  webserver.handleHttpRequest();
+  if (WiFiController::isConnected())
+  {
+    ClockwiseWebServer::getInstance()->handleHttpRequest();
+  }
+
   // clockface->update();
 }

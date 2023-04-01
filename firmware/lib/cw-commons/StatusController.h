@@ -549,8 +549,14 @@ const uint16_t epd_bitmap_qrcode[] PROGMEM = {
 	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
 	0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff};
 
-struct IOManager
+struct StatusController
 {
+
+    static StatusController* getInstance() {
+        static StatusController base;
+        return &base;
+    }
+
 	void clockwiseLogo()
 	{
 		Locator::getDisplay()->drawRGBBitmap(1, 1, epd_bitmap_clockwise64, 63, 21);
@@ -588,7 +594,7 @@ struct IOManager
 		Locator::getDisplay()->print(buf);
 	}
 
-	static void blink_led(int d, int times)
+	void blink_led(int d, int times)
 	{
 		for (int j = 0; j < times; j++)
 		{
