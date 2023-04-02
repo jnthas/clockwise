@@ -34,7 +34,7 @@ struct WiFiController
     improvSerial.handleSerial();
   }
 
-  void begin()
+  bool begin()
   {
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
@@ -49,9 +49,11 @@ struct WiFiController
       if (improvSerial.tryConnectToWifi(ClockwiseParams::getInstance()->wifiSsid.c_str(), ClockwiseParams::getInstance()->wifiPwd.c_str()))
       {
         ClockwiseWebServer::getInstance()->startWebServer();
+        return true;
       }
     }
-  }
 
-  
+    StatusController::getInstance()->wifiConnectionFailed();
+    return false;
+  }
 };

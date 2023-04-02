@@ -92,7 +92,6 @@ struct ClockwiseWebServer
       getCurrentSettings(client);
     } else if (method == "POST" && path == "/set") {
       ClockwiseParams::getInstance()->load();
-
       //a baby seal has died due this ifs
       if (key == ClockwiseParams::getInstance()->PREF_DISPLAY_BRIGHT) {
         ClockwiseParams::getInstance()->displayBright = value.toInt();
@@ -130,5 +129,5 @@ struct ClockwiseWebServer
       client.println();
       client.println(response);
   }
-
+  
 };

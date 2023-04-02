@@ -8,12 +8,10 @@ class CWDateTime
 {
 private:
   Timezone myTZ;
+  bool use24hFormat = true;
 
 public:
-  void begin();
-  void setTimezone(const char *timeZone);
-  String getTimezone();
-  void update();
+  void begin(const char *timeZone, bool use24format);
   String getFormattedTime();
 
   char *getHour(const char *format);

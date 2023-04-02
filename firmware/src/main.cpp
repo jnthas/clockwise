@@ -51,24 +51,29 @@ void setup()
 
   StatusController::getInstance()->blink_led(5, 100);
 
+  ClockwiseParams::getInstance()->load();
+  
+  // Serial.println(ClockwiseParams::getInstance()->swapBlueGreen);
+  // Serial.println(ClockwiseParams::getInstance()->use24hFormat);
+  // Serial.println(ClockwiseParams::getInstance()->displayBright);
+  // Serial.println(ClockwiseParams::getInstance()->timeZone);
+  // Serial.println(ClockwiseParams::getInstance()->wifiSsid);
+  // Serial.println(ClockwiseParams::getInstance()->wifiPwd);
+
+  displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->displayBright);
+  clockface = new Clockface(dma_display);
+
+  StatusController::getInstance()->clockwiseLogo();
+  delay(1000);
+
+  StatusController::getInstance()->wifiConnecting();
   wifi.begin();
-  Serial.println(ClockwiseParams::getInstance()->swapBlueGreen);
-  Serial.println(ClockwiseParams::getInstance()->use24hFormat);
-  Serial.println(ClockwiseParams::getInstance()->displayBright);
-  Serial.println(ClockwiseParams::getInstance()->timeZone);
-  Serial.println(ClockwiseParams::getInstance()->wifiSsid);
-  Serial.println(ClockwiseParams::getInstance()->wifiPwd);
 
-  // displaySetup(params.swapBlueGreen, params.displayBright);
-  //  clockface = new Clockface(dma_display);
+  if (WiFiController::isConnected())      
+    StatusController::getInstance()->ntpConnecting();
 
-  // io.clockwiseLogo();
-  // io.wifiConnecting();
-  // wifi.connect();
-  // io.ntpConnecting();
-  // cwDateTime.begin();
-
-  // clockface->setup(&cwDateTime);
+  //cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), ClockwiseParams::getInstance()->use24hFormat);
+  //clockface->setup(&cwDateTime);
 }
 
 void loop()
@@ -80,5 +85,5 @@ void loop()
     ClockwiseWebServer::getInstance()->handleHttpRequest();
   }
 
-  // clockface->update();
+  //clockface->update();
 }

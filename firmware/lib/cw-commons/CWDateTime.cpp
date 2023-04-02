@@ -1,26 +1,10 @@
 #include "CWDateTime.h"
 
-void CWDateTime::begin()
+void CWDateTime::begin(const char *timeZone, bool use24format)
 {
-  myTZ.setCache(0);
-  waitForSync();
-}
-
-void CWDateTime::setTimezone(const char *timeZone)
-{
-  myTZ.setCache(0);
   myTZ.setLocation(timeZone);
+  this->use24hFormat = use24format;
   waitForSync();
-}
-
-String CWDateTime::getTimezone()
-{
-  return myTZ.getTimezoneName(0);
-}
-
-
-void CWDateTime::update()
-{
 }
 
 String CWDateTime::getFormattedTime()
@@ -31,7 +15,7 @@ String CWDateTime::getFormattedTime()
 char *CWDateTime::getHour(const char *format)
 {
   static char buffer[3] = {'\0'};
-  strncpy(buffer, myTZ.dateTime("H").c_str(), sizeof(buffer));
+  strncpy(buffer, myTZ.dateTime((use24hFormat ? "H" : "h")).c_str(), sizeof(buffer));
   return buffer;
 }
 
@@ -44,7 +28,7 @@ char *CWDateTime::getMinute(const char *format)
 
 int CWDateTime::getHour()
 {
-  return myTZ.dateTime("H").toInt();
+  return myTZ.dateTime((use24hFormat ? "H" : "h")).toInt();
 }
 
 int CWDateTime::getMinute()
