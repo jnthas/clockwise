@@ -1,5 +1,7 @@
+> ![News 90s GIF](static/images/news.gif)The [version 1.1.0 was released](https://github.com/jnthas/clockwise/releases/tag/v1.1.0) supporting Improv WiFi and a settings page to set up timezone, RGB/RBG pins, diplay bright and the 12/24 hours format.
+
 ## Flash self-service
-Here in this section you can upload the desired clockface to your device. Once installed it will start the access point `Clockwise-Wifi` with password `12345678`. A step-by-step how to flash the Clockwise can be seen [here](https://github.com/jnthas/clockwise/blob/main/README.md#how-to-change-the-clockface-web-flashing). This feature uses the [ESP Web Tools](https://esphome.github.io/esp-web-tools/) library.
+Here in this section you can upload the desired clockface to your device. A step-by-step how to flash the Clockwise can be seen [here](https://github.com/jnthas/clockwise/blob/main/README.md#how-to-change-the-clockface-web-flashing). This feature uses the [ESP Web Tools](https://esphome.github.io/esp-web-tools/) library.
 
 <fieldset>
   <legend>Clockface library</legend>
