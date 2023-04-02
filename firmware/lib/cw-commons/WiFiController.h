@@ -9,6 +9,8 @@ ImprovWiFi improvSerial(&Serial);
 
 struct WiFiController
 {
+  bool connectionSucessfulOnce;
+
   static void onImprovWiFiErrorCb(ImprovTypes::Error err)
   {
     ClockwiseWebServer::getInstance()->stopWebServer();
@@ -39,7 +41,7 @@ struct WiFiController
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
 
-    improvSerial.setDeviceInfo(ImprovTypes::ChipFamily::CF_ESP32, "CW-20230324", "1.1.0", "Clockwise");
+    improvSerial.setDeviceInfo(ImprovTypes::ChipFamily::CF_ESP32, "CW-20230402", "1.1.0", "Clockwise");
     improvSerial.onImprovError(onImprovWiFiErrorCb);
     improvSerial.onImprovConnected(onImprovWiFiConnectedCb);
 
@@ -48,6 +50,7 @@ struct WiFiController
     if (!ClockwiseParams::getInstance()->wifiSsid.isEmpty()) {
       if (improvSerial.tryConnectToWifi(ClockwiseParams::getInstance()->wifiSsid.c_str(), ClockwiseParams::getInstance()->wifiPwd.c_str()))
       {
+        connectionSucessfulOnce = true;
         ClockwiseWebServer::getInstance()->startWebServer();
         return true;
       }

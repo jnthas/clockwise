@@ -1,8 +1,5 @@
 #pragma once
 
-#define HTTP_GET_SIZE 3
-#define HTTP_POST_SIZE 4
-
 #include <WiFi.h>
 #include <CWPreferences.h>
 #include "StatusController.h"
@@ -47,8 +44,6 @@ struct ClockwiseWebServer
 
           if (c == '\n')
           {
-            //Serial.println(httpBuffer);
-
             uint8_t method_pos = httpBuffer.indexOf(' ');
             uint8_t path_pos = httpBuffer.indexOf(' ', method_pos + 1);
 
@@ -57,7 +52,7 @@ struct ClockwiseWebServer
             String key = "";
             String value = "";
 
-            if (method == "POST")
+            if (method == "POST" && path.indexOf('?') > 0)
             {
               key = path.substring(path.indexOf('?') + 1, path.indexOf('='));
               value = path.substring(path.indexOf('=') + 1, ' ');
@@ -77,12 +72,6 @@ struct ClockwiseWebServer
 
   void processRequest(WiFiClient client, String method, String path, String key, String value)
   {
-
-    // Serial.println(method);
-    // Serial.println(path);
-    // Serial.println(key);
-    // Serial.println(value);
-
     if (method == "GET" && path == "/") {
       client.println("HTTP/1.0 200 OK");
       client.println("Content-Type: text/html");
@@ -90,6 +79,10 @@ struct ClockwiseWebServer
       client.println(SETTINGS_PAGE);
     } else if (method == "GET" && path == "/get") {
       getCurrentSettings(client);
+    } else if (method == "POST" && path == "/restart") {
+      client.println("HTTP/1.0 204 No Content");
+      delay(1000);
+      ESP.restart();
     } else if (method == "POST" && path == "/set") {
       ClockwiseParams::getInstance()->load();
       //a baby seal has died due this ifs

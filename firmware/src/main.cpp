@@ -19,11 +19,7 @@ CWDateTime cwDateTime;
 
 void displaySetup(bool swapBlueGreen, uint8_t displayBright)
 {
-  HUB75_I2S_CFG mxconfig(
-      64, // module width
-      64, // module height
-      1   // Chain length
-  );
+  HUB75_I2S_CFG mxconfig(64, 64, 1);
 
   if (swapBlueGreen)
   {
@@ -52,13 +48,6 @@ void setup()
   StatusController::getInstance()->blink_led(5, 100);
 
   ClockwiseParams::getInstance()->load();
-  
-  // Serial.println(ClockwiseParams::getInstance()->swapBlueGreen);
-  // Serial.println(ClockwiseParams::getInstance()->use24hFormat);
-  // Serial.println(ClockwiseParams::getInstance()->displayBright);
-  // Serial.println(ClockwiseParams::getInstance()->timeZone);
-  // Serial.println(ClockwiseParams::getInstance()->wifiSsid);
-  // Serial.println(ClockwiseParams::getInstance()->wifiPwd);
 
   displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->displayBright);
   clockface = new Clockface(dma_display);
@@ -67,13 +56,12 @@ void setup()
   delay(1000);
 
   StatusController::getInstance()->wifiConnecting();
-  wifi.begin();
-
-  if (WiFiController::isConnected())      
+  if (wifi.begin())
+  {
     StatusController::getInstance()->ntpConnecting();
-
-  //cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), ClockwiseParams::getInstance()->use24hFormat);
-  //clockface->setup(&cwDateTime);
+    cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), ClockwiseParams::getInstance()->use24hFormat);
+    clockface->setup(&cwDateTime);
+  }
 }
 
 void loop()
@@ -85,5 +73,8 @@ void loop()
     ClockwiseWebServer::getInstance()->handleHttpRequest();
   }
 
-  //clockface->update();
+  if (wifi.connectionSucessfulOnce)
+  {
+    clockface->update();
+  }
 }
