@@ -1,12 +1,10 @@
 name: Clockwise CI/CD
 
 on:
-  workflow_dispatch:
-    tags:        
-      - v*
   push:
-    tags:        
-      - v*
+    branches:
+      - 'releases/**'
+
 jobs:    
   build:
     runs-on: ubuntu-latest
