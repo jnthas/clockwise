@@ -1,3 +1,6 @@
+> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) The [version 1.1.0 was released](https://github.com/jnthas/clockwise/releases/tag/v1.1.0) supporting Improv WiFi and a settings page to set up timezone, RGB/RBG pins, display bright and the 12/24 hours format.
+
+
 [![Clockwise CI/CD](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml/badge.svg)](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml)
 
 ![Logo](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/clockwise_logo.png "Logo")
@@ -67,9 +70,22 @@ In case you want something ready to use, I recommend Brian Lough's [ESP32 Trinit
 4) A dialog will appear, select the correct USB port and click in Connect ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step1.png))
 5) Select the INSTALL and INSTALL again ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step2.png))
 6) Wait while the flash tool uploads the firmware and finish ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step3.png))
+7) From the version 1.1.0, click in NEXT on step 6, Improv will start looking for available WiFi networks to connect
+8) Select your local network (must be a 2.4GHz) and enter with your password ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step4.png))
+9) If connection was successful, a message with button VISIT DEVICE will pop up and you can visit the Clockwise setting page  ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step5.png))
 
-### Configuring WiFi
-The first time you run it, you need to configure the WiFi, for that connect to the `Clockwise-Wifi` access point using the password `12345678` via your smartphone or laptop, click “Configure WiFi” and select your AP, put in your password and your timezone and save it. The timezone must be one of the listed here e.g. America/New_York, America/Sao_Paulo, Europe/Paris, Asia/Dubai, etc. so that the clock can connect to an NTP server to get the correct time. It is important to use a 2.4GHz WiFi, it will not work on 5GHz.
+
+### Configuring only WiFi
+After flashing your clockface, you will have a step to configure the WiFi. But in case you change your access point or password, you can set up just the WiFi connecting the Clockwise on USB, opening https://clockwise.page and clicking in Flash button, a window will pop up with a few options where you can re-configure your WiFi network ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step6.png)) as well as open the Settings page to change preferences using button VISIT DEVICE. Remember: it is important to use a 2.4GHz WiFi, it will not work on 5GHz.
+
+
+### Settings page
+The settings page have the following options
+- *Timezone*: The timezone must be in the format America/New_York, America/Sao_Paulo, Europe/Paris, Asia/Dubai, etc. so that the clock can connect to an NTP server to get the correct time.
+- *Swap Blue/Green pins*: Some displays have the RGB order different, in this case RBG. You can use this options to change the order.
+- *Display Bright*: Change the display bright.
+- *Use 24h format*: You can choose between 20:00 or 8:00PM in your device.
+
 
 ## How to change the clockface (PlatformIO)
 
