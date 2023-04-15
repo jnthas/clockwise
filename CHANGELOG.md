@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid use extensive of String in CWWebServer.cpp
 - Add a flag to restart the device instead of just restart it
 
+### Fixed
+
+- Clockface 0x05 (Pacman): fixed weekday was overlapping the boundaries
+
 
 ## [1.1.0] - 2023-04-02
 
