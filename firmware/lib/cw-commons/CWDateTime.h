@@ -25,5 +25,6 @@ public:
   int getMonth();
   int getWeekday();
 
+  bool isAM();
 
 };
