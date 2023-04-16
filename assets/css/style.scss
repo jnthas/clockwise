@@ -3,6 +3,65 @@
 
 @import "{{ site.theme }}";
 
+
+fieldset {
+  border: 3px solid #6D9B7C;
+  border-radius: 5px;
+  padding: 20px;
+  margin-top: 40px;
+  background-color: #eee;
+}
+
+fieldset legend {
+  background: #6D9B7C;
+  color: #fff;
+  padding: 5px;
+  font-size: 20px;
+  font-weight: 700;
+  border-radius: 5px;
+  box-shadow: 0 0 0 5px #6D9B7C;
+  margin-left: 20px;
+  text-align:left;
+  
+}
+
+
+.container-radio {
+  max-width: 70%;
+  width: 100%; /* Can be in percentage also. */
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+}
+
+
+button {
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  background-color: #6D9B7C;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-bottom: 4px solid #3B4A3F;
+  font-weight: 700;
+  color: white;
+  line-height: 26px; 
+}
+
+
+button:hover {
+  box-shadow: 4px 4px 0 #3B4A3F;
+  transform: translate(-2px,-2px);
+}
+
+button:active {
+  box-shadow: 0px 0px 0 #3B4A3F;
+  transform: translate(2px,2px);
+}
+
+
 [type=radio] { 
     position: absolute;
     opacity: 0;
@@ -18,14 +77,16 @@
   
   /* CHECKED STYLES */
   [type=radio]:checked + img {
-    outline: 2px solid #159957;
-  }
-
-  fieldset {
-    padding: 20px;
+    outline: 3px solid #3B4A3F;
   }
 
   #esp-web-tool-widget {
-    text-align: right;
+    text-align: center;
     margin: 20px;
   }
+
+
+
+
+
+  

@@ -3,8 +3,11 @@
 ## Flash self-service
 Here in this section you can upload the desired clockface to your device. A step-by-step how to flash the Clockwise can be seen [here](https://github.com/jnthas/clockwise/blob/main/README.md#how-to-change-the-clockface-web-flashing). This feature uses the [ESP Web Tools](https://esphome.github.io/esp-web-tools/) library.
 
+
 <fieldset>
-  <legend>Clockface library</legend>
+  <legend>📚 Clockface Library</legend>
+
+  <div class="container-radio">
   <label>
     <input type="radio" name="clockface" value="cw-cf-0x01" onclick="handleClick(this);" checked>
     <img id="cw-cf-0x01" src="https://github.com/jnthas/cw-cf-0x01/raw/main/cf_0x01_thumb.jpg" width="128" alt="Mario Bros.">
@@ -29,8 +32,10 @@ Here in this section you can upload the desired clockface to your device. A step
     <input type="radio" name="clockface" value="cw-cf-0x06" onclick="handleClick(this);">
     <img id="cw-cf-0x06" src="https://github.com/jnthas/cw-cf-0x06/raw/main/cf_0x06_thumb.jpg" width="128" alt="Pokedex">
   </label>
+  </div>
 
 </fieldset>
+
 
 <!-- Flash button -->
 <div id="esp-web-tool-widget">
@@ -53,7 +58,7 @@ Clockwise was an idea I had while working with 64x64 LED matrices. These display
 <script>
   function handleClick(radio) {
     document.getElementById("esp-web").setAttribute("manifest", "static/firmware/" + radio.value + "/manifest.json"); 
-    document.getElementById("flash-button").textContent = "Flash '" + document.getElementById(radio.value).alt + "'"; 
+    document.getElementById("flash-button").textContent = "📤 UPLOAD '" + document.getElementById(radio.value).alt + "'"; 
   }
 
   handleClick(document.querySelector('input[name="clockface"]:checked'));
