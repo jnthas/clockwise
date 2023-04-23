@@ -61,6 +61,13 @@ button:active {
   transform: translate(2px,2px);
 }
 
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
 
 [type=radio] { 
     position: absolute;
