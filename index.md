@@ -52,9 +52,9 @@ You will need only three components to make a Clockwise device, they are easily 
 
 ## About
 
-Clockwise was an idea I had while working with 64x64 LED matrices. These displays are about the size of a wall clock and with the ESP32, besides controlling the content presented on the display we also gain the functionality of WiFi, Bluetooth, touch buttons and other sensors, which gives us basically a smart wall clock.
+Clockwise was an idea I had while working with 64x64 LED matrices. These displays are about the size of a wall clock and with the ESP32, besides controlling the content presented on the display we also gain the functionality of WiFi, Bluetooth, touch buttons and other sensors, which gives us basically a smart wall clock. I wrote a post for [instructables](https://www.instructables.com/Mario-Bros-Clock/).
 
-<img class="center" alt="Clockwise on a shelf" src="static/images/clockwise-shelf.jpg"  width="60%">
+<img class="center" alt="Clockwise on a shelf" src="static/images/clockwise-shelf.jpg"/>
 
 
 <script>
