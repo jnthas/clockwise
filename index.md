@@ -5,7 +5,7 @@ Here in this section you can upload the desired clockface to your device. A step
 
 
 <fieldset>
-  <legend>📚 Clockface Library</legend>
+  <legend>Clockface:</legend>
 
   <div class="container-radio">
   <label>
@@ -40,7 +40,7 @@ Here in this section you can upload the desired clockface to your device. A step
 <!-- Flash button -->
 <div id="esp-web-tool-widget">
   <esp-web-install-button id="esp-web" manifest="">
-    <button id="flash-button" slot="activate"></button>
+    <button id="flash-button" slot="activate">🔌 CONNECT!</button>
     <span slot="unsupported">Ah snap, your browser does not support WebSerial API! If you are using a mobile browser, this is expected. Please, move to the desktop version.</span>
     <span slot="not-allowed">Ah snap, you are not allowed to use this on HTTP!</span>
   </esp-web-install-button>
@@ -60,7 +60,7 @@ Clockwise was an idea I had while working with 64x64 LED matrices. These display
 <script>
   function handleClick(radio) {
     document.getElementById("esp-web").setAttribute("manifest", "static/firmware/" + radio.value + "/manifest.json"); 
-    document.getElementById("flash-button").textContent = "📤 UPLOAD '" + document.getElementById(radio.value).alt + "'"; 
+    document.getElementsByTagName("legend")[0].textContent = "Clockface: '" + document.getElementById(radio.value).alt + "'";
   }
 
   handleClick(document.querySelector('input[name="clockface"]:checked'));
