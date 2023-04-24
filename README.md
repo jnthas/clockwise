@@ -18,44 +18,27 @@ Start here https://github.com/jnthas/cw-cf-0x00
 
 ## Available clockfaces
 
-## Mario Bros. Clock
+Mario Bros. Clock | Time in Words
+:----------------:|:------------:
+![Mario Bros. Clockface](https://github.com/jnthas/cw-cf-0x01/blob/main/cf_0x01_thumb.jpg "Mario Bros. Clockface") | ![Time in Words Clockface](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg "Time in Words Clockface") 
+https://github.com/jnthas/cw-cf-0x01 | https://github.com/jnthas/cw-cf-0x02
 
-![Mario Bros. Clockface](https://github.com/jnthas/cw-cf-0x01/blob/main/cf_0x01_thumb.jpg "Mario Bros. Clockface")
+World Map Clock | Castlevania Clock Tower
+:--------------:|:----------------------:
+![World Map Clockface](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg "World Map Clockface") | ![Castlevania Clockface](https://github.com/jnthas/cw-cf-0x04/blob/main/cf_0x04_thumb.jpg "Castlevania Clockface") 
+https://github.com/jnthas/cw-cf-0x03 | https://github.com/jnthas/cw-cf-0x04
 
-https://github.com/jnthas/cw-cf-0x01
-
-
-## Time in Words
-
-![Time in Words Clockface](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg "Time in Words Clockface")
-
-https://github.com/jnthas/cw-cf-0x02
-
-## World Map Clock
-
-![World Map Clockface](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg "World Map Clockface")
-
-https://github.com/jnthas/cw-cf-0x03
-
-## Castlevania Clock Tower
-
-![Castlevania Clockface](https://github.com/jnthas/cw-cf-0x04/blob/main/cf_0x04_thumb.jpg "Castlevania Clockface")
-
-https://github.com/jnthas/cw-cf-0x04
-
-## Pacman
-
-![Pacman Clockface](https://github.com/jnthas/cw-cf-0x05/blob/main/cf_0x05_thumb.jpg "Pacman Clockface")
-
-https://github.com/jnthas/cw-cf-0x05
-
+Pacman | Pokedex
+:-----:|:------:
+![Pacman Clockface](https://github.com/jnthas/cw-cf-0x05/blob/main/cf_0x05_thumb.jpg "Pacman Clockface") | ![Pokedex Clockface](https://github.com/jnthas/cw-cf-0x06/blob/main/cf_0x06_thumb.jpg "Pokedex Clockface") 
+https://github.com/jnthas/cw-cf-0x05 | https://github.com/jnthas/cw-cf-0x06
 
 ## Driving the led matrix
 
 The three main hardware components of Clockwise are: 
 - HUB75/HUB75E compatible LED matrix 64x64
 - an ESP32; and 
-- a power supply of 3A+
+- a power supply of 3A or more
 
 With these components in hand, just follow the wiring instructions according to the library used, by default Clockwise uses the [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA#2-wiring-esp32-with-the-led-matrix-panel) but any Adafruit GFX compatible library should work. The default wiring connection is showed below.
 
