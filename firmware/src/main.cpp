@@ -10,6 +10,26 @@
 #include <CWWebServer.h>
 #include <StatusController.h>
 
+#define R1_PIN  2
+#define G1_PIN  15
+#define B1_PIN  4
+#define R2_PIN  16
+#define G2_PIN  27
+#define B2_PIN  17
+
+#define A_PIN   5
+#define B_PIN   18
+#define C_PIN   19
+#define D_PIN   21 // pin for devkitc, for PCIO please go IO33
+#define E_PIN   12 // IMPORTANT: Change to a valid pin if using a 64x64px panel.
+            
+#define LAT_PIN 26
+#define OE_PIN  25
+#define CLK_PIN 22 // pin for devkitc, for PCIO please go IO32
+
+HUB75_I2S_CFG::i2s_pins _pins={R1_PIN, G1_PIN, B1_PIN, R2_PIN, G2_PIN, B2_PIN, A_PIN, B_PIN, C_PIN, D_PIN, E_PIN, LAT_PIN, OE_PIN, CLK_PIN};
+
+
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 
 Clockface *clockface;
@@ -19,7 +39,13 @@ CWDateTime cwDateTime;
 
 void displaySetup(bool swapBlueGreen, uint8_t displayBright)
 {
-  HUB75_I2S_CFG mxconfig(64, 64, 1);
+
+HUB75_I2S_CFG mxconfig(
+	64, // Module width
+	64, // Module height
+	1, // chain length
+	_pins // pin mapping
+);
 
   if (swapBlueGreen)
   {
@@ -30,7 +56,7 @@ void displaySetup(bool swapBlueGreen, uint8_t displayBright)
     mxconfig.gpio.g2 = 13;
   }
 
-  mxconfig.gpio.e = 18;
+  mxconfig.gpio.e = 12;
   mxconfig.clkphase = false;
 
   // Display Setup

@@ -48,7 +48,7 @@ struct ClockwiseParams
         swapBlueGreen = preferences.getBool(PREF_SWAP_BLUE_GREEN, false);
         use24hFormat = preferences.getBool(PREF_USE_24H_FORMAT, true);
         displayBright = preferences.getUInt(PREF_DISPLAY_BRIGHT, 32);
-        timeZone = preferences.getString(PREF_TIME_ZONE, "America/Sao_Paulo");
+        timeZone = preferences.getString(PREF_TIME_ZONE, "America/Denver");
         wifiSsid = preferences.getString(PREF_WIFI_SSID, "");
         wifiPwd = preferences.getString(PREF_WIFI_PASSWORD, "");
     }
