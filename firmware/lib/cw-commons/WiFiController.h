@@ -67,11 +67,15 @@ struct WiFiController
     }
 
     StatusController::getInstance()->wifiConnectionFailed();
-    WiFiManager wifiManager;
-    wifiManager.startConfigPortal("Clockwise");
-    if (WiFi.status() == WL_CONNECTED)
+
+    if (WiFi.status() != WL_CONNECTED)
     {
-      saveWiFiCredentials();
+      WiFiManager wifiManager;
+      wifiManager.startConfigPortal("Clockwise");
+      if (WiFi.status() == WL_CONNECTED)
+      {
+        saveWiFiCredentials();
+      }
     }
     return false;
   }
