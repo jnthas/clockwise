@@ -15,10 +15,10 @@ struct WiFiController
   static void onImprovWiFiErrorCb(ImprovTypes::Error err)
   {
     ClockwiseWebServer::getInstance()->stopWebServer();
-    StatusController::getInstance()->blink_led(2000, 3); 
+    StatusController::getInstance()->blink_led(2000, 3);
   }
 
-  static void onImprovWiFiConnectedCb(const char* ssid, const char* password)
+  static void onImprovWiFiConnectedCb(const char *ssid, const char *password)
   {
     ClockwiseParams::getInstance()->load();
     ClockwiseParams::getInstance()->wifiSsid = String(ssid);
@@ -28,7 +28,8 @@ struct WiFiController
     ClockwiseWebServer::getInstance()->startWebServer();
   }
 
-  static bool isConnected() {
+  static bool isConnected()
+  {
     return improvSerial.isConnected();
   }
 
@@ -37,7 +38,7 @@ struct WiFiController
     improvSerial.handleSerial();
   }
 
-    void saveWiFiCredentials()
+  void saveWiFiCredentials()
   {
     ClockwiseParams::getInstance()->wifiSsid = String(WiFi.SSID());
     ClockwiseParams::getInstance()->wifiPwd = String(WiFi.psk());
@@ -55,7 +56,8 @@ struct WiFiController
 
     ClockwiseParams::getInstance()->load();
 
-    if (!ClockwiseParams::getInstance()->wifiSsid.isEmpty()) {
+    if (!ClockwiseParams::getInstance()->wifiSsid.isEmpty())
+    {
       if (improvSerial.tryConnectToWifi(ClockwiseParams::getInstance()->wifiSsid.c_str(), ClockwiseParams::getInstance()->wifiPwd.c_str()))
       {
         connectionSucessfulOnce = true;
@@ -63,17 +65,14 @@ struct WiFiController
         return true;
       }
     }
-     else
-    {
-      WiFiManager wifiManager;
-      wifiManager.startConfigPortal("Clockwise");
-      if (WiFi.status() == WL_CONNECTED)
-      {
-        saveWiFiCredentials();
-      }
-    }
 
     StatusController::getInstance()->wifiConnectionFailed();
+    WiFiManager wifiManager;
+    wifiManager.startConfigPortal("Clockwise");
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      saveWiFiCredentials();
+    }
     return false;
   }
 };
