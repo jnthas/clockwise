@@ -4,6 +4,7 @@
 #include <WiFi.h>
 #include "CWWebServer.h"
 #include "StatusController.h"
+#include <WiFiManager.h>
 
 ImprovWiFi improvSerial(&Serial);
 
@@ -36,6 +37,13 @@ struct WiFiController
     improvSerial.handleSerial();
   }
 
+    void saveWiFiCredentials()
+  {
+    ClockwiseParams::getInstance()->wifiSsid = String(WiFi.SSID());
+    ClockwiseParams::getInstance()->wifiPwd = String(WiFi.psk());
+    ClockwiseParams::getInstance()->save();
+  }
+
   bool begin()
   {
     WiFi.mode(WIFI_STA);
@@ -53,6 +61,15 @@ struct WiFiController
         connectionSucessfulOnce = true;
         ClockwiseWebServer::getInstance()->startWebServer();
         return true;
+      }
+    }
+     else
+    {
+      WiFiManager wifiManager;
+      wifiManager.startConfigPortal("Clockwise");
+      if (WiFi.status() == WL_CONNECTED)
+      {
+        saveWiFiCredentials();
       }
     }
 
