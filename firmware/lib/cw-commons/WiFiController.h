@@ -2,6 +2,7 @@
 
 #include "ImprovWiFiLibrary.h"
 #include <WiFi.h>
+#include <ESPmDNS.h>
 #include "CWWebServer.h"
 #include "StatusController.h"
 #include <WiFiManager.h>
@@ -26,6 +27,11 @@ struct WiFiController
     ClockwiseParams::getInstance()->save();
 
     ClockwiseWebServer::getInstance()->startWebServer();
+
+    if (MDNS.begin("clockwise"))
+    {
+      MDNS.addService("http", "tcp", 80);
+    }
   }
 
   static bool isConnected()
@@ -38,11 +44,19 @@ struct WiFiController
     improvSerial.handleSerial();
   }
 
-  void saveWiFiCredentials()
+  bool alternativeSetupMethod()
   {
-    ClockwiseParams::getInstance()->wifiSsid = String(WiFi.SSID());
-    ClockwiseParams::getInstance()->wifiPwd = String(WiFi.psk());
-    ClockwiseParams::getInstance()->save();
+    WiFiManager wifiManager;
+    bool success = wifiManager.startConfigPortal("Clockwise-Wifi");
+
+    if (success)
+    {
+      Serial.println("Connected via WiFiManager");
+      onImprovWiFiConnectedCb(WiFi.SSID().c_str(), WiFi.psk().c_str());
+      connectionSucessfulOnce = success;
+    }
+
+    return success;
   }
 
   bool begin()
@@ -65,18 +79,12 @@ struct WiFiController
         return true;
       }
     }
+    
+    StatusController::getInstance()->wifiConnectionFailed("Setup WiFi via AP");
 
-    StatusController::getInstance()->wifiConnectionFailed();
+    alternativeSetupMethod();
 
-    if (WiFi.status() != WL_CONNECTED)
-    {
-      WiFiManager wifiManager;
-      wifiManager.startConfigPortal("Clockwise");
-      if (WiFi.status() == WL_CONNECTED)
-      {
-        saveWiFiCredentials();
-      }
-    }
+    StatusController::getInstance()->wifiConnectionFailed("WiFi Failed");
     return false;
   }
 };

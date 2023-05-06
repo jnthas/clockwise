@@ -568,12 +568,12 @@ struct StatusController
 		Locator::getDisplay()->drawRGBBitmap(16, 24, epd_bitmap_wifi, 32, 32);
 		printCenter("Checking WiFi", 61);
 	}
-
-	void wifiConnectionFailed()
+	
+	void wifiConnectionFailed(const char *msg)
 	{
 		Locator::getDisplay()->fillRect(0, 24, 64, 52, 0);
 		Locator::getDisplay()->drawRGBBitmap(16, 24, epd_bitmap_wifi_failed, 32, 32);
-		printCenter("WiFi failed", 61);
+		printCenter(msg, 61);
 	}
 
 	void ntpConnecting()
