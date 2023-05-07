@@ -46,3 +46,6 @@
 [submodule "firmware/clockfaces/cw-cf-0x06"]
 	path = firmware/clockfaces/cw-cf-0x06
 	url = https://github.com/jnthas/cw-cf-0x06.git
+[submodule "components/WiFiManager"]
+	path = components/WiFiManager
+	url = https://github.com/tzapu/WiFiManager
