@@ -42,10 +42,11 @@
 	path = components/Improv-WiFi-Library
 	url = https://github.com/jnthas/Improv-WiFi-Library.git
 	shallow = true
-
 [submodule "firmware/clockfaces/cw-cf-0x06"]
 	path = firmware/clockfaces/cw-cf-0x06
 	url = https://github.com/jnthas/cw-cf-0x06.git
+	shallow = true
 [submodule "components/WiFiManager"]
 	path = components/WiFiManager
 	url = https://github.com/tzapu/WiFiManager
+	shallow = true
