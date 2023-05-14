@@ -10,12 +10,17 @@
 #include <CWWebServer.h>
 #include <StatusController.h>
 
+#define PIN_LDR_BRIGHT 35
+
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 
 Clockface *clockface;
 
 WiFiController wifi;
 CWDateTime cwDateTime;
+
+bool autoBrightEnabled;
+long autoBrightMillis = 0;
 
 void displaySetup(bool swapBlueGreen, uint8_t displayBright)
 {
@@ -40,10 +45,36 @@ void displaySetup(bool swapBlueGreen, uint8_t displayBright)
   dma_display->clearScreen();
 }
 
+void automaticBrightControl()
+{
+  if (autoBrightEnabled) {
+    if (millis() - autoBrightMillis > 3000)
+    {
+      int16_t currentValue = analogRead(PIN_LDR_BRIGHT);
+
+      const uint8_t minBright = 4;
+      uint8_t maxBright = ClockwiseParams::getInstance()->displayBright;
+
+      uint16_t ldrMin = ClockwiseParams::getInstance()->autoBrightMin;
+      uint16_t ldrMax = ClockwiseParams::getInstance()->autoBrightMax;
+
+      uint8_t mapLDR = map(currentValue, ldrMin, ldrMax, 1, 5);  //5 slots
+      uint8_t mapBright = map(mapLDR, 1, 5, minBright, maxBright);
+
+      //Serial.printf("LDR: %d, Bright: %d\n", currentValue, mapBright);
+
+      dma_display->setBrightness8(mapBright);
+
+      autoBrightMillis = millis();
+    }
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
-  pinMode(2, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(PIN_LDR_BRIGHT, INPUT);
 
   StatusController::getInstance()->blink_led(5, 100);
 
@@ -51,6 +82,8 @@ void setup()
 
   displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->displayBright);
   clockface = new Clockface(dma_display);
+
+  autoBrightEnabled = (ClockwiseParams::getInstance()->autoBrightMax > 0);
 
   StatusController::getInstance()->clockwiseLogo();
   delay(1000);
@@ -68,7 +101,7 @@ void loop()
 {
   wifi.handleImprovWiFi();
 
-  if (WiFiController::isConnected())
+  if (wifi.isConnected())
   {
     ClockwiseWebServer::getInstance()->handleHttpRequest();
   }
@@ -77,4 +110,6 @@ void loop()
   {
     clockface->update();
   }
+
+  automaticBrightControl();
 }

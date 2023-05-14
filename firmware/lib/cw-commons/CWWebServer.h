@@ -10,6 +10,7 @@ WiFiServer server(80);
 struct ClockwiseWebServer
 {
   String httpBuffer;
+  bool force_restart;
  
   static ClockwiseWebServer *getInstance()
   {
@@ -30,6 +31,10 @@ struct ClockwiseWebServer
 
   void handleHttpRequest()
   {
+    if (force_restart)
+      StatusController::getInstance()->forceRestart();
+
+
     WiFiClient client = server.available();
     if (client)
     {
@@ -81,13 +86,15 @@ struct ClockwiseWebServer
       getCurrentSettings(client);
     } else if (method == "POST" && path == "/restart") {
       client.println("HTTP/1.0 204 No Content");
-      delay(1000);
-      ESP.restart();
+      force_restart = true;
     } else if (method == "POST" && path == "/set") {
       ClockwiseParams::getInstance()->load();
       //a baby seal has died due this ifs
       if (key == ClockwiseParams::getInstance()->PREF_DISPLAY_BRIGHT) {
         ClockwiseParams::getInstance()->displayBright = value.toInt();
+      } else if (key == "autoBright") {   //autoBright=0010,0800
+        ClockwiseParams::getInstance()->autoBrightMin = value.substring(0,4).toInt();
+        ClockwiseParams::getInstance()->autoBrightMax = value.substring(5,9).toInt();
       } else if (key == ClockwiseParams::getInstance()->PREF_SWAP_BLUE_GREEN) {
         ClockwiseParams::getInstance()->swapBlueGreen = (value == "1");
       } else if (key == ClockwiseParams::getInstance()->PREF_USE_24H_FORMAT) {
@@ -105,9 +112,13 @@ struct ClockwiseWebServer
     ClockwiseParams::getInstance()->load();
 
     char response[256];
-    snprintf(response, sizeof(response), "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":\"%s\",\"%s\":\"%s\"}", \
+    snprintf(response, sizeof(response), "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":\"%s\",\"%s\":\"%s\"}", \
       ClockwiseParams::getInstance()->PREF_DISPLAY_BRIGHT,
       ClockwiseParams::getInstance()->displayBright,
+      ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MIN,
+      ClockwiseParams::getInstance()->autoBrightMin,
+      ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MAX,
+      ClockwiseParams::getInstance()->autoBrightMax,
       ClockwiseParams::getInstance()->PREF_SWAP_BLUE_GREEN,
       ClockwiseParams::getInstance()->swapBlueGreen,
       ClockwiseParams::getInstance()->PREF_USE_24H_FORMAT,

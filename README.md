@@ -73,6 +73,14 @@ The settings page have the following options
 - *Swap Blue/Green pins*: Some displays have the RGB order different, in this case RBG. You can use this options to change the order.
 - *Display Bright*: Change the display bright.
 - *Use 24h format*: You can choose between 20:00 or 8:00PM in your device.
+- *Automatic Bright*: Connect a LDR on pin 35 of your ESP32 and the display bright can be controlled automatically. The two fields in the settings page are related to the values read by the LDR. Each environment have different lightning levels and these values are used to set the correct bright. I'm using the `map` function to reach the correct bright:
+  ```C
+    // SETTINGS_MIN and SETTINGS_MAX are the values defined in settings page for automatic bright
+    // MIN_BRIGHT is a constant in the code, it's the minimal bright value without turn the display off
+    // DISPLAY_BRIGHT it's the bright defined in settings page
+    uint8_t mapLDR = map(currentLDRValue, SETTINGS_MIN, SETTINGS_MAX, 1, 5);  //map in 5 slots
+    uint8_t bright = map(mapLDR, 1, 5, MIN_BRIGHT, DISPLAY_BRIGHT);
+  ```
 
 
 ## How to change the clockface (PlatformIO)

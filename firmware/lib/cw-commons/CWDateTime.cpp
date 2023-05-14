@@ -64,4 +64,9 @@ bool CWDateTime::isAM()
   return myTZ.isAM();
 }
 
+bool CWDateTime::is24hFormat() 
+{
+  return this->use24hFormat;
+}
+
 

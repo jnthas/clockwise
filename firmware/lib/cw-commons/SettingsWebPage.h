@@ -82,6 +82,15 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           icon: "fa-globe",
           save: "updatePreference('timeZone', tz.value)",
           property: "timeZone"
+        },
+        {
+          title: "Automatic Bright",
+          description: "Inform the values read by the LDR when the room is dark (min value) and bright (max value). Range 0 - 4095",
+          formInput: "<input id='autoBrightMin' class='w3-input w3-light-grey w3-cell w3-margin-right' name='autoBrightMin' style='width:45%;' type='number' min='0' max='4095' placeholder='Min value' value='" + settings.autoBrightMin + "''>" + 
+                     "<input id='autoBrightMax' class='w3-input w3-light-grey w3-cell' name='autoBrightMax' style='width:45%;' type='number' min='0' max='4095' placeholder='Max value' value='" + settings.autoBrightMax + "''>",
+          icon: "fa-sun-o",
+          save: "updatePreference('autoBright', autoBrightMin.value.padStart(4, '0') + ',' + autoBrightMax.value.padStart(4, '0'))",
+          property: "autoBright"
         }
       ];
 
@@ -140,7 +149,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     }
 
     //Local
-    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "wifiSsid": "test" });
+    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800 });
 
     //Embedded
     begin();

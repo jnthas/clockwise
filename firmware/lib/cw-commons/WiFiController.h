@@ -11,6 +11,7 @@ ImprovWiFi improvSerial(&Serial);
 
 struct WiFiController
 {
+  long elapsedTimeOffline = 0;
   bool connectionSucessfulOnce;
 
   static void onImprovWiFiErrorCb(ImprovTypes::Error err)
@@ -34,9 +35,20 @@ struct WiFiController
     }
   }
 
-  static bool isConnected()
+  bool isConnected()
   {
-    return improvSerial.isConnected();
+    if (improvSerial.isConnected()) {
+      elapsedTimeOffline = 0;
+      return true;
+    } else {
+      if (elapsedTimeOffline == 0 && !connectionSucessfulOnce)
+        elapsedTimeOffline = millis();
+      
+      if ((millis() - elapsedTimeOffline) > 1000 * 60 * 5)  // restart if clockface is not showed and is 5min offline 
+        StatusController::getInstance()->forceRestart();
+
+      return false;
+    }
   }
 
   static void handleImprovWiFi()
@@ -47,12 +59,14 @@ struct WiFiController
   bool alternativeSetupMethod()
   {
     WiFiManager wifiManager;
+    wifiManager.setConfigPortalTimeout(300); //Wait 5min to configure wifi via AP
+
     bool success = wifiManager.startConfigPortal("Clockwise-Wifi");
 
     if (success)
     {
-      Serial.println("Connected via WiFiManager");
       onImprovWiFiConnectedCb(WiFi.SSID().c_str(), WiFi.psk().c_str());
+      Serial.printf("[WiFi] Connected via WiFiManager to %s, IP address %s\n", WiFi.SSID(), WiFi.localIP());
       connectionSucessfulOnce = success;
     }
 
@@ -64,7 +78,7 @@ struct WiFiController
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
 
-    improvSerial.setDeviceInfo(ImprovTypes::ChipFamily::CF_ESP32, "CW-20230402", "1.1.0", "Clockwise");
+    improvSerial.setDeviceInfo(ImprovTypes::ChipFamily::CF_ESP32, CW_FW_NAME, CW_FW_VERSION, "Clockwise");
     improvSerial.onImprovError(onImprovWiFiErrorCb);
     improvSerial.onImprovConnected(onImprovWiFiConnectedCb);
 
@@ -76,6 +90,7 @@ struct WiFiController
       {
         connectionSucessfulOnce = true;
         ClockwiseWebServer::getInstance()->startWebServer();
+        Serial.printf("[WiFi] Connected to %s, IP address %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
         return true;
       }
     }

@@ -552,10 +552,11 @@ const uint16_t epd_bitmap_qrcode[] PROGMEM = {
 struct StatusController
 {
 
-    static StatusController* getInstance() {
-        static StatusController base;
-        return &base;
-    }
+	static StatusController *getInstance()
+	{
+		static StatusController base;
+		return &base;
+	}
 
 	void clockwiseLogo()
 	{
@@ -568,7 +569,7 @@ struct StatusController
 		Locator::getDisplay()->drawRGBBitmap(16, 24, epd_bitmap_wifi, 32, 32);
 		printCenter("Checking WiFi", 61);
 	}
-	
+
 	void wifiConnectionFailed(const char *msg)
 	{
 		Locator::getDisplay()->fillRect(0, 24, 64, 52, 0);
@@ -603,5 +604,11 @@ struct StatusController
 			digitalWrite(LED_BUILTIN, LOW);
 			delay(d);
 		}
+	}
+
+	void forceRestart()
+	{
+		delay(1000);
+		ESP.restart();
 	}
 };
