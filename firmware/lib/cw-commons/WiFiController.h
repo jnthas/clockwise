@@ -93,11 +93,10 @@ struct WiFiController
         Serial.printf("[WiFi] Connected to %s, IP address %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
         return true;
       }
-    }
-    
-    StatusController::getInstance()->wifiConnectionFailed("Setup WiFi via AP");
 
-    alternativeSetupMethod();
+      StatusController::getInstance()->wifiConnectionFailed("Setup WiFi via AP");
+      alternativeSetupMethod();
+    }
 
     StatusController::getInstance()->wifiConnectionFailed("WiFi Failed");
     return false;
