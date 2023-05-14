@@ -7,21 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.1] - 2023-??-??
-
-### Added
-
-- Parameter to enable/disable LDR
-- Read data from LDR and change the display bright according to it 
-
 ### Changed
 
 - Avoid use extensive of String in CWWebServer.cpp
-- Add a flag to restart the device instead of just restart it
+
+## [1.2.0] - 2023-05-14
+
+### Added
+
+- Automatic bright control using LDR 
+- Restart if offline for 5 minutes
 
 ### Fixed
 
-- Clockface 0x05 (Pacman): fixed weekday was overlapping the boundaries
+- Clockface 0x06 (Pokedex): show AM PM only when is not using 24h format
+- Restart endpoint returns HTTP 204 before restarting 
 
 
 ## [1.1.0] - 2023-04-02

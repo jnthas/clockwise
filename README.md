@@ -73,7 +73,7 @@ The settings page have the following options
 - *Swap Blue/Green pins*: Some displays have the RGB order different, in this case RBG. You can use this options to change the order.
 - *Display Bright*: Change the display bright.
 - *Use 24h format*: You can choose between 20:00 or 8:00PM in your device.
-- *Automatic Bright*: Connect a LDR on pin 35 of your ESP32 and the display bright can be controlled automatically. The two fields in the settings page are related to the values read by the LDR. Each environment have different lightning levels and these values are used to set the correct bright. I'm using the `map` function to reach the correct bright:
+- *Automatic Bright*: Connect a LDR on pin 35 of your ESP32 and the display bright can be controlled automatically. The two fields in the settings page are related to the values read by the LDR. With all lights turned off, the value read by LDR should be close to zero, and, with all lights on, the maximum reading is 4095. In my case, it worked fine with `Min Value` = 0 and `Max Value` = 800 but it depends on each room/environment. You can uncomment the following [line](https://github.com/jnthas/clockwise/blob/bee212b2b2c7905a4aaa8c0658c9ef173e578f8b/firmware/src/main.cpp#LL64C28-L64C29) to follow up the value read by your LDR. When `Max value` is set to zero, the feature is considered **disabled**. About the bright control algorithm, I'm using the `map` function to reach the "correct" bright:
   ```C
     // SETTINGS_MIN and SETTINGS_MAX are the values defined in settings page for automatic bright
     // MIN_BRIGHT is a constant in the code, it's the minimal bright value without turn the display off
@@ -81,7 +81,6 @@ The settings page have the following options
     uint8_t mapLDR = map(currentLDRValue, SETTINGS_MIN, SETTINGS_MAX, 1, 5);  //map in 5 slots
     uint8_t bright = map(mapLDR, 1, 5, MIN_BRIGHT, DISPLAY_BRIGHT);
   ```
-
 
 ## How to change the clockface (PlatformIO)
 
