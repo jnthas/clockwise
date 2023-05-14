@@ -1,9 +1,9 @@
 {
     "name": "Clockwise",
+    "funding_url": "https://github.com/sponsors/jnthas",
     "builds": [
         {
             "chipFamily": "ESP32",
-            "improv": false,
             "parts": [
                 {
                     "path": "../base_firmware/boot_app0.bin",
