@@ -61,12 +61,14 @@ jobs:
     - name: Building ${{ matrix.clockfaces }}
       run: |
         echo "WS: $GITHUB_WORKSPACE"
+        echo "0"
+        sh -c "ls ../$GITHUB_WORKSPACE"
         echo "1"
-        sh -c ls $GITHUB_WORKSPACE
+        sh -c "ls $GITHUB_WORKSPACE"
         echo "2"
-        sh -c ls $GITHUB_WORKSPACE/clockwise
+        sh -c "ls $GITHUB_WORKSPACE/clockwise"
         echo "3"
-        sh -c ls $GITHUB_WORKSPACE/clockwise/firmware/lib
+        sh -c "ls $GITHUB_WORKSPACE/clockwise/firmware/lib"
         ln -s ../clockfaces/${{ matrix.clockfaces }} $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
         pio run --project-dir clockwise/firmware/
         rm $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
