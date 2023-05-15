@@ -28,8 +28,9 @@ jobs:
       with:
         path: clockwise
     - name: Update submodules
-      run: 
-        git submodule update clockwise/firmware/clockfaces/
+      run: |
+        cd $GITHUB_WORKSPACE/clockwise 
+        git submodule update firmware/clockfaces/
     - name: Checkout GitHub Pages
       uses: actions/checkout@v3
       with:
