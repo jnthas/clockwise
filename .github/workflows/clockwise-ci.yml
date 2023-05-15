@@ -7,9 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tags:
-        description: 'Manual run'  
-    
-    
+        description: 'Reason for manual run'
 
 jobs:
   prepare:
@@ -45,6 +43,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade platformio
   build:
+    needs: prepare
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 2
