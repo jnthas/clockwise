@@ -58,6 +58,10 @@ jobs:
           - cw-cf-0x05
           - cw-cf-0x06
     steps:
+    - run: ls ../$GITHUB_WORKSPACE
+    - run: ls $GITHUB_WORKSPACE
+    - run: ls $GITHUB_WORKSPACE/clockwise
+    
     - name: Building ${{ matrix.clockfaces }}
       run: |
         echo "WS: $GITHUB_WORKSPACE"
