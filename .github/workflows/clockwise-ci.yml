@@ -59,7 +59,7 @@ jobs:
     - name: Pulling changes from ${{ matrix.clockfaces }} 
       run: |
         cd $GITHUB_WORKSPACE/clockwise/firmware/clockfaces/${{ matrix.clockfaces }}
-        git pull --ff-only
+        git pull origin main
       
     - name: Building ${{ matrix.clockfaces }}
       run: |
