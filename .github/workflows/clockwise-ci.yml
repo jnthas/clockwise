@@ -45,7 +45,9 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: env-setup
-        path: $GITHUB_WORKSPACE
+        path: |
+          clockwise/
+          github-pages/
   
   build:
     needs: prepare
