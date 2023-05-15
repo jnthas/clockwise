@@ -58,7 +58,9 @@ jobs:
         
     - name: Building ${{ matrix.clockfaces }}
       run: |
-        sh -c "ls $GITHUB_WORKSPACE"
+        cd $GITHUB_WORKSPACE/clockwise/clockfaces/${{ matrix.clockfaces }}
+        git pull
+        cd -
         ln -s ../clockfaces/${{ matrix.clockfaces }} $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
         pio run --project-dir clockwise/firmware/
         rm $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
