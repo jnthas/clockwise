@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - 'releases/**'
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Manual run'  
+    
+    
 
 jobs:
   prepare:
