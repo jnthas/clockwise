@@ -42,7 +42,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade platformio
-  
+    - uses: actions/upload-artifact@v3
+      with:
+        name: env-setup
+        path: $GITHUB_WORKSPACE
   
   build:
     needs: prepare
@@ -58,21 +61,13 @@ jobs:
           - cw-cf-0x05
           - cw-cf-0x06
     steps:
-    - run: ls ../$GITHUB_WORKSPACE
-    - run: ls $GITHUB_WORKSPACE
-    - run: ls $GITHUB_WORKSPACE/clockwise
+    - uses: actions/download-artifact@v3
+      with:
+        name: env-setup
     
     - name: Building ${{ matrix.clockfaces }}
       run: |
-        echo "WS: $GITHUB_WORKSPACE"
-        echo "0"
-        sh -c "ls ../$GITHUB_WORKSPACE"
-        echo "1"
         sh -c "ls $GITHUB_WORKSPACE"
-        echo "2"
-        sh -c "ls $GITHUB_WORKSPACE/clockwise"
-        echo "3"
-        sh -c "ls $GITHUB_WORKSPACE/clockwise/firmware/lib"
         ln -s ../clockfaces/${{ matrix.clockfaces }} $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
         pio run --project-dir clockwise/firmware/
         rm $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
