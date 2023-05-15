@@ -9,15 +9,27 @@ on:
       tags:
         description: 'Reason for manual run'
 
-jobs:
-  prepare:
+jobs: 
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 2
+      matrix:
+        clockfaces:
+          - cw-cf-0x01
+          - cw-cf-0x02
+          - cw-cf-0x03
+          - cw-cf-0x04
+          - cw-cf-0x05
+          - cw-cf-0x06
     steps:
     - name: Checkout clockwise
       uses: actions/checkout@v3
       with:
         path: clockwise
-        submodules: recursive
+    - name: Update submodules
+      run: 
+        git submodule update clockwise/firmware/clockfaces/
     - name: Checkout GitHub Pages
       uses: actions/checkout@v3
       with:
@@ -42,31 +54,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade platformio
-    - uses: actions/upload-artifact@v3
-      with:
-        name: env-setup
-        path: |
-          clockwise/
-          github-pages/
-  
-  build:
-    needs: prepare
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 2
-      matrix:
-        clockfaces:
-          - cw-cf-0x01
-          - cw-cf-0x02
-          - cw-cf-0x03
-          - cw-cf-0x04
-          - cw-cf-0x05
-          - cw-cf-0x06
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: env-setup
-    
+        
     - name: Building ${{ matrix.clockfaces }}
       run: |
         sh -c "ls $GITHUB_WORKSPACE"
