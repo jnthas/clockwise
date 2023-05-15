@@ -55,12 +55,14 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install --upgrade platformio
-        
+    
+    - name: Pulling changes from ${{ matrix.clockfaces }} 
+      run: |
+        cd ../clockfaces/${{ matrix.clockfaces }}
+        git pull
+      
     - name: Building ${{ matrix.clockfaces }}
       run: |
-        cd $GITHUB_WORKSPACE/clockwise/clockfaces/${{ matrix.clockfaces }}
-        git pull
-        cd -
         ln -s ../clockfaces/${{ matrix.clockfaces }} $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
         pio run --project-dir clockwise/firmware/
         rm $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
