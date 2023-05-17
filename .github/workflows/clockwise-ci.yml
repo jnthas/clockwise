@@ -76,7 +76,7 @@ jobs:
           git config user.email github-actions@github.com
           git pull origin gh-pages
           cp --force $GITHUB_WORKSPACE/clockwise/firmware/.pio/build/esp32dev/firmware.bin static/firmware/${{ matrix.clockfaces }}/firmware.bin
-          sed -i '/"name": "Clockwise"/s/"Clockwise"/"$FW_NAME"/' static/firmware/${{ matrix.clockfaces }}/manifest.json
+          sed -i '/name/c\    \"name\": \"'"$FW_NAME"'"\,' static/firmware/${{ matrix.clockfaces }}/manifest.json
           git add .
           git commit -m "new version published - ${{ matrix.clockfaces }}"
           git push
