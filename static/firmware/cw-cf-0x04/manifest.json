@@ -1,5 +1,5 @@
 {
-    "name": "Clockwise",
+    "name": "$FW_NAME",
     "funding_url": "https://github.com/sponsors/jnthas",
     "builds": [
         {
