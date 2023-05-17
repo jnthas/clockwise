@@ -58,7 +58,7 @@ jobs:
     
     - name: Pulling changes from ${{ matrix.clockfaces }} 
       run: |
-        cd $GITHUB_WORKSPACE/clockwise
+        cd $GITHUB_WORKSPACE/clockwise/firmware/clockfaces/${{ matrix.clockfaces }}
         git reset --hard origin/main
         git checkout main
       
