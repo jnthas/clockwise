@@ -1,4 +1,4 @@
-> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) The [version 1.1.0 was released](https://github.com/jnthas/clockwise/releases/tag/v1.1.0) supporting Improv WiFi and a settings page to set up timezone, RGB/RBG pins, display bright and the 12/24 hours format.
+> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.2.1 was released](https://github.com/jnthas/clockwise/releases/tag/v1.2.1) featuring automatic bright control. Read below for more details
 
 
 [![Clockwise CI/CD](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml/badge.svg)](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml)
