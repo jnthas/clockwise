@@ -64,16 +64,19 @@ jobs:
       
     - name: Building ${{ matrix.clockfaces }}
       run: |
+        export FW_NAME=CW_$(date '+%Y%m%d')
         ln -s ../clockfaces/${{ matrix.clockfaces }} $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
         pio run --project-dir clockwise/firmware/
         rm $GITHUB_WORKSPACE/clockwise/firmware/lib/${{ matrix.clockfaces }}
     - name: Publish new version
       run: |
+          export FW_NAME=CW_$(date '+%Y%m%d')
           cd $GITHUB_WORKSPACE/github-pages
           git config user.name github-actions
           git config user.email github-actions@github.com
           git pull origin gh-pages
           cp --force $GITHUB_WORKSPACE/clockwise/firmware/.pio/build/esp32dev/firmware.bin static/firmware/${{ matrix.clockfaces }}/firmware.bin
+          sed -i '/"name": "Clockwise"/s/"Clockwise"/"$FW_NAME"/' static/firmware/${{ matrix.clockfaces }}/manifest.json
           git add .
           git commit -m "new version published - ${{ matrix.clockfaces }}"
           git push
