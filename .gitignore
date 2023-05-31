@@ -9,3 +9,5 @@ sdkconfig*
 
 # Ignore IDE configs
 .vscode
+
+dependencies.lock
