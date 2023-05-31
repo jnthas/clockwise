@@ -1,9 +1,11 @@
 #include "CWDateTime.h"
 
-void CWDateTime::begin(const char *timeZone, bool use24format)
+void CWDateTime::begin(const char *timeZone, bool use24format, string ntpServer)
 {
   myTZ.setLocation(timeZone);
+  myTZ.setServer(ntpServer);
   this->use24hFormat = use24format;
+  this->ntpServer = ntpServer;
   waitForSync();
 }
 
@@ -69,4 +71,15 @@ bool CWDateTime::is24hFormat()
   return this->use24hFormat;
 }
 
+void CWDateTime::setNtpServer(string ntpServer)
+{
+  this->ntpServer = ntpServer;
+  myTZ.setServer(ntpServer);
+  myTZ.updateNTP();
+  waitForSync();
+}
 
+String CWDateTime::getNtpServer()
+{
+  return this->ntpServer;
+}
