@@ -70,6 +70,7 @@ After flashing your clockface, you will have a step to configure the WiFi. But i
 ### Settings page
 The settings page have the following options
 - *Timezone*: The timezone must be in the format America/New_York, America/Sao_Paulo, Europe/Paris, Asia/Dubai, etc. so that the clock can connect to an NTP server to get the correct time.
+- *NTP Server*: By default the clock will sync with `pool.ntp.org`, but you can configure your own (local) NTP server to be used.
 - *Swap Blue/Green pins*: Some displays have the RGB order different, in this case RBG. You can use this options to change the order.
 - *Display Bright*: Change the display bright.
 - *Use 24h format*: You can choose between 20:00 or 8:00PM in your device.
