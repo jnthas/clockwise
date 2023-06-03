@@ -48,6 +48,7 @@ With these components in hand, just follow the wiring instructions according to 
 
 - In case you want something ready to use, I recommend Brian Lough's [ESP32 Trinity](https://github.com/witnessmenow/ESP32-Trinity), basically it's connecting the board and uploading the firmware, as simple as that.
 - If you want a designed PCB, I recommend this project from @Alexvanheu. It's compatible with HUB75/HUB75E led matrices and already tested with Clockwise https://github.com/Alexvanheu/Mario-Clock-PCB-ESP32
+- [ESP32 D1 Mini D1 RGB Matrix Shield](https://github.com/hallard/WeMos-Matrix-Shield-DMA) from @hallard is another option
 
 
 ## How to change the clockface (web flashing)
