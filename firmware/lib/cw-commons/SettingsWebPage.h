@@ -85,8 +85,8 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         },
         {
           title: "NTP Server",
-          description: "Configure your prefered timezone. For example, you could use one of the <a href='https://www.ntppool.org'>NTP Pool Project</a> pools or a local NTP server.",
-          formInput: "<input id='tz' class='w3-input w3-light-grey' name='ntp' type='text' placeholder='NTP Server' value='" + settings.ntpServer + "''>",
+          description: "Configure your prefered NTP Server. You can use one of the <a href='https://www.ntppool.org'>NTP Pool Project</a> pools or a local one.",
+          formInput: "<input id='ntp' class='w3-input w3-light-grey' name='ntp' type='text' placeholder='NTP Server' value='" + settings.ntpServer + "''>",
           icon: "fa-clock-o",
           save: "updatePreference('ntpServer', ntp.value)",
           property: "ntpServer"

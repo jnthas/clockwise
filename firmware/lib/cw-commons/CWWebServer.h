@@ -60,7 +60,7 @@ struct ClockwiseWebServer
             if (method == "POST" && path.indexOf('?') > 0)
             {
               key = path.substring(path.indexOf('?') + 1, path.indexOf('='));
-              value = path.substring(path.indexOf('=') + 1, ' ');
+              value = path.substring(path.indexOf('=') + 1);
               path = path.substring(0, path.indexOf('?'));
             }
 
@@ -128,7 +128,7 @@ struct ClockwiseWebServer
       ClockwiseParams::getInstance()->PREF_TIME_ZONE,
       ClockwiseParams::getInstance()->timeZone.c_str(),
       ClockwiseParams::getInstance()->PREF_WIFI_SSID,
-      ClockwiseParams::getInstance()->wifiSsid.c_str());
+      ClockwiseParams::getInstance()->wifiSsid.c_str(),
       ClockwiseParams::getInstance()->PREF_NTP_SERVER,
       ClockwiseParams::getInstance()->ntpServer.c_str());
       

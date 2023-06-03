@@ -1,11 +1,13 @@
 #include "CWDateTime.h"
 
-void CWDateTime::begin(const char *timeZone, bool use24format, string ntpServer)
+void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpServer = NTP_SERVER)
 {
+  Serial.printf("[Time] NTP Server: %s, Timezone: %s", ntpServer, timeZone);
+  
+  ezt::setServer(String(ntpServer));
   myTZ.setLocation(timeZone);
-  myTZ.setServer(ntpServer);
   this->use24hFormat = use24format;
-  this->ntpServer = ntpServer;
+  ezt::updateNTP();
   waitForSync();
 }
 
@@ -69,17 +71,4 @@ bool CWDateTime::isAM()
 bool CWDateTime::is24hFormat() 
 {
   return this->use24hFormat;
-}
-
-void CWDateTime::setNtpServer(string ntpServer)
-{
-  this->ntpServer = ntpServer;
-  myTZ.setServer(ntpServer);
-  myTZ.updateNTP();
-  waitForSync();
-}
-
-String CWDateTime::getNtpServer()
-{
-  return this->ntpServer;
 }

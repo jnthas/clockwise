@@ -92,7 +92,7 @@ void setup()
   if (wifi.begin())
   {
     StatusController::getInstance()->ntpConnecting();
-    cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), ClockwiseParams::getInstance()->use24hFormat, ClockwiseParams::getInstance()->ntpServer);
+    cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), ClockwiseParams::getInstance()->use24hFormat, ClockwiseParams::getInstance()->ntpServer.c_str());
     clockface->setup(&cwDateTime);
   }
 }

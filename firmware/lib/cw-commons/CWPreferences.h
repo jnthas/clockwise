@@ -62,7 +62,7 @@ struct ClockwiseParams
         timeZone = preferences.getString(PREF_TIME_ZONE, "America/Sao_Paulo");
         wifiSsid = preferences.getString(PREF_WIFI_SSID, "");
         wifiPwd = preferences.getString(PREF_WIFI_PASSWORD, "");
-        ntpServer = preferences.getString(PREF_NTP_SERVER, "pool.ntp.org");
+        ntpServer = preferences.getString(PREF_NTP_SERVER, NTP_SERVER);
     }
 
 };
