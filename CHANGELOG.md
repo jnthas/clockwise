@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [ABC] It's possible to turnoff the display if the LDR reading < minBright (add documentation)
 - Configure the NTP Server
 - Firmware version displayed on settings page
+- LDR GPIO configuration
 
 ### Changed
 
