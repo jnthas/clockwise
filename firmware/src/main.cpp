@@ -11,6 +11,8 @@
 #include <StatusController.h>
 
 #define PIN_LDR_BRIGHT 35
+#define MIN_BRIGHT_DISPLAY_ON 4
+#define MIN_BRIGHT_DISPLAY_OFF 0
 
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 
@@ -52,11 +54,11 @@ void automaticBrightControl()
     {
       int16_t currentValue = analogRead(PIN_LDR_BRIGHT);
 
-      const uint8_t minBright = 4;
-      uint8_t maxBright = ClockwiseParams::getInstance()->displayBright;
-
       uint16_t ldrMin = ClockwiseParams::getInstance()->autoBrightMin;
       uint16_t ldrMax = ClockwiseParams::getInstance()->autoBrightMax;
+
+      const uint8_t minBright = (currentValue < ldrMin ? MIN_BRIGHT_DISPLAY_OFF : MIN_BRIGHT_DISPLAY_ON);
+      uint8_t maxBright = ClockwiseParams::getInstance()->displayBright;
 
       uint8_t mapLDR = map(currentValue, ldrMin, ldrMax, 1, 5);  //5 slots
       uint8_t mapBright = map(mapLDR, 1, 5, minBright, maxBright);
