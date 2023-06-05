@@ -11,7 +11,7 @@ private:
   bool use24hFormat = true;
 
 public:
-  void begin(const char *timeZone, bool use24format);
+  void begin(const char *timeZone, bool use24format, const char *ntpServer);
   String getFormattedTime();
 
   char *getHour(const char *format);

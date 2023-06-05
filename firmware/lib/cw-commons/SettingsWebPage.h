@@ -84,6 +84,14 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           property: "timeZone"
         },
         {
+          title: "NTP Server",
+          description: "Configure your prefered NTP Server. You can use one of the <a href='https://www.ntppool.org'>NTP Pool Project</a> pools or a local one.",
+          formInput: "<input id='ntp' class='w3-input w3-light-grey' name='ntp' type='text' placeholder='NTP Server' value='" + settings.ntpServer + "''>",
+          icon: "fa-clock-o",
+          save: "updatePreference('ntpServer', ntp.value)",
+          property: "ntpServer"
+        },
+        {
           title: "Automatic Bright",
           description: "Inform the values read by the LDR when the room is dark (min value) and bright (max value). Range 0 - 4095",
           formInput: "<input id='autoBrightMin' class='w3-input w3-light-grey w3-cell w3-margin-right' name='autoBrightMin' style='width:45%;' type='number' min='0' max='4095' placeholder='Min value' value='" + settings.autoBrightMin + "''>" + 
@@ -149,7 +157,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     }
 
     //Local
-    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800 });
+    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800 });
 
     //Embedded
     begin();

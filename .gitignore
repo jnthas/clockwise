@@ -6,3 +6,8 @@ build
 sdkconfig*
 # Unignore the default project configuration file.
 !sdkconfig.defaults
+
+# Ignore IDE configs
+.vscode
+
+dependencies.lock

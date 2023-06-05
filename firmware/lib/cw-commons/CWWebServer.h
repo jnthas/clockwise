@@ -60,7 +60,7 @@ struct ClockwiseWebServer
             if (method == "POST" && path.indexOf('?') > 0)
             {
               key = path.substring(path.indexOf('?') + 1, path.indexOf('='));
-              value = path.substring(path.indexOf('=') + 1, ' ');
+              value = path.substring(path.indexOf('=') + 1);
               path = path.substring(0, path.indexOf('?'));
             }
 
@@ -101,6 +101,8 @@ struct ClockwiseWebServer
         ClockwiseParams::getInstance()->use24hFormat = (value == "1");
       } else if (key == ClockwiseParams::getInstance()->PREF_TIME_ZONE) {
         ClockwiseParams::getInstance()->timeZone = value;
+      } else if (key == ClockwiseParams::getInstance()->PREF_NTP_SERVER) {
+        ClockwiseParams::getInstance()->ntpServer = value;
       }
       ClockwiseParams::getInstance()->save();
       client.println("HTTP/1.0 204 No Content");
@@ -112,7 +114,7 @@ struct ClockwiseWebServer
     ClockwiseParams::getInstance()->load();
 
     char response[256];
-    snprintf(response, sizeof(response), "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":\"%s\",\"%s\":\"%s\"}", \
+    snprintf(response, sizeof(response), "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":\"%s\",\"%s\":\"%s\",\"%s\":\"%s\"}", \
       ClockwiseParams::getInstance()->PREF_DISPLAY_BRIGHT,
       ClockwiseParams::getInstance()->displayBright,
       ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MIN,
@@ -126,7 +128,9 @@ struct ClockwiseWebServer
       ClockwiseParams::getInstance()->PREF_TIME_ZONE,
       ClockwiseParams::getInstance()->timeZone.c_str(),
       ClockwiseParams::getInstance()->PREF_WIFI_SSID,
-      ClockwiseParams::getInstance()->wifiSsid.c_str());
+      ClockwiseParams::getInstance()->wifiSsid.c_str(),
+      ClockwiseParams::getInstance()->PREF_NTP_SERVER,
+      ClockwiseParams::getInstance()->ntpServer.c_str());
       
       client.println("HTTP/1.0 200 OK");
       client.println("Content-Type: application/json");

@@ -14,6 +14,7 @@ struct ClockwiseParams
     const char* const PREF_TIME_ZONE = "timeZone";
     const char* const PREF_WIFI_SSID = "wifiSsid";
     const char* const PREF_WIFI_PASSWORD = "wifiPwd";
+    const char* const PREF_NTP_SERVER = "ntpServer";
 
 
     bool swapBlueGreen;
@@ -24,6 +25,7 @@ struct ClockwiseParams
     String timeZone;
     String wifiSsid;
     String wifiPwd;
+    String ntpServer;
 
 
     ClockwiseParams() {
@@ -47,6 +49,7 @@ struct ClockwiseParams
         preferences.putString(PREF_TIME_ZONE, timeZone);
         preferences.putString(PREF_WIFI_SSID, wifiSsid);
         preferences.putString(PREF_WIFI_PASSWORD, wifiPwd);
+        preferences.putString(PREF_NTP_SERVER, ntpServer);
     }
 
     void load()
@@ -59,6 +62,7 @@ struct ClockwiseParams
         timeZone = preferences.getString(PREF_TIME_ZONE, "America/Sao_Paulo");
         wifiSsid = preferences.getString(PREF_WIFI_SSID, "");
         wifiPwd = preferences.getString(PREF_WIFI_PASSWORD, "");
+        ntpServer = preferences.getString(PREF_NTP_SERVER, NTP_SERVER);
     }
 
 };
