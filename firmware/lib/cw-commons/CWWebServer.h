@@ -11,6 +11,8 @@ struct ClockwiseWebServer
 {
   String httpBuffer;
   bool force_restart;
+  const char* HEADER_TEMPLATE_D = "X-%s: %d\r\n";
+  const char* HEADER_TEMPLATE_S = "X-%s: %s\r\n";
  
   static ClockwiseWebServer *getInstance()
   {
@@ -113,29 +115,19 @@ struct ClockwiseWebServer
   void getCurrentSettings(WiFiClient client) {
     ClockwiseParams::getInstance()->load();
 
-    char response[256];
-    snprintf(response, sizeof(response), "{\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":%d,\"%s\":\"%s\",\"%s\":\"%s\",\"%s\":\"%s\"}", \
-      ClockwiseParams::getInstance()->PREF_DISPLAY_BRIGHT,
-      ClockwiseParams::getInstance()->displayBright,
-      ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MIN,
-      ClockwiseParams::getInstance()->autoBrightMin,
-      ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MAX,
-      ClockwiseParams::getInstance()->autoBrightMax,
-      ClockwiseParams::getInstance()->PREF_SWAP_BLUE_GREEN,
-      ClockwiseParams::getInstance()->swapBlueGreen,
-      ClockwiseParams::getInstance()->PREF_USE_24H_FORMAT,
-      ClockwiseParams::getInstance()->use24hFormat,
-      ClockwiseParams::getInstance()->PREF_TIME_ZONE,
-      ClockwiseParams::getInstance()->timeZone.c_str(),
-      ClockwiseParams::getInstance()->PREF_WIFI_SSID,
-      ClockwiseParams::getInstance()->wifiSsid.c_str(),
-      ClockwiseParams::getInstance()->PREF_NTP_SERVER,
-      ClockwiseParams::getInstance()->ntpServer.c_str());
-      
-      client.println("HTTP/1.0 200 OK");
-      client.println("Content-Type: application/json");
-      client.println();
-      client.println(response);
+    client.println("HTTP/1.0 204 NO CONTENT");
+
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_DISPLAY_BRIGHT, ClockwiseParams::getInstance()->displayBright);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MIN, ClockwiseParams::getInstance()->autoBrightMin);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MAX, ClockwiseParams::getInstance()->autoBrightMax);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_SWAP_BLUE_GREEN, ClockwiseParams::getInstance()->swapBlueGreen);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_USE_24H_FORMAT, ClockwiseParams::getInstance()->use24hFormat);
+    client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_TIME_ZONE, ClockwiseParams::getInstance()->timeZone.c_str());
+    client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_WIFI_SSID, ClockwiseParams::getInstance()->wifiSsid.c_str());
+    client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_NTP_SERVER, ClockwiseParams::getInstance()->ntpServer.c_str());
+    client.printf(HEADER_TEMPLATE_S, "CW_FW_VERSION", CW_FW_VERSION);
+    client.printf(HEADER_TEMPLATE_S, "CW_FW_NAME", CW_FW_NAME);
+    client.println();
   }
   
 };

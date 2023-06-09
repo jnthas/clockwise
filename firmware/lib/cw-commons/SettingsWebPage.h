@@ -20,7 +20,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
   </div>
 
   <div class="w3-bar w3-black w3-medium">
-    <div class="w3-bar-item w3-black w3-hover-red"><i class="fa fa-wrench"></i> Settings Page</div>
+    <div id="fw-version" class="w3-bar-item w3-black w3-hover-red"></div>
     <div id="ssid" class="w3-bar-item w3-hover-blue w3-right"></div>
     <div class="w3-bar-item w3-button w3-hover-yellow w3-right" onclick="restartDevice();"><i class='fa fa-power-off'></i> Restart</div>
     <div id="status" class="w3-bar-item w3-green" style="display:none"><i class='fa fa-floppy-o'></i> Saved! Restart your device</div>
@@ -53,8 +53,8 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
       const cards = [
         {
           title: "Display Bright",
-          description: "0 = dark (display off) / 255 = super bright | Value: <strong><output id='rangevalue'>" + settings.displayBright + "</output></strong>",
-          formInput: "<input class='w3-input w3-border' type='range' min='0' max='255' value='" + settings.displayBright + "' class='slider' id='bright' oninput='rangevalue.value=value'>",
+          description: "0 = dark (display off) / 255 = super bright | Value: <strong><output id='rangevalue'>" + settings.displaybright + "</output></strong>",
+          formInput: "<input class='w3-input w3-border' type='range' min='0' max='255' value='" + settings.displaybright + "' class='slider' id='bright' oninput='rangevalue.value=value'>",
           icon: "fa-adjust",
           save: "updatePreference('displayBright', bright.value)",
           property: "displayBright"
@@ -62,7 +62,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         {
           title: "Use 24h format?",
           description: "Changes the hour format to show 20:00 instead of 8:00PM",
-          formInput: "<input class='w3-check' type='checkbox' id='use24h' " + (settings.use24hFormat == 1 ? "checked" : "") + "><label for='use24h'> Yep</label>",
+          formInput: "<input class='w3-check' type='checkbox' id='use24h' " + (settings.use24hformat == '1' ? "checked" : "") + "><label for='use24h'> Yep</label>",
           icon: "fa-clock-o",
           save: "updatePreference('use24hFormat', Number(use24h.checked))",
           property: "use24hFormat"
@@ -70,7 +70,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         {
           title: "Swap Blue/Green pins?",
           description: "Swap Blue and Green pins because the panel is RBG instead of RGB",
-          formInput: "<input class='w3-check' type='checkbox' id='swapBG' " + (settings.swapBlueGreen == 1 ? "checked" : "") + "><label for='swapBG'> Yep</label>",
+          formInput: "<input class='w3-check' type='checkbox' id='swapBG' " + (settings.swapbluegreen == '1' ? "checked" : "") + "><label for='swapBG'> Yep</label>",
           icon: "fa-random",
           save: "updatePreference('swapBlueGreen', Number(swapBG.checked))",
           property: "swapBlueGreen"
@@ -78,7 +78,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         {
           title: "Timezone",
           description: "Consult your TZ identifier <a href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>here.</a> Examples: America/Sao_Paulo, Europe/Lisbon",
-          formInput: "<input id='tz' class='w3-input w3-light-grey' name='tz' type='text' placeholder='Timezone' value='" + settings.timeZone + "''>",
+          formInput: "<input id='tz' class='w3-input w3-light-grey' name='tz' type='text' placeholder='Timezone' value='" + settings.timezone + "''>",
           icon: "fa-globe",
           save: "updatePreference('timeZone', tz.value)",
           property: "timeZone"
@@ -86,16 +86,16 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         {
           title: "NTP Server",
           description: "Configure your prefered NTP Server. You can use one of the <a href='https://www.ntppool.org'>NTP Pool Project</a> pools or a local one.",
-          formInput: "<input id='ntp' class='w3-input w3-light-grey' name='ntp' type='text' placeholder='NTP Server' value='" + settings.ntpServer + "''>",
-          icon: "fa-clock-o",
+          formInput: "<input id='ntp' class='w3-input w3-light-grey' name='ntp' type='text' placeholder='NTP Server' value='" + settings.ntpserver + "''>",
+          icon: "fa-server",
           save: "updatePreference('ntpServer', ntp.value)",
           property: "ntpServer"
         },
         {
           title: "Automatic Bright",
           description: "Inform the values read by the LDR when the room is dark (min value) and bright (max value). Range 0 - 4095",
-          formInput: "<input id='autoBrightMin' class='w3-input w3-light-grey w3-cell w3-margin-right' name='autoBrightMin' style='width:45%;' type='number' min='0' max='4095' placeholder='Min value' value='" + settings.autoBrightMin + "''>" + 
-                     "<input id='autoBrightMax' class='w3-input w3-light-grey w3-cell' name='autoBrightMax' style='width:45%;' type='number' min='0' max='4095' placeholder='Max value' value='" + settings.autoBrightMax + "''>",
+          formInput: "<input id='autoBrightMin' class='w3-input w3-light-grey w3-cell w3-margin-right' name='autoBrightMin' style='width:45%;' type='number' min='0' max='4095' placeholder='Min value' value='" + settings.autobrightmin + "''>" + 
+                     "<input id='autoBrightMax' class='w3-input w3-light-grey w3-cell' name='autoBrightMax' style='width:45%;' type='number' min='0' max='4095' placeholder='Max value' value='" + settings.autobrightmax + "''>",
           icon: "fa-sun-o",
           save: "updatePreference('autoBright', autoBrightMin.value.padStart(4, '0') + ',' + autoBrightMax.value.padStart(4, '0'))",
           property: "autoBright"
@@ -121,13 +121,14 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         document.getElementById("cardButton-" + c.property).setAttribute("onclick", c.save);
       })
 
-      document.getElementById("ssid").innerHTML = "<i class='fa fa-wifi'></i> " + settings.wifiSsid
+      document.getElementById("ssid").innerHTML = "<i class='fa fa-wifi'></i> " + settings.wifissid
+      document.getElementById("fw-version").innerHTML = "<i class='fa fa-code-fork'></i> Firmware v" + settings.cw_fw_version
     }
 
     function updatePreference(key, value) {
       const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status > 200 && this.status < 299) {
+        if (this.readyState == 4 && this.status >= 200 && this.status < 299) {
           document.getElementById('status').style.display = 'block';
         }
       };
@@ -142,8 +143,16 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     function begin() {
       var xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          createCards(JSON.parse(this.responseText));
+        if (this.readyState === 2 && this.status === 204) {
+          const headers = this.getAllResponseHeaders().trim().split(/[\r\n]+/);
+          const headerMap = {};
+          headers.forEach((line) => {
+            const parts = line.split(": ");
+            const header = parts.shift().substring(2);
+            const value = parts.join(": ");
+            headerMap[header] = value;
+          });
+          createCards(headerMap);
         }
       };
       xmlhttp.open("GET", "/get", true);
@@ -157,7 +166,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     }
 
     //Local
-    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800 });
+    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "cw_fw_version":"1.2.2" });
 
     //Embedded
     begin();
