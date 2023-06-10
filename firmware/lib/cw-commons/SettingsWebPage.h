@@ -78,7 +78,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         {
           title: "Timezone",
           description: "Consult your TZ identifier <a href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>here.</a> Examples: America/Sao_Paulo, Europe/Lisbon",
-          formInput: "<input id='tz' class='w3-input w3-light-grey' name='tz' type='text' placeholder='Timezone' value='" + settings.timezone + "''>",
+          formInput: "<input id='tz' class='w3-input w3-light-grey' name='tz' type='text' placeholder='Timezone' value='" + settings.timezone + "'>",
           icon: "fa-globe",
           save: "updatePreference('timeZone', tz.value)",
           property: "timeZone"
@@ -86,7 +86,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         {
           title: "NTP Server",
           description: "Configure your prefered NTP Server. You can use one of the <a href='https://www.ntppool.org'>NTP Pool Project</a> pools or a local one.",
-          formInput: "<input id='ntp' class='w3-input w3-light-grey' name='ntp' type='text' placeholder='NTP Server' value='" + settings.ntpserver + "''>",
+          formInput: "<input id='ntp' class='w3-input w3-light-grey' name='ntp' type='text' placeholder='NTP Server' value='" + settings.ntpserver + "'>",
           icon: "fa-server",
           save: "updatePreference('ntpServer', ntp.value)",
           property: "ntpServer"
@@ -94,11 +94,19 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         {
           title: "Automatic Bright",
           description: "Inform the values read by the LDR when the room is dark (min value) and bright (max value). Range 0 - 4095",
-          formInput: "<input id='autoBrightMin' class='w3-input w3-light-grey w3-cell w3-margin-right' name='autoBrightMin' style='width:45%;' type='number' min='0' max='4095' placeholder='Min value' value='" + settings.autobrightmin + "''>" + 
-                     "<input id='autoBrightMax' class='w3-input w3-light-grey w3-cell' name='autoBrightMax' style='width:45%;' type='number' min='0' max='4095' placeholder='Max value' value='" + settings.autobrightmax + "''>",
+          formInput: "<input id='autoBrightMin' class='w3-input w3-light-grey w3-cell w3-margin-right' name='autoBrightMin' style='width:45%;' type='number' min='0' max='4095' placeholder='Min value' value='" + settings.autobrightmin + "'>" + 
+                     "<input id='autoBrightMax' class='w3-input w3-light-grey w3-cell' name='autoBrightMax' style='width:45%;' type='number' min='0' max='4095' placeholder='Max value' value='" + settings.autobrightmax + "'>",
           icon: "fa-sun-o",
           save: "updatePreference('autoBright', autoBrightMin.value.padStart(4, '0') + ',' + autoBrightMax.value.padStart(4, '0'))",
           property: "autoBright"
+        },
+        {
+          title: "LDR Pin",
+          description: "The GPIO pin where the LDR is connected to. Use just the numeric value (default: 35)",
+          formInput: "<input id='ldrPin' class='w3-input w3-light-grey' name='ldrPin' type='number' min='0' max='39' value='" + settings.ldrpin + "'>",
+          icon: "fa-microchip",
+          save: "updatePreference('ldrPin', ldrPin.value)",
+          property: "ldrPin"
         }
       ];
 
@@ -106,7 +114,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
       cards.forEach(c => {
 
         var clone = base.cloneNode(true);
-        clone.id = c.property;
+        clone.id = c.property + "-card";
         clone.removeAttribute("style");
 
         Array.prototype.slice.call(clone.getElementsByTagName('*')).forEach(e => {
@@ -166,7 +174,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     }
 
     //Local
-    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "cw_fw_version":"1.2.2" });
+    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "ldrPin":35, "cw_fw_version":"1.2.2" });
 
     //Embedded
     begin();
