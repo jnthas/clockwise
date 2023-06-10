@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+// TODO: Move the whole JS to a CDN soon
+
 const char SETTINGS_PAGE[] PROGMEM = R""""(
 <!DOCTYPE html>
 <html>
@@ -102,7 +104,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
         },
         {
           title: "LDR Pin",
-          description: "The GPIO pin where the LDR is connected to. Use just the numeric value (default: 35)",
+          description: "The GPIO pin where the LDR is connected to. Use just the numeric value (default: 35) | <a href='#' onclick='readPin(ldrPin.value);'>Read Pin: </a><strong id='ldrPinRead'>0</strong>",
           formInput: "<input id='ldrPin' class='w3-input w3-light-grey' name='ldrPin' type='number' min='0' max='39' value='" + settings.ldrpin + "'>",
           icon: "fa-microchip",
           save: "updatePreference('ldrPin', ldrPin.value)",
@@ -148,23 +150,40 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
       }, 2000);
     }
 
-    function begin() {
+    function splitHeaders(request) {
+      const headers = request.getAllResponseHeaders().trim().split(/[\r\n]+/);
+      const headerMap = {};
+      headers.forEach((line) => {
+        const parts = line.split(": ");
+        const header = parts.shift().substring(2);
+        const value = parts.join(": ");
+        headerMap[header] = value;
+      });
+      return headerMap;
+    }
+
+    function requestGet(path, cb) {
       var xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function () {
         if (this.readyState === 2 && this.status === 204) {
-          const headers = this.getAllResponseHeaders().trim().split(/[\r\n]+/);
-          const headerMap = {};
-          headers.forEach((line) => {
-            const parts = line.split(": ");
-            const header = parts.shift().substring(2);
-            const value = parts.join(": ");
-            headerMap[header] = value;
-          });
-          createCards(headerMap);
+          cb(this);
         }
       };
-      xmlhttp.open("GET", "/get", true);
+      xmlhttp.open("GET", path, true);
       xmlhttp.send();
+    }
+    
+    function readPin(pin) {
+      requestGet("/read?pin=" + pin, (req) => {
+        var headers = splitHeaders(req);
+        document.getElementById("ldrPinRead").innerHTML = headers.pin;  
+      });  
+    }
+
+    function begin() {
+      requestGet("/get", (req) => {
+        createCards(splitHeaders(req));
+      });  
     }
 
     function restartDevice() {

@@ -59,7 +59,7 @@ struct ClockwiseWebServer
             String key = "";
             String value = "";
 
-            if (method == "POST" && path.indexOf('?') > 0)
+            if (path.indexOf('?') > 0)
             {
               key = path.substring(path.indexOf('?') + 1, path.indexOf('='));
               value = path.substring(path.indexOf('=') + 1);
@@ -86,6 +86,10 @@ struct ClockwiseWebServer
       client.println(SETTINGS_PAGE);
     } else if (method == "GET" && path == "/get") {
       getCurrentSettings(client);
+    } else if (method == "GET" && path == "/read") {
+      if (key == "pin") {
+        readPin(client, key, value.toInt());
+      }
     } else if (method == "POST" && path == "/restart") {
       client.println("HTTP/1.0 204 No Content");
       force_restart = true;
@@ -111,6 +115,17 @@ struct ClockwiseWebServer
       ClockwiseParams::getInstance()->save();
       client.println("HTTP/1.0 204 No Content");
     }
+  }
+
+
+
+  void readPin(WiFiClient client, String key, uint16_t pin) {
+    ClockwiseParams::getInstance()->load();
+
+    client.println("HTTP/1.0 204 No Content");
+    client.printf(HEADER_TEMPLATE_D, key, analogRead(pin));
+    
+    client.println();
   }
 
 

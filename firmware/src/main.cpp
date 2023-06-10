@@ -10,7 +10,6 @@
 #include <CWWebServer.h>
 #include <StatusController.h>
 
-#define PIN_LDR_BRIGHT 35
 #define MIN_BRIGHT_DISPLAY_ON 4
 #define MIN_BRIGHT_DISPLAY_OFF 0
 
@@ -52,7 +51,7 @@ void automaticBrightControl()
   if (autoBrightEnabled) {
     if (millis() - autoBrightMillis > 3000)
     {
-      int16_t currentValue = analogRead(PIN_LDR_BRIGHT);
+      int16_t currentValue = analogRead(ClockwiseParams::getInstance()->ldrPin);
 
       uint16_t ldrMin = ClockwiseParams::getInstance()->autoBrightMin;
       uint16_t ldrMax = ClockwiseParams::getInstance()->autoBrightMax;
@@ -76,11 +75,12 @@ void setup()
 {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(PIN_LDR_BRIGHT, INPUT);
 
   StatusController::getInstance()->blink_led(5, 100);
 
   ClockwiseParams::getInstance()->load();
+
+  pinMode(ClockwiseParams::getInstance()->ldrPin, INPUT);
 
   displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->displayBright);
   clockface = new Clockface(dma_display);
