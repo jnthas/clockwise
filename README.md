@@ -1,4 +1,4 @@
-> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.2.1 was released](https://github.com/jnthas/clockwise/releases/tag/v1.2.1) featuring automatic bright control. Read below for more details
+> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.3.0 was released](https://github.com/jnthas/clockwise/releases/tag/v1.3.0) with new parameters of NTP Server, LDR Pin and the possibility to read a pin value. For bright control, it's possible to turnoff the display when LDR value < min bright.
 
 
 [![Clockwise CI/CD](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml/badge.svg)](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml)
