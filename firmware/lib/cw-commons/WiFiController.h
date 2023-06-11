@@ -66,7 +66,7 @@ struct WiFiController
     if (success)
     {
       onImprovWiFiConnectedCb(WiFi.SSID().c_str(), WiFi.psk().c_str());
-      Serial.printf("[WiFi] Connected via WiFiManager to %s, IP address %s\n", WiFi.SSID(), WiFi.localIP());
+      Serial.printf("[WiFi] Connected via WiFiManager to %s, IP address %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
       connectionSucessfulOnce = success;
     }
 
