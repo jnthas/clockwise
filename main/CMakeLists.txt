@@ -5,3 +5,5 @@ idf_component_register(
 			INCLUDE_DIRS ${PROJECT_DIR}/firmware/src
 			REQUIRES ESP32-HUB75-MatrixPanel-I2S-DMA cw-commons cw-gfx-engine WiFiManager ${CLOCKFACES}
                        )
+
+target_compile_options(${COMPONENT_TARGET} PUBLIC -DCW_FW_VERSION="1.2.2" -DCW_FW_NAME="Clockwise")
