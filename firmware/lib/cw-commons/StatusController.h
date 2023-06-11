@@ -4,6 +4,8 @@
 #include <Locator.h>
 #include "picopixel.h"
 
+#define ESP32_LED_BUILTIN 2
+
 const uint16_t epd_bitmap_ntp[] PROGMEM = {
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -599,9 +601,9 @@ struct StatusController
 	{
 		for (int j = 0; j < times; j++)
 		{
-			digitalWrite(LED_BUILTIN, HIGH);
+			digitalWrite(ESP32_LED_BUILTIN, HIGH);
 			delay(d);
-			digitalWrite(LED_BUILTIN, LOW);
+			digitalWrite(ESP32_LED_BUILTIN, LOW);
 			delay(d);
 		}
 	}
