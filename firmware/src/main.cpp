@@ -13,6 +13,8 @@
 #define MIN_BRIGHT_DISPLAY_ON 4
 #define MIN_BRIGHT_DISPLAY_OFF 0
 
+#define ESP32_LED_BUILTIN 2
+
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 
 Clockface *clockface;
@@ -74,7 +76,7 @@ void automaticBrightControl()
 void setup()
 {
   Serial.begin(115200);
-  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(ESP32_LED_BUILTIN, OUTPUT);
 
   StatusController::getInstance()->blink_led(5, 100);
 
