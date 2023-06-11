@@ -111,9 +111,13 @@ Clockwise uses PlatformIO as IDE, so the configuration is already done if you us
     └── main.cpp
 
 ```
+Clone this repository and then run the following command to clone the clockface submodules 
+
+``.../clockwise$ git submodule update --init firmware/clockfaces``
+
 To create the symbolic link run the following command inside lib/ folder:
 
-``clockwise/firmware/lib$ ln -s ../clockfaces/cw-cf-0x02/ timeinwords``
+``.../clockwise/firmware/lib$ ln -s ../clockfaces/cw-cf-0x02/ timeinwords``
 
 Or, if you prefer, you can get the same result by copying the desired clockface folder into lib/
 
