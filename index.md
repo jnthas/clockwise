@@ -1,4 +1,4 @@
-> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.3.0 was released](https://github.com/jnthas/clockwise/releases/tag/v1.3.0) with new parameters of NTP Server, LDR Pin and the possibility to read a pin value. For bright control, it's possible to turnoff the display when LDR value < min bright. Check out [README](https://github.com/jnthas/clockwise/blob/main/README.md) for more details.
+> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.4.0 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.0) a new special type of clockface is available called **Canvas**. Using Canvas you can customize your Clockwise with just a single JSON file. Take a look at the [Wiki](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface) of the feature.
 
 ## Flash self-service
 Here in this section you can upload the desired clockface to your device. A step-by-step how to flash the Clockwise can be seen [here](https://github.com/jnthas/clockwise/blob/main/README.md#how-to-change-the-clockface-web-flashing). This feature uses the [ESP Web Tools](https://esphome.github.io/esp-web-tools/) library.
@@ -32,6 +32,14 @@ Here in this section you can upload the desired clockface to your device. A step
     <input type="radio" name="clockface" value="cw-cf-0x06" onclick="handleClick(this);">
     <img id="cw-cf-0x06" src="https://github.com/jnthas/cw-cf-0x06/raw/main/cf_0x06_thumb.jpg" width="128" alt="Pokedex">
   </label>
+  <hr>
+  <label>
+    <input type="radio" name="clockface" value="cw-cf-0x07" onclick="handleClick(this);">
+    <img id="cw-cf-0x07" src="https://github.com/jnthas/cw-cf-0x07/raw/main/cf_0x07_thumb.jpg" width="128" alt="Canvas">
+    <span><strong>Canvas</strong> is a special type of Clockface that is capable of rendering different themes described in a JSON file. Find out more <a href="https://github.com/jnthas/clockwise/wiki/Canvas-Clockface" target="_blank">here</a>.</span>
+  </label>
+  
+
   </div>
 
 </fieldset>

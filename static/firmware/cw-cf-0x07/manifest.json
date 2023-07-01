@@ -1,0 +1,27 @@
+{
+    "name": "CW_20230611",
+    "funding_url": "https://github.com/sponsors/jnthas",
+    "builds": [
+        {
+            "chipFamily": "ESP32",
+            "parts": [
+                {
+                    "path": "../base_firmware/boot_app0.bin",
+                    "offset": 57344
+                },
+                {
+                    "path": "../base_firmware/bootloader_dio_40m.bin",
+                    "offset": 4096
+                },
+                {
+                    "path": "firmware.bin",
+                    "offset": 65536
+                },
+                {
+                    "path": "../base_firmware/partitions.bin",
+                    "offset": 32768
+                }
+            ]
+        }
+    ]
+}
