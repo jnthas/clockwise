@@ -35,7 +35,7 @@ https://github.com/jnthas/cw-cf-0x05 | https://github.com/jnthas/cw-cf-0x06
 
 Canvas | Description
 :-----:|:------:
-![Canvas Clockface](https://github.com/jnthas/cw-cf-0x07/blob/main/cf_0x07_thumb.jpg "Canvas Clockface") | Canvas is a special type of Clockface that is capable of rendering different themes described in a JSON file. Find out more [here](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface).
+<img id="cw-cf-0x07" src="https://github.com/jnthas/cw-cf-0x07/raw/main/cf_0x07_thumb.jpg" width="200" alt="Canvas Clockface"> | Canvas is a special type of Clockface<br>that is capable of rendering different<br>themes described in a JSON file.<br>Find out more [here](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface).
 https://github.com/jnthas/cw-cf-0x07 |
 
 
