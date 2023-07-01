@@ -2,7 +2,7 @@
 
 void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpServer = NTP_SERVER)
 {
-  Serial.printf("[Time] NTP Server: %s, Timezone: %s", ntpServer, timeZone);
+  Serial.printf("[Time] NTP Server: %s, Timezone: %s\n", ntpServer, timeZone);
   
   ezt::setServer(String(ntpServer));
   myTZ.setLocation(timeZone);
@@ -14,6 +14,11 @@ void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpSe
 String CWDateTime::getFormattedTime()
 {
   return myTZ.dateTime();
+}
+
+String CWDateTime::getFormattedTime(const char *format)
+{
+  return myTZ.dateTime(format);
 }
 
 char *CWDateTime::getHour(const char *format)

@@ -109,26 +109,46 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           icon: "fa-microchip",
           save: "updatePreference('ldrPin', ldrPin.value)",
           property: "ldrPin"
+        },
+        {
+          title: "[Canvas] Description file",
+          description: "Name of the description file to be rendered without extension.",
+          formInput: "<input id='descFile' class='w3-input w3-light-grey' name='descFile' type='text' placeholder='Description File' value='" + settings.canvasfile + "'>",
+          icon: "fa-file-image-o",
+          save: "updatePreference('canvasFile', descFile.value)",
+          property: "canvasFile",
+          exclusive: "cw-cf-0x07"
+        },
+        {
+          title: "[Canvas] Server Address",
+          description: "Server address where the description files are located. Change this to test it locally.",
+          formInput: "<input id='serverAddress' class='w3-input w3-light-grey' name='serverAddress' type='text' placeholder='Canvas Server' value='" + settings.canvasserver + "'>",
+          icon: "fa-server",
+          save: "updatePreference('canvasServer', serverAddress.value)",
+          property: "canvasServer",
+          exclusive: "cw-cf-0x07"
         }
       ];
 
       var base = document.querySelector('#base');
       cards.forEach(c => {
 
-        var clone = base.cloneNode(true);
-        clone.id = c.property + "-card";
-        clone.removeAttribute("style");
+        if (!c.hasOwnProperty('exclusive') || (c.hasOwnProperty('exclusive') && c.exclusive === settings.clockface_name)) {
+          var clone = base.cloneNode(true);
+          clone.id = c.property + "-card";
+          clone.removeAttribute("style");
 
-        Array.prototype.slice.call(clone.getElementsByTagName('*')).forEach(e => {
-          e.id = e.id + "-" + c.property;
-        });
+          Array.prototype.slice.call(clone.getElementsByTagName('*')).forEach(e => {
+            e.id = e.id + "-" + c.property;
+          });
 
-        base.before(clone);
-        document.getElementById("title-" + c.property).innerHTML = c.title
-        document.getElementById("description-" + c.property).innerHTML = c.description
-        document.getElementById("formInput-" + c.property).innerHTML = c.formInput
-        document.getElementById("icon-" + c.property).classList.add(c.icon);
-        document.getElementById("cardButton-" + c.property).setAttribute("onclick", c.save);
+          base.before(clone);
+          document.getElementById("title-" + c.property).innerHTML = c.title
+          document.getElementById("description-" + c.property).innerHTML = c.description
+          document.getElementById("formInput-" + c.property).innerHTML = c.formInput
+          document.getElementById("icon-" + c.property).classList.add(c.icon);
+          document.getElementById("cardButton-" + c.property).setAttribute("onclick", c.save);
+        }
       })
 
       document.getElementById("ssid").innerHTML = "<i class='fa fa-wifi'></i> " + settings.wifissid
@@ -193,7 +213,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     }
 
     //Local
-    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "ldrPin":35, "cw_fw_version":"1.2.2" });
+    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "ldrPin":35, "cw_fw_version":"1.2.2", "clockface_name":"cw-cf-0x07", "canvasServer":"raw.githubusercontent.com", "canvasFile":"star-wars.json" });
 
     //Embedded
     begin();

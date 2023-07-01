@@ -5,10 +5,10 @@
 class Sprite {
 
   protected:
-    uint8_t _x;
-    uint8_t _y;
-    uint8_t _width;
-    uint8_t _height;
+    int8_t _x = 0;
+    int8_t _y = 0;
+    uint8_t _width = 0;
+    uint8_t _height = 0;
 
   public:
     boolean collidedWith(Sprite* sprite);

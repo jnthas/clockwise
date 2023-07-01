@@ -13,6 +13,7 @@ private:
 public:
   void begin(const char *timeZone, bool use24format, const char *ntpServer);
   String getFormattedTime();
+  String getFormattedTime(const char* format);
 
   char *getHour(const char *format);
   char *getMinute(const char *format);

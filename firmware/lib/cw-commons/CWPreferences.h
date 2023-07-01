@@ -1,11 +1,17 @@
 #pragma once
 
 #include <Preferences.h>
+#include <ezTime.h>
 
-Preferences preferences;
+#ifndef CW_PREF_DB_NAME
+    #define CW_PREF_DB_NAME "clockwise"
+#endif
+
 
 struct ClockwiseParams
 {
+    Preferences preferences;
+
     const char* const PREF_SWAP_BLUE_GREEN = "swapBlueGreen";
     const char* const PREF_USE_24H_FORMAT = "use24hFormat";
     const char* const PREF_DISPLAY_BRIGHT = "displayBright";
@@ -16,6 +22,8 @@ struct ClockwiseParams
     const char* const PREF_WIFI_SSID = "wifiSsid";
     const char* const PREF_WIFI_PASSWORD = "wifiPwd";
     const char* const PREF_NTP_SERVER = "ntpServer";
+    const char* const PREF_CANVAS_FILE = "canvasFile";
+    const char* const PREF_CANVAS_SERVER = "canvasServer";
 
 
     bool swapBlueGreen;
@@ -28,6 +36,8 @@ struct ClockwiseParams
     String wifiSsid;
     String wifiPwd;
     String ntpServer;
+    String canvasFile;
+    String canvasServer;
 
 
     ClockwiseParams() {
@@ -53,6 +63,8 @@ struct ClockwiseParams
         preferences.putString(PREF_WIFI_SSID, wifiSsid);
         preferences.putString(PREF_WIFI_PASSWORD, wifiPwd);
         preferences.putString(PREF_NTP_SERVER, ntpServer);
+        preferences.putString(PREF_CANVAS_FILE, canvasFile);
+        preferences.putString(PREF_CANVAS_SERVER, canvasServer);
     }
 
     void load()
@@ -67,6 +79,8 @@ struct ClockwiseParams
         wifiSsid = preferences.getString(PREF_WIFI_SSID, "");
         wifiPwd = preferences.getString(PREF_WIFI_PASSWORD, "");
         ntpServer = preferences.getString(PREF_NTP_SERVER, NTP_SERVER);
+        canvasFile = preferences.getString(PREF_CANVAS_FILE, "");
+        canvasServer = preferences.getString(PREF_CANVAS_SERVER, "raw.githubusercontent.com");
     }
 
 };

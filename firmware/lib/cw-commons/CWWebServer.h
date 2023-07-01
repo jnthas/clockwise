@@ -5,6 +5,10 @@
 #include "StatusController.h"
 #include "SettingsWebPage.h"
 
+#ifndef CLOCKFACE_NAME
+  #define CLOCKFACE_NAME "UNKNOWN"
+#endif
+
 WiFiServer server(80);
 
 struct ClockwiseWebServer
@@ -98,6 +102,10 @@ struct ClockwiseWebServer
       //a baby seal has died due this ifs
       if (key == ClockwiseParams::getInstance()->PREF_DISPLAY_BRIGHT) {
         ClockwiseParams::getInstance()->displayBright = value.toInt();
+      } else if (key == ClockwiseParams::getInstance()->PREF_WIFI_SSID) {
+        ClockwiseParams::getInstance()->wifiSsid = value;
+      } else if (key == ClockwiseParams::getInstance()->PREF_WIFI_PASSWORD) {
+        ClockwiseParams::getInstance()->wifiPwd = value;
       } else if (key == "autoBright") {   //autoBright=0010,0800
         ClockwiseParams::getInstance()->autoBrightMin = value.substring(0,4).toInt();
         ClockwiseParams::getInstance()->autoBrightMax = value.substring(5,9).toInt();
@@ -111,6 +119,10 @@ struct ClockwiseWebServer
         ClockwiseParams::getInstance()->timeZone = value;
       } else if (key == ClockwiseParams::getInstance()->PREF_NTP_SERVER) {
         ClockwiseParams::getInstance()->ntpServer = value;
+      } else if (key == ClockwiseParams::getInstance()->PREF_CANVAS_FILE) {
+        ClockwiseParams::getInstance()->canvasFile = value;
+      } else if (key == ClockwiseParams::getInstance()->PREF_CANVAS_SERVER) {
+        ClockwiseParams::getInstance()->canvasServer = value;
       }
       ClockwiseParams::getInstance()->save();
       client.println("HTTP/1.0 204 No Content");
@@ -143,8 +155,12 @@ struct ClockwiseWebServer
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_TIME_ZONE, ClockwiseParams::getInstance()->timeZone.c_str());
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_WIFI_SSID, ClockwiseParams::getInstance()->wifiSsid.c_str());
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_NTP_SERVER, ClockwiseParams::getInstance()->ntpServer.c_str());
+    client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_CANVAS_FILE, ClockwiseParams::getInstance()->canvasFile.c_str());
+    client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_CANVAS_SERVER, ClockwiseParams::getInstance()->canvasServer.c_str());
+
     client.printf(HEADER_TEMPLATE_S, "CW_FW_VERSION", CW_FW_VERSION);
     client.printf(HEADER_TEMPLATE_S, "CW_FW_NAME", CW_FW_NAME);
+    client.printf(HEADER_TEMPLATE_S, "CLOCKFACE_NAME", CLOCKFACE_NAME);
     client.println();
   }
   
