@@ -13,6 +13,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid use extensive of String in CWWebServer.cpp
 
 
+## [1.4.0] - 2023-07-01
+
+### Added 
+
+- Canvas clockface
+- Created a method to make use of the ezTime formating string 
+- Possibility to change Wifi user/pwd via API (must be connected)
+- A helper to make HTTP requests
+
+### Changed
+
+- RGB icons used in the startup, it was replaced by one-bit images that reduce used flash
+
+
 ## [1.3.0] - 2023-06-11
 
 ### Added

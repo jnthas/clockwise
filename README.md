@@ -12,8 +12,8 @@ These displays are about the size of a wall clock and with the ESP32, besides co
 WiFi, Bluetooth, touch buttons and other sensors, which gives us basically a smart wall clock. 
 From there I started to develop a platform to create the _Clockfaces_, or skins that the clock can have. The possibilities are many and I hope that with help from contributors, we can grow the options even more.
 
-### ⏰ Do you want to create a new cool Clockface?
-Start here https://github.com/jnthas/cw-cf-0x00
+### ⏰ New Clockfaces
+Create a new custom Clockface starting from [here](https://github.com/jnthas/cw-cf-0x00) or take a look at the [Clock Club](https://github.com/jnthas/clock-club) and discover how to create new ones using just a JSON file with no coding.
 
 
 ## Available clockfaces
@@ -32,6 +32,12 @@ Pacman | Pokedex
 :-----:|:------:
 ![Pacman Clockface](https://github.com/jnthas/cw-cf-0x05/blob/main/cf_0x05_thumb.jpg "Pacman Clockface") | ![Pokedex Clockface](https://github.com/jnthas/cw-cf-0x06/blob/main/cf_0x06_thumb.jpg "Pokedex Clockface") 
 https://github.com/jnthas/cw-cf-0x05 | https://github.com/jnthas/cw-cf-0x06
+
+Canvas | Description
+:-----:|:------:
+![Canvas Clockface](https://github.com/jnthas/cw-cf-0x07/blob/main/cf_0x07_thumb.jpg "Canvas Clockface") | Canvas is a special type of Clockface that is capable of rendering different themes described in a JSON file. Find out more [here](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface).
+https://github.com/jnthas/cw-cf-0x07 |
+
 
 ## Driving the led matrix
 
