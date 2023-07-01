@@ -32,10 +32,14 @@ Here in this section you can upload the desired clockface to your device. A step
     <input type="radio" name="clockface" value="cw-cf-0x06" onclick="handleClick(this);">
     <img id="cw-cf-0x06" src="https://github.com/jnthas/cw-cf-0x06/raw/main/cf_0x06_thumb.jpg" width="128" alt="Pokedex">
   </label>
+  <hr>
   <label>
     <input type="radio" name="clockface" value="cw-cf-0x07" onclick="handleClick(this);">
     <img id="cw-cf-0x07" src="https://github.com/jnthas/cw-cf-0x07/raw/main/cf_0x07_thumb.jpg" width="128" alt="Canvas">
+    <span><strong>Canvas</strong> is a special type of Clockface that is capable of rendering different themes described in a JSON file. Find out more <a href="https://github.com/jnthas/clockwise/wiki/Canvas-Clockface" target="_blank">here</a>.</span>
   </label>
+  
+
   </div>
 
 </fieldset>

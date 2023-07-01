@@ -22,16 +22,26 @@ fieldset legend {
   box-shadow: 0 0 0 5px #6D9B7C;
   margin-left: 20px;
   text-align:left;
-  
 }
 
-
 .container-radio {
-  max-width: 70%;
-  width: 100%; /* Can be in percentage also. */
+  max-width: 86%;
+  width: 100%;
   height: auto;
   margin: 0 auto;
   position: relative;
+}
+
+
+
+#cw-cf-0x07 {
+  float: left;
+  margin-right: 15px;
+}
+
+
+hr {
+  border-top: 3px dashed #6d9b7c !important;
 }
 
 
