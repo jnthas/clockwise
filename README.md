@@ -1,5 +1,4 @@
-> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.3.0 was released](https://github.com/jnthas/clockwise/releases/tag/v1.3.0) with new parameters of NTP Server, LDR Pin and the possibility to read a pin value. For bright control, it's possible to turnoff the display when LDR value < min bright.
-
+> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.4.0 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.0) a new special type of clockface is available called **Canvas**. Using Canvas you can customize your Clockwise with just a single JSON file. Take a look at the [Wiki](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface) of the feature.
 
 [![Clockwise CI/CD](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml/badge.svg)](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml)
 
