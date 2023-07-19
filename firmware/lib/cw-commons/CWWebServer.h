@@ -123,6 +123,8 @@ struct ClockwiseWebServer
         ClockwiseParams::getInstance()->canvasFile = value;
       } else if (key == ClockwiseParams::getInstance()->PREF_CANVAS_SERVER) {
         ClockwiseParams::getInstance()->canvasServer = value;
+      } else if (key == ClockwiseParams::getInstance()->PREF_MANUAL_POSIX) {
+        ClockwiseParams::getInstance()->manualPosix = value;
       }
       ClockwiseParams::getInstance()->save();
       client.println("HTTP/1.0 204 No Content");
@@ -157,6 +159,7 @@ struct ClockwiseWebServer
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_NTP_SERVER, ClockwiseParams::getInstance()->ntpServer.c_str());
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_CANVAS_FILE, ClockwiseParams::getInstance()->canvasFile.c_str());
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_CANVAS_SERVER, ClockwiseParams::getInstance()->canvasServer.c_str());
+    client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_MANUAL_POSIX, ClockwiseParams::getInstance()->manualPosix.c_str());
 
     client.printf(HEADER_TEMPLATE_S, "CW_FW_VERSION", CW_FW_VERSION);
     client.printf(HEADER_TEMPLATE_S, "CW_FW_NAME", CW_FW_NAME);

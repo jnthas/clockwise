@@ -127,6 +127,14 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           save: "updatePreference('canvasServer', serverAddress.value)",
           property: "canvasServer",
           exclusive: "cw-cf-0x07"
+        },
+        {
+          title: "[Advanced] Posix Timezone String",
+          description: "To avoid remote lookups, provide a Posix string that corresponds to your timezone. Leave empty to disable.",
+          formInput: "<input id='posixString' class='w3-input w3-light-grey' name='posixString' type='text' placeholder='Manual Posix String' value='" + settings.manualposix + "'>",
+          icon: "fa-globe",
+          save: "updatePreference('manualPosix', posixString.value)",
+          property: "manualPosix"
         }
       ];
 
