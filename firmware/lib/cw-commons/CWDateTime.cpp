@@ -1,11 +1,19 @@
 #include "CWDateTime.h"
 
-void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpServer = NTP_SERVER)
+void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpServer = NTP_SERVER, const char *posixTZ = "")
 {
   Serial.printf("[Time] NTP Server: %s, Timezone: %s\n", ntpServer, timeZone);
-  
   ezt::setServer(String(ntpServer));
-  myTZ.setLocation(timeZone);
+
+  if (strlen(posixTZ) > 1) {
+    // An empty value still contains a null character so not empty is a value greater than 1.
+    // Set to defined Posix TZ
+    myTZ.setPosix(posixTZ);
+  } else {
+    // Use automatic eztime remote lookup
+    myTZ.setLocation(timeZone);
+  }
+
   this->use24hFormat = use24format;
   ezt::updateNTP();
   waitForSync();
