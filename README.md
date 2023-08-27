@@ -1,4 +1,4 @@
-> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [Version 1.4.0 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.0) a new special type of clockface is available called **Canvas**. Using Canvas you can customize your Clockwise with just a single JSON file. Take a look at the [Wiki](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface) of the feature.
+> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [2023-08-27] [Version 1.4.1 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.1) fixed a bug in Canvas clockface and a new parameter to set the POSIX manually was added. Be part of the [Clock Club](https://github.com/jnthas/clock-club) and create your own clockface using Canvas.
 
 [![Clockwise CI/CD](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml/badge.svg)](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml)
 
@@ -82,8 +82,9 @@ The settings page have the following options
 - *Use 24h format*: You can choose between 20:00 or 8:00PM in your device.
 - *Automatic Bright*: Once you connect a LDR in the ESP32, Clockwise will be able to control the display bright based on the ambient light. Check the [Wiki](
 https://github.com/jnthas/clockwise/wiki/Connecting-the-LDR) about that.
-- *NTP Server*: Configure your prefered NTP Server. You can use one of the [NTP Pool Project](https://www.ntppool.org/) pools or a local one.
+- *NTP Server*: Configure your prefered NTP Server. You can use one of the [NTP Pool Project](https://www.ntppool.org/) pools or a local one. Default is `time.google.com`.
 - *LDR Pin*: The ESP32 GPIO pin where the LDR is connected to. The default is 35. There is a link there where you can read the current value of LDR and test if it's working.
+- *Posix Timezone String*: To avoid remote lookups of ezTime, provide a Posix string that corresponds to your timezone ([explanation](https://github.com/ropg/ezTime#timezones-1)). Leave empty to obtain this automatically from the server. 
 
 ## How to change the clockface (PlatformIO)
 
