@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid use extensive of String in CWWebServer.cpp
 
 
+## [1.4.1] - 2023-08-27
+
+### Added 
+
+- New Manual Posix param to avoid the `timezoned.rop.nl` ezTime's timezone service. Thanks @JeffWDH!
+
+### Changed
+
+- Set `time.google.com` as a default NTP server - `pool.ntp.org` is a slug
+
+### Fixed
+
+- A bug in the Canvas clockface - Commit a216c29c4f15b1b3cadbd89805d150c2f551562b
+
+
 ## [1.4.0] - 2023-07-01
 
 ### Added 
