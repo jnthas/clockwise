@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Preferences.h>
-#include <ezTime.h>
 
 #ifndef CW_PREF_DB_NAME
     #define CW_PREF_DB_NAME "clockwise"
@@ -81,7 +80,7 @@ struct ClockwiseParams
         timeZone = preferences.getString(PREF_TIME_ZONE, "America/Sao_Paulo");
         wifiSsid = preferences.getString(PREF_WIFI_SSID, "");
         wifiPwd = preferences.getString(PREF_WIFI_PASSWORD, "");
-        ntpServer = preferences.getString(PREF_NTP_SERVER, NTP_SERVER);
+        ntpServer = preferences.getString(PREF_NTP_SERVER, "time.google.com");
         canvasFile = preferences.getString(PREF_CANVAS_FILE, "");
         canvasServer = preferences.getString(PREF_CANVAS_SERVER, "raw.githubusercontent.com");
         manualPosix = preferences.getString(PREF_MANUAL_POSIX, "");
