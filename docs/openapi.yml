@@ -20,64 +20,78 @@ paths:
                     description: No Content
                     headers:
                         X-displayBright:
+                            description: Display brightness
                             schema:
                                 type: integer
                                 example: 33
                                 minimum: 0
                                 maximum: 255
                         X-autoBrightMin:
+                            description: Auto brightness minimum
                             schema:
                                 type: integer
                                 example: 1
                                 minimum: 0
                                 maximum: 4095
                         X-autoBrightMax:
+                            description: Auto brightness maximum
                             schema:
                                 type: integer
                                 example: 230
                                 minimum: 0
                                 maximum: 4095
                         X-swapBlueGreen:
+                            description: Is RBG used instead of RGB (blue & green are switched)?
                             schema:
                                 type: integer
                                 example: 1
                         X-use24hFormat:
+                            description: Use the 24h format instead of 12h for the clock
                             schema:
                                 type: integer
                                 example: 1
                         X-ldrPin:
+                            description: Which GPIO pin is currently defined for the LDR
                             schema:
                                 type: integer
                                 example: 35
                         X-timeZone:
+                            description: Currently selected time zone
                             schema:
                                 type: string
                                 example: Europe/Paris
                         X-wifiSsid:
+                            description: SSID the device is connected to
                             schema:
                                 type: string
                                 example: MyWifi
                         X-ntpServer:
+                            description: URL of the NTP server the device is connected to
                             schema:
                                 type: string
                                 example: de.pool.ntp.org
                         X-canvasFile:
+                            description: Name of the canvas file that is currently being used
                             schema:
                                 type: string
                                 example: my-theme.json
                         X-canvasServer:
+                            description: Address of the canvas server that is currently being used
                             schema:
                                 type: string
                                 example: raw.githubusercontent.com
                         X-CW_FW_VERSION:
+                            description: Clockwise firmware version
                             schema:
                                 type: string
                                 example: 1.4.0
                         X-CW_FW_NAME:
+                            description: Clockwise firmware name
                             schema:
                                 type: string
                                 example: CW_20230701
                         X-CLOCKFACE_NAME:
+                            description: Clockface name (e.g. `cw-cf-0x01`)
                             schema:
                                 type: string
                                 example: UNKNOWN
