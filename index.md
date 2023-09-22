@@ -58,6 +58,10 @@ Here in this section you can upload the desired clockface to your device. A step
 You will need only three components to make a Clockwise device, they are easily found on stores like Amazon and Aliexpress. More details [here](https://github.com/jnthas/clockwise/tree/main#driving-the-led-matrix).
 
 
+## API
+Clockwise comes with a small built in server that provides a few calls to control your device.
+
+Have a look at our dedicated [API documentation](/docs/api)
 ## About
 
 Clockwise was an idea I had while working with 64x64 LED matrices. These displays are about the size of a wall clock and with the ESP32, besides controlling the content presented on the display we also gain the functionality of WiFi, Bluetooth, touch buttons and other sensors, which gives us basically a smart wall clock. I wrote a post for [instructables](https://www.instructables.com/Mario-Bros-Clock/).

@@ -1,0 +1,223 @@
+openapi: 3.0.3
+servers:
+    - url: "http://<clockwise-device>" # add IP address of your Clockwise device
+info:
+    title: Clockwise API
+    description: Clockwise API
+    version: 1.0.0
+paths:
+    /:
+        get:
+            description: Getting the settings page
+            responses:
+                "200":
+                    description: OK
+    /get:
+        get:
+            description: Getting all information
+            responses:
+                "204":
+                    description: No Content
+                    headers:
+                        X-displayBright:
+                            description: Display brightness
+                            schema:
+                                type: integer
+                                example: 33
+                                minimum: 0
+                                maximum: 255
+                        X-autoBrightMin:
+                            description: Auto brightness minimum
+                            schema:
+                                type: integer
+                                example: 1
+                                minimum: 0
+                                maximum: 4095
+                        X-autoBrightMax:
+                            description: Auto brightness maximum
+                            schema:
+                                type: integer
+                                example: 230
+                                minimum: 0
+                                maximum: 4095
+                        X-swapBlueGreen:
+                            description: Is RBG used instead of RGB (blue & green are switched)?
+                            schema:
+                                type: integer
+                                example: 1
+                        X-use24hFormat:
+                            description: Use the 24h format instead of 12h for the clock
+                            schema:
+                                type: integer
+                                example: 1
+                        X-ldrPin:
+                            description: Which GPIO pin is currently defined for the LDR
+                            schema:
+                                type: integer
+                                example: 35
+                        X-timeZone:
+                            description: Currently selected time zone
+                            schema:
+                                type: string
+                                example: Europe/Paris
+                        X-wifiSsid:
+                            description: SSID the device is connected to
+                            schema:
+                                type: string
+                                example: MyWifi
+                        X-ntpServer:
+                            description: URL of the NTP server the device is connected to
+                            schema:
+                                type: string
+                                example: de.pool.ntp.org
+                        X-canvasFile:
+                            description: Name of the canvas file that is currently being used
+                            schema:
+                                type: string
+                                example: my-theme.json
+                        X-canvasServer:
+                            description: Address of the canvas server that is currently being used
+                            schema:
+                                type: string
+                                example: raw.githubusercontent.com
+                        X-CW_FW_VERSION:
+                            description: Clockwise firmware version
+                            schema:
+                                type: string
+                                example: 1.4.0
+                        X-CW_FW_NAME:
+                            description: Clockwise firmware name
+                            schema:
+                                type: string
+                                example: CW_20230701
+                        X-CLOCKFACE_NAME:
+                            description: Clockface name (e.g. `cw-cf-0x01`)
+                            schema:
+                                type: string
+                                example: UNKNOWN
+    /read:
+        get:
+            description: Getting pin information
+            parameters:
+                - name: pin
+                  in: query
+                  description: Get pin value
+                  required: false
+                  schema:
+                      type: integer
+                      format: int64
+            responses:
+                "204":
+                    description: No Content
+    /restart:
+        post:
+            description: Restart device
+            responses:
+                "204":
+                    description: No Content
+    /set:
+        post:
+            parameters:
+                - name: displayBright
+                  in: query
+                  description: Number to set the display brightness to
+                  required: false
+                  schema:
+                      type: integer
+                      default: 32
+                      minimum: 0
+                      maximum: 255
+                - name: wifiSsid
+                  in: query
+                  required: false
+                  description: SSID of wifi network to be used
+                  schema:
+                      type: string
+                - name: wifiPwd
+                  in: query
+                  required: false
+                  description: Wifi password to be used
+                  schema:
+                      type: string
+                - name: autoBright
+                  in: query
+                  required: false
+                  description: |
+                    Set min and max values for autoBrightness. The value is a 
+                    compound string that houses both values in one. First 
+                    part is min, second part is max. 
+
+                    If current brightness value is smaller than minimum 
+                    brightness the device will turn off.
+                  schema:
+                      type: string
+                      pattern: ^\d{4},\d{4}$
+                      default: 0000,0800
+                - name: swapBlueGreen
+                  in: query
+                  required: false
+                  description: |
+                    Swap the blue and green color. Basically use RBG instead of 
+                    RGB.
+                  schema:
+                      type: number
+                      enum:
+                        - 0
+                        - 1
+                - name: use24hFormat
+                  in: query
+                  required: false
+                  description: |
+                    Defines if the 24h format should be used
+                  schema:
+                      type: integer
+                      enum:
+                        - 0
+                        - 1
+                - name: ldrPin
+                  in: query
+                  required: false
+                  description: Define which GPIO pin the LDR is connected to
+                  schema:
+                      type: integer
+                      default: 35
+                - name: timeZone
+                  in: query
+                  required: false
+                  description: Set the time zone that should be used
+                  schema:
+                      type: string
+                      default: "America/Sao_Paulo"
+                - name: ntpServer
+                  in: query
+                  required: false
+                  description: |
+                    Define URL of NTP server to be used for synchronization
+                  schema:
+                      type: string
+                      default: "time.google.com"
+                - name: canvasFile
+                  in: query
+                  required: false
+                  description: |
+                    Name of the canvas file that should be used (e.g. 
+                    `my-theme.json`)
+                  schema:
+                      type: string
+                - name: canvasServer
+                  in: query
+                  required: false
+                  description: URL of the server where the canvas file is saved
+                  schema:
+                      type: string
+                      default: "raw.githubusercontent.com"
+                - name: manualPosix
+                  in: query
+                  required: false
+                  description: |
+                    Avoid remote lookups of ezTime, by providing a posix string
+                  schema:
+                      type: string
+            responses:
+                "204":
+                    description: No Content
