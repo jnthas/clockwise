@@ -25,7 +25,7 @@ CWDateTime cwDateTime;
 bool autoBrightEnabled;
 long autoBrightMillis = 0;
 
-void displaySetup(bool swapBlueGreen, uint8_t displayBright)
+void displaySetup(bool swapBlueGreen, uint8_t displayBright, uint8_t displayRotation)
 {
   HUB75_I2S_CFG mxconfig(64, 64, 1);
 
@@ -46,6 +46,7 @@ void displaySetup(bool swapBlueGreen, uint8_t displayBright)
   dma_display->begin();
   dma_display->setBrightness8(displayBright);
   dma_display->clearScreen();
+  dma_display->setRotation(displayRotation);
 }
 
 void automaticBrightControl()
@@ -84,7 +85,7 @@ void setup()
 
   pinMode(ClockwiseParams::getInstance()->ldrPin, INPUT);
 
-  displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->displayBright);
+  displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->displayBright, ClockwiseParams::getInstance()->displayRotation);
   clockface = new Clockface(dma_display);
 
   autoBrightEnabled = (ClockwiseParams::getInstance()->autoBrightMax > 0);

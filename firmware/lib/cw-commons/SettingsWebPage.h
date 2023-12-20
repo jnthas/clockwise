@@ -135,6 +135,14 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           icon: "fa-globe",
           save: "updatePreference('manualPosix', posixString.value)",
           property: "manualPosix"
+        },
+        {
+          title: "Rotation",
+          description: "Rotation of the matrix display.",
+          formInput: "<select name='rotation' id='rotation'><option value='0'" + (settings.displayrotation == 0 ? " selected='selected'" : "") + ">0</option><option value='1'" + (settings.displayrotation == 1 ? " selected='selected'" : "") + ">90</option><option value='2'" + (settings.displayrotation == 2 ? " selected='selected'" : "") + ">180</option><option value='3'" + (settings.displayrotation == 3 ? " selected='selected'" : "") + ">270</option></select>",
+          icon: "fa-rotate-right",
+          save: "updatePreference('displayRotation', rotation.value)",
+          property: "displayRotation"
         }
       ];
 
