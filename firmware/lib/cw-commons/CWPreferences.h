@@ -24,7 +24,7 @@ struct ClockwiseParams
     const char* const PREF_CANVAS_FILE = "canvasFile";
     const char* const PREF_CANVAS_SERVER = "canvasServer";
     const char* const PREF_MANUAL_POSIX = "manualPosix";
-
+    const char* const PREF_DISPLAY_ROTATION = "displayRotation";
 
     bool swapBlueGreen;
     bool use24hFormat;
@@ -39,6 +39,7 @@ struct ClockwiseParams
     String canvasFile;
     String canvasServer;
     String manualPosix;
+    uint8_t displayRotation;
 
 
     ClockwiseParams() {
@@ -67,6 +68,7 @@ struct ClockwiseParams
         preferences.putString(PREF_CANVAS_FILE, canvasFile);
         preferences.putString(PREF_CANVAS_SERVER, canvasServer);
         preferences.putString(PREF_MANUAL_POSIX, manualPosix);
+        preferences.putUInt(PREF_DISPLAY_ROTATION, displayRotation);
     }
 
     void load()
@@ -84,6 +86,7 @@ struct ClockwiseParams
         canvasFile = preferences.getString(PREF_CANVAS_FILE, "");
         canvasServer = preferences.getString(PREF_CANVAS_SERVER, "raw.githubusercontent.com");
         manualPosix = preferences.getString(PREF_MANUAL_POSIX, "");
+        displayRotation = preferences.getUInt(PREF_DISPLAY_ROTATION, 0);
     }
 
 };
