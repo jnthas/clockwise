@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid use extensive of String in CWWebServer.cpp
 
 
+## [1.4.2] - 2024-04-21
+
+### Added 
+
+- New Display Rotation param. Thanks @Xefan.
+- Added ntp sync in main loop. Thanks @vandalon
+- Add api documentation
+- Pacman clockface: Add library.json to import using platformio
+- Canvas: Feature/add sprite loop and frame delay. Thanks @robegamesios
+
+
 ## [1.4.1] - 2023-08-27
 
 ### Added 
