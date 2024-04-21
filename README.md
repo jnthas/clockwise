@@ -1,4 +1,4 @@
-> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) [2023-08-27] [Version 1.4.1 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.1) fixed a bug in Canvas clockface and a new parameter to set the POSIX manually was added. Be part of the [Clock Club](https://github.com/jnthas/clock-club) and create your own clockface using Canvas.
+> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif)[2024-04-21] [Version 1.4.2 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.2) Check the [change log](https://github.com/jnthas/clockwise/blob/main/CHANGELOG.md#142---2024-04-21) to see the fixes and new features added. Be part of the [Clock Club](https://github.com/jnthas/clock-club) and create your own clockface using Canvas.
 
 [![Clockwise CI/CD](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml/badge.svg)](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml)
 
