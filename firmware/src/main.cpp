@@ -112,6 +112,7 @@ void loop()
   if (wifi.isConnected())
   {
     ClockwiseWebServer::getInstance()->handleHttpRequest();
+    ezt::events();
   }
 
   if (wifi.connectionSucessfulOnce)
