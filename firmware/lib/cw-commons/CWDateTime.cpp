@@ -16,7 +16,7 @@ void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpSe
 
   this->use24hFormat = use24format;
   ezt::updateNTP();
-  waitForSync();
+  waitForSync(10);
 }
 
 String CWDateTime::getFormattedTime()
