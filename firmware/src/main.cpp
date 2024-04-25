@@ -67,11 +67,11 @@ void automaticBrightControl()
       uint8_t mapLDR = map(currentValue, ldrMin, ldrMax, 1, slots);
       uint8_t mapBright = map(mapLDR, 1, slots, minBright, maxBright);
 
-      Serial.printf("LDR: %d, mapLDR: %d, Bright: %d\n", currentValue, mapLDR, mapBright);
+      // Serial.printf("LDR: %d, mapLDR: %d, Bright: %d\n", currentValue, mapLDR, mapBright);
       if(abs(currentBrightSlot - mapLDR ) >= 2 || mapBright == 0){
            dma_display->setBrightness8(mapBright);
            currentBrightSlot=mapLDR;
-           Serial.printf("setBrightness: %d , Update currentBrightSlot to %d\n", mapBright, mapLDR);
+          //  Serial.printf("setBrightness: %d , Update currentBrightSlot to %d\n", mapBright, mapLDR);
       }
       autoBrightMillis = millis();
     }
