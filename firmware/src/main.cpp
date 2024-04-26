@@ -64,7 +64,7 @@ void automaticBrightControl()
       uint8_t maxBright = ClockwiseParams::getInstance()->displayBright;
 
       uint8_t slots = 10; //10 slots
-      uint8_t mapLDR = map(currentValue, ldrMin, ldrMax, 1, slots);
+      uint8_t mapLDR = map(currentValue > ldrMax ? ldrMax : currentValue, ldrMin, ldrMax, 1, slots);
       uint8_t mapBright = map(mapLDR, 1, slots, minBright, maxBright);
 
       // Serial.printf("LDR: %d, mapLDR: %d, Bright: %d\n", currentValue, mapLDR, mapBright);
