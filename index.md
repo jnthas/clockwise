@@ -68,6 +68,18 @@ Clockwise was an idea I had while working with 64x64 LED matrices. These display
 
 <img class="center" alt="Clockwise on a shelf" src="static/images/clockwise-shelf.jpg"/>
 
+## Videos
+
+### English
+[<img src="https://i.ytimg.com/vi/vugulzS0EoU/maxresdefault.jpg" width="25%">](https://www.youtube.com/watch?v=vugulzS0EoU "Clockwise video in English 1")
+[<img src="https://i.ytimg.com/vi/9vXFssfQ6p4/maxresdefault.jpg" width="25%">](https://www.youtube.com/watch?v=9vXFssfQ6p4 "Clockwise video in English 2")
+
+### Spanish
+[<img src="https://i.ytimg.com/vi/8Fej_eP2MNg/maxresdefault.jpg" width="25%">](https://www.youtube.com/watch?v=8Fej_eP2MNg "Clockwise video in Spanish 1")
+
+### Italian
+[<img src="https://i.ytimg.com/vi/sg71ilrcJJA/maxresdefault.jpg" width="25%">](https://www.youtube.com/watch?v=sg71ilrcJJA "Clockwise video in Italian 1")
+
 
 <script>
   function handleClick(radio) {
