@@ -70,6 +70,14 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           property: "use24hFormat"
         },
         {
+          title: "Chain 64x32 panels",
+          description: "Use two 64x32 LED Panels instead of one single 64x64",
+          formInput: "<input class='w3-check' type='checkbox' id='chain' " + (settings.chain == '1' ? "checked" : "") + "><label for='chain'> Yep</label>",
+          icon: "fa-clock-o",
+          save: "updatePreference('chain', Number(chain.checked))",
+          property: "chain"
+        },
+        {
           title: "Swap Blue/Green pins?",
           description: "Swap Blue and Green pins because the panel is RBG instead of RGB",
           formInput: "<input class='w3-check' type='checkbox' id='swapBG' " + (settings.swapbluegreen == '1' ? "checked" : "") + "><label for='swapBG'> Yep</label>",
@@ -229,7 +237,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     }
 
     //Local
-    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "ldrPin":35, "cw_fw_version":"1.2.2", "clockface_name":"cw-cf-0x07", "canvasServer":"raw.githubusercontent.com", "canvasFile":"star-wars.json" });
+    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, , "chain" : 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "ldrPin":35, "cw_fw_version":"1.2.2", "clockface_name":"cw-cf-0x07", "canvasServer":"raw.githubusercontent.com", "canvasFile":"star-wars.json" });
 
     //Embedded
     begin();

@@ -13,6 +13,7 @@ struct ClockwiseParams
 
     const char* const PREF_SWAP_BLUE_GREEN = "swapBlueGreen";
     const char* const PREF_USE_24H_FORMAT = "use24hFormat";
+    const char* const CHAIN = "chain";
     const char* const PREF_DISPLAY_BRIGHT = "displayBright";
     const char* const PREF_DISPLAY_ABC_MIN = "autoBrightMin";
     const char* const PREF_DISPLAY_ABC_MAX = "autoBrightMax";
@@ -28,6 +29,7 @@ struct ClockwiseParams
 
     bool swapBlueGreen;
     bool use24hFormat;
+    bool chain;
     uint8_t displayBright;
     uint16_t autoBrightMin;
     uint16_t autoBrightMax;
@@ -57,6 +59,7 @@ struct ClockwiseParams
     {
         preferences.putBool(PREF_SWAP_BLUE_GREEN, swapBlueGreen);
         preferences.putBool(PREF_USE_24H_FORMAT, use24hFormat);
+        preferences.putBool(CHAIN, chain);
         preferences.putUInt(PREF_DISPLAY_BRIGHT, displayBright);
         preferences.putUInt(PREF_DISPLAY_ABC_MIN, autoBrightMin);
         preferences.putUInt(PREF_DISPLAY_ABC_MAX, autoBrightMax);
@@ -75,6 +78,7 @@ struct ClockwiseParams
     {
         swapBlueGreen = preferences.getBool(PREF_SWAP_BLUE_GREEN, false);
         use24hFormat = preferences.getBool(PREF_USE_24H_FORMAT, true);
+        chain = preferences.getBool(CHAIN, false);
         displayBright = preferences.getUInt(PREF_DISPLAY_BRIGHT, 32);
         autoBrightMin = preferences.getUInt(PREF_DISPLAY_ABC_MIN, 0);
         autoBrightMax = preferences.getUInt(PREF_DISPLAY_ABC_MAX, 0);
