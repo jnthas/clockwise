@@ -18,7 +18,7 @@ struct ClockwiseWebServer
   const char* HEADER_TEMPLATE_D = "X-%s: %d\r\n";
   const char* HEADER_TEMPLATE_S = "X-%s: %s\r\n";
 
-  static ClockwiseWebServer *getInstance() 
+  static ClockwiseWebServer *getInstance()
   {
     static ClockwiseWebServer base;
     return &base;
