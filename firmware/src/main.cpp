@@ -15,17 +15,19 @@
 
 #define ESP32_LED_BUILTIN 2
 
-#define CHAINED_PANEL_RES_X 64 // Number of pixels wide of each INDIVIDUAL panel module. 
-#define CHAINED_PANEL_RES_Y 32 // Number of pixels tall of each INDIVIDUAL panel module.
-#define CHAINED_NUM_ROWS 2 // Number of rows of chained INDIVIDUAL PANELS
-#define CHAINED_NUM_COLS 1 // Number of rows of chained INDIVIDUAL PANELS
+// Single 64x64 LED panel use case
+#define PANEL_RES_X 64
+#define PANEL_RES_Y 64
+#define NUM_COLS 1
+#define NUM_ROWS 1
 
-#define PANEL_RES_X 64 // Number of pixels wide of each INDIVIDUAL panel module. 
-#define PANEL_RES_Y 64 // Number of pixels tall of each INDIVIDUAL panel module.
-#define NUM_COLS 1 // Number of INDIVIDUAL PANELS per ROW
-#define NUM_ROWS 1 // Number of rows of chained INDIVIDUAL PANELS
+// Chained 64x32 panels use case
+// #define CHAINED_PANEL_RES_X 64
+#define CHAINED_PANEL_RES_Y 32
+#define CHAINED_NUM_ROWS 2
+// #define CHAINED_NUM_COLS 1
 
-#define VIRTUAL_MATRIX_CHAIN_TYPE CHAIN_BOTTOM_LEFT_UP 
+#define VIRTUAL_MATRIX_CHAIN_TYPE CHAIN_BOTTOM_LEFT_UP
 
 MatrixPanel_I2S_DMA *dma_display = nullptr;
 VirtualMatrixPanel  *virtualDisp = nullptr;
@@ -42,10 +44,10 @@ uint8_t currentBrightSlot = -1;
 void displaySetup(bool swapBlueGreen, uint8_t displayBright, uint8_t displayRotation)
 {
   HUB75_I2S_CFG mxconfig(
-    ClockwiseParams::getInstance()->chain ? CHAINED_PANEL_RES_X : PANEL_RES_X,   // module width
-    ClockwiseParams::getInstance()->chain ? CHAINED_PANEL_RES_Y : PANEL_RES_Y,   // module height
-    ClockwiseParams::getInstance()->chain ? (CHAINED_PANEL_RES_X * CHAINED_PANEL_RES_Y) : (NUM_ROWS * NUM_COLS)    // chain length
-);
+    PANEL_RES_X,
+    ClockwiseParams::getInstance()->chain ? CHAINED_PANEL_RES_Y : PANEL_RES_Y,
+    ClockwiseParams::getInstance()->chain ? (CHAINED_NUM_ROWS * NUM_COLS) : (NUM_ROWS * NUM_COLS)
+  );
 
   if (swapBlueGreen)
   {
