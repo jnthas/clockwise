@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
+#include <ESP32-VirtualMatrixPanel-I2S-DMA.h>
 
 // Clockface
 #include <Clockface.h>
@@ -15,7 +15,20 @@
 
 #define ESP32_LED_BUILTIN 2
 
+#define CHAINED_PANEL_RES_X 64 // Number of pixels wide of each INDIVIDUAL panel module. 
+#define CHAINED_PANEL_RES_Y 32 // Number of pixels tall of each INDIVIDUAL panel module.
+#define CHAINED_NUM_ROWS 2 // Number of rows of chained INDIVIDUAL PANELS
+#define CHAINED_NUM_COLS 1 // Number of rows of chained INDIVIDUAL PANELS
+
+#define PANEL_RES_X 64 // Number of pixels wide of each INDIVIDUAL panel module. 
+#define PANEL_RES_Y 64 // Number of pixels tall of each INDIVIDUAL panel module.
+#define NUM_COLS 1 // Number of INDIVIDUAL PANELS per ROW
+#define NUM_ROWS 1 // Number of rows of chained INDIVIDUAL PANELS
+
+#define VIRTUAL_MATRIX_CHAIN_TYPE CHAIN_BOTTOM_LEFT_UP 
+
 MatrixPanel_I2S_DMA *dma_display = nullptr;
+VirtualMatrixPanel  *virtualDisp = nullptr;
 
 Clockface *clockface;
 
@@ -28,7 +41,11 @@ uint8_t currentBrightSlot = -1;
 
 void displaySetup(bool swapBlueGreen, uint8_t displayBright, uint8_t displayRotation)
 {
-  HUB75_I2S_CFG mxconfig(64, 64, 1);
+  HUB75_I2S_CFG mxconfig(
+    ClockwiseParams::getInstance()->chain ? CHAINED_PANEL_RES_X : PANEL_RES_X,   // module width
+    ClockwiseParams::getInstance()->chain ? CHAINED_PANEL_RES_Y : PANEL_RES_Y,   // module height
+    ClockwiseParams::getInstance()->chain ? (CHAINED_PANEL_RES_X * CHAINED_PANEL_RES_Y) : (NUM_ROWS * NUM_COLS)    // chain length
+);
 
   if (swapBlueGreen)
   {
@@ -46,8 +63,10 @@ void displaySetup(bool swapBlueGreen, uint8_t displayBright, uint8_t displayRota
   dma_display = new MatrixPanel_I2S_DMA(mxconfig);
   dma_display->begin();
   dma_display->setBrightness8(displayBright);
-  dma_display->clearScreen();
-  dma_display->setRotation(displayRotation);
+
+  virtualDisp = new VirtualMatrixPanel((*dma_display), NUM_ROWS, NUM_COLS, PANEL_RES_X, PANEL_RES_Y, VIRTUAL_MATRIX_CHAIN_TYPE);
+  virtualDisp->clearScreen();
+  virtualDisp->setRotation(displayRotation);
 }
 
 void automaticBrightControl()
@@ -90,7 +109,7 @@ void setup()
   pinMode(ClockwiseParams::getInstance()->ldrPin, INPUT);
 
   displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->displayBright, ClockwiseParams::getInstance()->displayRotation);
-  clockface = new Clockface(dma_display);
+  clockface = new Clockface(virtualDisp);
 
   autoBrightEnabled = (ClockwiseParams::getInstance()->autoBrightMax > 0);
 
