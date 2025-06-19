@@ -57,6 +57,8 @@ Here in this section you can upload the desired clockface to your device. A step
 ## Hardware
 You will need only three components to make a Clockwise device, they are easily found on stores like Amazon and Aliexpress. More details [here](https://github.com/jnthas/clockwise/tree/main#driving-the-led-matrix).
 
+**Do you have a WiseShield-32 DIY Kit? Go to the [welcome page](welcome)!**
+
 
 ## API
 Clockwise comes with a small built in server that provides a few calls to control your device.
