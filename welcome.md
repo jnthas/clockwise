@@ -44,7 +44,7 @@ Before you begin assembling your Clockwise, make sure you have these tools ready
 * Tweezers
 * Multimeter (optional, for testing connections)
 
-**Estimated assembly time:** \~1 hour
+**Estimated assembly time:** \~1.5 hour
 
 **Tips:**
 
