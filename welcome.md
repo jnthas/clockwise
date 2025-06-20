@@ -54,6 +54,8 @@ Before you begin assembling your Clockwise, make sure you have these tools ready
 
 ## **Assembly Instructions**
 
+![Picture of the PCB soldered](static/images/pcb-with-sensors.jpg)
+
 Follow our [**WiseShield Soldering Guide**](docs/soldering-guide) to assemble your board step-by-step. The guide includes detailed instructions each stage of assembly.
 
 ## **First Power-Up & Firmware Flashing**

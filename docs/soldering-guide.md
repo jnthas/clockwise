@@ -105,6 +105,7 @@ Use the provided labeled PCB image to locate the positions of each component on 
 3. **J1 (HUB75 Connector):**
    * Solder all pins of the 2x8 pin header for the LED matrix connection.
 4. **J5 (Display Power - Terminal Block):**
+   * **Attention:** J5 is the only connector that is soldered faced to back side.
    * Insert and solder securely.
 5. **J4 (Expansion Header - 1x7 Pin):**
    * Solder the header pins for custom peripherals.
@@ -138,3 +139,6 @@ Use the provided labeled PCB image to locate the positions of each component on 
 ## **Congratulations!**
 
 Your WiseShield-32 is now fully assembled. You’re ready to proceed to the setup stage and start using your Clockwise.
+
+![Picture of the PCB soldered Front](../static/images/pcb-soldered.jpg)
+![Picture of the PCB soldered Back](../static/images/pcb-soldered-back.jpg)
