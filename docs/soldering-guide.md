@@ -4,7 +4,7 @@
 
 Welcome to the WiseShield-32 soldering guide! This manual will walk you through the step-by-step process of assembling your WiseShield-32 PCB. Follow along carefully, and you’ll have your board ready for use in no time!
 
-![Picture of the PCB front and back](../static/images/wiseshield32.png)
+![Picture of the components of WiseShield32](../static/images/box-content.png)
 
 ## **Before You Start**
 
@@ -30,7 +30,7 @@ Welcome to the WiseShield-32 soldering guide! This manual will walk you through 
 Use the provided labeled PCB image to locate the positions of each component on the board. Match each part with the silkscreen markings (e.g., C1, R2, J1).
 
 **Reference Labeled PCB Image**:
-![Picture of the PCB front and back](../static/images/box-content.png)
+![Picture of the PCB front and back](../static/images/wiseshield32.png)
 
 **Base:**
 * RGB LED Matrix 64x64 + Cables
