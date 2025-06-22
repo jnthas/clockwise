@@ -85,7 +85,7 @@ If you need help, or just want some inspiration:
 
 * [**Video Playlist**](https://www.youtube.com/playlist?list=PL2mlGAhto8F0BKQD4NS-AX1aP_FH7m3mo): Watch videos about Clockwise.
 * [**Wiki**](https://github.com/jnthas/clockwise/wiki): Clockwise wiki 
-* **Troubleshooting Guide**: Common issues and how to solve them.
+* [**Troubleshooting Guide**](docs/troubleshooting-guide.md): Common issues and how to solve them.
 
 ## **Get Involved**
 
