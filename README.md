@@ -43,8 +43,8 @@ Alternatively, we created a custom PCB that simplifies this process a lot. The k
 - Go to: [https://clockwise.page](https://clockwise.page)
 - Follow the on-screen steps to flash Clockwise and configure WiFi
 
-For detailed flashing steps:  
-👉 [See Wiki: Flashing Clockwise](https://github.com/jnthas/clockwise/wiki/Flashing-Clockwise)
+For detailed instructions:  
+👉 [See Wiki: Getting Started](https://github.com/jnthas/clockwise/wiki/%F0%9F%9A%80-Getting-Started)
 
 ---
 
@@ -62,16 +62,12 @@ Mario Bros | Words | World Map | Castlevania | Pacman | Pokedex | Canvas
 
 ## How to Build
 
-You can assemble Clockwise in three different ways:
+You can start developing and customizing Clockwise in two different ways:
 
-1. **Web Flashing** — the easiest way (recommended)  
-    👉 [Wiki: Web Flashing Guide](https://github.com/jnthas/clockwise/wiki/Flashing-Clockwise)
+1. **PlatformIO** — advanced usage for developers  
+2. **ESP-IDF** — for full control  
 
-2. **PlatformIO** — advanced usage for developers  
-    👉 [Wiki: Building with PlatformIO](https://github.com/jnthas/clockwise/wiki/Building-with-PlatformIO)
-
-3. **ESP-IDF** — for full control  
-    👉 [Wiki: Building with ESP-IDF](https://github.com/jnthas/clockwise/wiki/Building-with-ESP-IDF)
+👉 [Both are described in the Flashing section of the Wiki](https://github.com/jnthas/clockwise/wiki/%F0%9F%92%BE-Flashing-the-Firmware)
 
 ---
 
@@ -87,16 +83,15 @@ Clockwise offers a flexible set of options that you can adjust through its built
 * **RGB order correction** — fix color mismatch on certain LED matrices
 * **POSIX timezone string** — fine-tune timezone behavior
 
-👉 See the full guide here: [Advanced Configuration Wiki](https://github.com/jnthas/clockwise/wiki/Settings)
+👉 See the full guide here: [Advanced Configuration Wiki](https://github.com/jnthas/clockwise/wiki/%E2%9A%99%EF%B8%8F-Configuring-Clockwise)
 
 ---
 
 ## Community & Contributions
 
 - Join the [Clock Club](https://github.com/jnthas/clock-club) to create your own Clockfaces
-- Visit [Embedded Rocks](https://embedded.rocks) for news & community
 - Contributions and pull requests are welcome!  
-👉 [Contributing Guide](https://github.com/jnthas/clockwise/wiki/Contributing)
+👉 [Contributing Guide](https://github.com/jnthas/clockwise/wiki/%F0%9F%A4%9D-Contributing)
 
 ---
 
