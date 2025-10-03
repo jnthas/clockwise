@@ -26,7 +26,17 @@ bool autoBrightEnabled;
 long autoBrightMillis = 0;
 uint8_t currentBrightSlot = -1;
 
-void displaySetup(bool swapBlueGreen, bool swapBlueRed, uint8_t displayBright, uint8_t displayRotation)
+bool isValidI2SSpeed(uint32_t speed) {
+  return speed == 8000000 || speed == 16000000 || speed == 20000000;
+}
+
+bool isValidDriver(uint32_t drv) {
+  return drv >= 0 && drv <= 5;
+}
+
+
+
+void displaySetup(bool swapBlueGreen, bool swapBlueRed, uint8_t displayBright, uint8_t displayRotation, uint8_t driver, uint32_t i2cSpeed, uint8_t E_pin)
 {
   HUB75_I2S_CFG mxconfig(64, 64, 1);
 
@@ -48,8 +58,19 @@ void displaySetup(bool swapBlueGreen, bool swapBlueRed, uint8_t displayBright, u
     mxconfig.gpio.r2 = 13;
   }
 
-  mxconfig.gpio.e = 18;
+  mxconfig.gpio.e = E_pin;
   mxconfig.clkphase = false;
+
+  if (isValidDriver(driver)) {
+    mxconfig.driver = static_cast<HUB75_I2S_CFG::shift_driver>(driver);
+  } else {
+    Serial.printf("[ERROR] Invalid driver from config:%d\n", driver);
+  }
+  if (isValidI2SSpeed(i2cSpeed)) {
+    mxconfig.i2sspeed = static_cast<HUB75_I2S_CFG::clk_speed>(i2cSpeed);
+  } else {
+    Serial.printf("[ERROR] Invalid I2S speed from config:%d\n", i2cSpeed);
+  }
 
   // Display Setup
   dma_display = new MatrixPanel_I2S_DMA(mxconfig);
@@ -98,7 +119,11 @@ void setup()
 
   pinMode(ClockwiseParams::getInstance()->ldrPin, INPUT);
 
-  displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->swapBlueRed, ClockwiseParams::getInstance()->displayBright, ClockwiseParams::getInstance()->displayRotation);
+  uint8_t driver = ClockwiseParams::getInstance()->driver;
+  uint32_t i2cSpeed = ClockwiseParams::getInstance()->i2cSpeed;
+  uint8_t E_pin = ClockwiseParams::getInstance()->E_pin;
+  
+  displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->swapBlueRed, ClockwiseParams::getInstance()->displayBright, ClockwiseParams::getInstance()->displayRotation, driver, i2cSpeed, E_pin);
   clockface = new Clockface(dma_display);
 
   autoBrightEnabled = (ClockwiseParams::getInstance()->autoBrightMax > 0);

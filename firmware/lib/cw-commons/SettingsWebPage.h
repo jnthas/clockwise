@@ -151,7 +151,31 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           icon: "fa-rotate-right",
           save: "updatePreference('displayRotation', rotation.value)",
           property: "displayRotation"
-        }
+        },
+        {
+          title: "Matrix Shift Driver",
+          description: "Hardware-specific chips used to drive matrix modules (default: SHIFTREG).",
+          formInput: "<select name='driver' id='driver'><option value='0'" + (settings.driver == 0 ? " selected='selected'" : "") + ">SHIFTREG</option><option value='1'" + (settings.driver == 1 ? " selected='selected'" : "") + ">FM6124</option><option value='2'" + (settings.driver == 2 ? " selected='selected'" : "") + ">FM6126A</option><option value='3'" + (settings.driver == 3 ? " selected='selected'" : "") + ">ICN2038S</option><option value='4'" + (settings.driver == 4 ? " selected='selected'" : "") + ">MBI5124</option><option value='5'" + (settings.driver == 5 ? " selected='selected'" : "") + ">DP3246</option></select>",
+          icon: "fa-microchip",
+          save: "updatePreference('driver', driver.value)",
+          property: "driver"
+        },
+        {
+          title: "I2C Speed",
+          description: "I2S clock speed selector (default: HZ_8M).",
+          formInput: "<select name='speed' id='speed'><option value='8000000'" + (settings.i2cspeed == 8000000 ? " selected='selected'" : "") + ">HZ_8M</option><option value='16000000'" + (settings.i2cspeed == 16000000 ? " selected='selected'" : "") + ">HZ_16M</option><option value='20000000'" + (settings.i2cspeed == 20000000 ? " selected='selected'" : "") + ">HZ_20M</option></select>",
+          save: "updatePreference('i2cSpeed', speed.value)",
+          icon: "fa-microchip",
+          property: "i2cSpeed"
+        },          
+        {
+          title: "E Pin",
+          description: "E pin is Address Line E used for 64-row LED panels to select specific rows (default: 18).",
+          formInput: "<input id='E_pin' class='w3-input w3-light-grey' name='E_pin' type='number' min='0' max='32' value='" + settings.e_pin + "'>",
+          icon: "fa-microchip",
+          save: "updatePreference('E_pin', E_pin.value)",
+          property: "E_pin"
+        }        
       ];
 
       var base = document.querySelector('#base');
@@ -237,7 +261,7 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
     }
 
     //Local
-    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "ldrPin":35, "cw_fw_version":"1.2.2", "clockface_name":"cw-cf-0x07", "canvasServer":"raw.githubusercontent.com", "canvasFile":"star-wars.json" });
+    //createCards({ "displayBright": 30, "swapBlueGreen": 1, "swapBlueRed": 0, "use24hFormat": 0, "timeZone": "Europe/Lisbon", "ntpServer": "pool.ntp.org", "wifiSsid": "test", "autoBrightMin":0, "autoBrightMax":800, "ldrPin":35, "driver":1, "i2cspeed":16000000, "e_pin":18, "cw_fw_version":"1.2.2", "clockface_name":"cw-cf-0x07", "canvasServer":"raw.githubusercontent.com", "canvasFile":"star-wars.json" });
 
     //Embedded
     begin();

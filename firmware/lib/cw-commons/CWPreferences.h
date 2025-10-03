@@ -26,6 +26,9 @@ struct ClockwiseParams
     const char* const PREF_CANVAS_SERVER = "canvasServer";
     const char* const PREF_MANUAL_POSIX = "manualPosix";
     const char* const PREF_DISPLAY_ROTATION = "displayRotation";
+    const char* const PREF_DRIVER = "driver";
+    const char* const PREF_I2CSPEED = "i2cSpeed";
+    const char* const PREF_E_PIN = "E_pin";    
 
     bool swapBlueGreen;
     bool swapBlueRed;
@@ -42,7 +45,9 @@ struct ClockwiseParams
     String canvasServer;
     String manualPosix;
     uint8_t displayRotation;
-
+    uint8_t driver;
+    uint32_t i2cSpeed;
+    uint8_t E_pin; 
 
     ClockwiseParams() {
         preferences.begin("clockwise", false); 
@@ -72,6 +77,9 @@ struct ClockwiseParams
         preferences.putString(PREF_CANVAS_SERVER, canvasServer);
         preferences.putString(PREF_MANUAL_POSIX, manualPosix);
         preferences.putUInt(PREF_DISPLAY_ROTATION, displayRotation);
+        preferences.putUInt(PREF_DRIVER, driver);
+        preferences.putUInt(PREF_I2CSPEED, i2cSpeed);
+        preferences.putUInt(PREF_E_PIN, E_pin);
     }
 
     void load()
@@ -91,6 +99,9 @@ struct ClockwiseParams
         canvasServer = preferences.getString(PREF_CANVAS_SERVER, "raw.githubusercontent.com");
         manualPosix = preferences.getString(PREF_MANUAL_POSIX, "");
         displayRotation = preferences.getUInt(PREF_DISPLAY_ROTATION, 0);
+        driver = preferences.getUInt(PREF_DRIVER, 0);
+        i2cSpeed = preferences.getUInt(PREF_I2CSPEED, (uint32_t)8000000);
+        E_pin = preferences.getUInt(PREF_E_PIN, 18);
     }
 
 };
