@@ -78,6 +78,14 @@ const char SETTINGS_PAGE[] PROGMEM = R""""(
           property: "swapBlueGreen"
         },
         {
+          title: "Swap Blue/Red pins?",
+          description: "Swap Blue and Red pins",
+          formInput: "<input class='w3-check' type='checkbox' id='swapBR' " + (settings.swapbluered == '1' ? "checked" : "") + "><label for='swapBR'> Yep</label>",
+          icon: "fa-random",
+          save: "updatePreference('swapBlueRed', Number(swapBR.checked))",
+          property: "swapBlueRed"
+        },        
+        {
           title: "Timezone",
           description: "Consult your TZ identifier <a href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>here.</a> Examples: America/Sao_Paulo, Europe/Lisbon",
           formInput: "<input id='tz' class='w3-input w3-light-grey' name='tz' type='text' placeholder='Timezone' value='" + settings.timezone + "'>",
