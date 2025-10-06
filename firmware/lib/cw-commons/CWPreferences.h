@@ -12,6 +12,7 @@ struct ClockwiseParams
     Preferences preferences;
 
     const char* const PREF_SWAP_BLUE_GREEN = "swapBlueGreen";
+    const char* const PREF_SWAP_BLUE_RED = "swapBlueRed";
     const char* const PREF_USE_24H_FORMAT = "use24hFormat";
     const char* const PREF_DISPLAY_BRIGHT = "displayBright";
     const char* const PREF_DISPLAY_ABC_MIN = "autoBrightMin";
@@ -25,8 +26,12 @@ struct ClockwiseParams
     const char* const PREF_CANVAS_SERVER = "canvasServer";
     const char* const PREF_MANUAL_POSIX = "manualPosix";
     const char* const PREF_DISPLAY_ROTATION = "displayRotation";
+    const char* const PREF_DRIVER = "driver";
+    const char* const PREF_I2CSPEED = "i2cSpeed";
+    const char* const PREF_E_PIN = "E_pin";    
 
     bool swapBlueGreen;
+    bool swapBlueRed;
     bool use24hFormat;
     uint8_t displayBright;
     uint16_t autoBrightMin;
@@ -40,7 +45,9 @@ struct ClockwiseParams
     String canvasServer;
     String manualPosix;
     uint8_t displayRotation;
-
+    uint8_t driver;
+    uint32_t i2cSpeed;
+    uint8_t E_pin; 
 
     ClockwiseParams() {
         preferences.begin("clockwise", false); 
@@ -56,6 +63,7 @@ struct ClockwiseParams
     void save()
     {
         preferences.putBool(PREF_SWAP_BLUE_GREEN, swapBlueGreen);
+        preferences.putBool(PREF_SWAP_BLUE_RED, swapBlueRed);
         preferences.putBool(PREF_USE_24H_FORMAT, use24hFormat);
         preferences.putUInt(PREF_DISPLAY_BRIGHT, displayBright);
         preferences.putUInt(PREF_DISPLAY_ABC_MIN, autoBrightMin);
@@ -69,11 +77,15 @@ struct ClockwiseParams
         preferences.putString(PREF_CANVAS_SERVER, canvasServer);
         preferences.putString(PREF_MANUAL_POSIX, manualPosix);
         preferences.putUInt(PREF_DISPLAY_ROTATION, displayRotation);
+        preferences.putUInt(PREF_DRIVER, driver);
+        preferences.putUInt(PREF_I2CSPEED, i2cSpeed);
+        preferences.putUInt(PREF_E_PIN, E_pin);
     }
 
     void load()
     {
         swapBlueGreen = preferences.getBool(PREF_SWAP_BLUE_GREEN, false);
+        swapBlueRed = preferences.getBool(PREF_SWAP_BLUE_RED, false);
         use24hFormat = preferences.getBool(PREF_USE_24H_FORMAT, true);
         displayBright = preferences.getUInt(PREF_DISPLAY_BRIGHT, 32);
         autoBrightMin = preferences.getUInt(PREF_DISPLAY_ABC_MIN, 0);
@@ -87,6 +99,9 @@ struct ClockwiseParams
         canvasServer = preferences.getString(PREF_CANVAS_SERVER, "raw.githubusercontent.com");
         manualPosix = preferences.getString(PREF_MANUAL_POSIX, "");
         displayRotation = preferences.getUInt(PREF_DISPLAY_ROTATION, 0);
+        driver = preferences.getUInt(PREF_DRIVER, 0);
+        i2cSpeed = preferences.getUInt(PREF_I2CSPEED, (uint32_t)8000000);
+        E_pin = preferences.getUInt(PREF_E_PIN, 18);
     }
 
 };
