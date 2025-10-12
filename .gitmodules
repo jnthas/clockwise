@@ -54,3 +54,11 @@
 	path = firmware/clockfaces/cw-cf-0x07
 	url = https://github.com/jnthas/cw-cf-0x07.git
 	shallow = true
+[submodule "components/ArduinoJson"]
+	path = components/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson
+	shallow = true
+[submodule "components/PNGdec"]
+	path = components/PNGdec
+	url = https://github.com/bitbank2/PNGdec
+	shallow = true
