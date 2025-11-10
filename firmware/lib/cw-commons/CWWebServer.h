@@ -111,6 +111,8 @@ struct ClockwiseWebServer
         ClockwiseParams::getInstance()->autoBrightMax = value.substring(5,9).toInt();
       } else if (key == ClockwiseParams::getInstance()->PREF_SWAP_BLUE_GREEN) {
         ClockwiseParams::getInstance()->swapBlueGreen = (value == "1");
+      } else if (key == ClockwiseParams::getInstance()->PREF_SWAP_BLUE_RED) {
+        ClockwiseParams::getInstance()->swapBlueRed = (value == "1");
       } else if (key == ClockwiseParams::getInstance()->PREF_USE_24H_FORMAT) {
         ClockwiseParams::getInstance()->use24hFormat = (value == "1");
       } else if (key == ClockwiseParams::getInstance()->PREF_LDR_PIN) {
@@ -127,6 +129,12 @@ struct ClockwiseWebServer
         ClockwiseParams::getInstance()->manualPosix = value;
       } else if (key == ClockwiseParams::getInstance()->PREF_DISPLAY_ROTATION) {
         ClockwiseParams::getInstance()->displayRotation = value.toInt();
+      } else if (key == ClockwiseParams::getInstance()->PREF_DRIVER) {
+        ClockwiseParams::getInstance()->driver = value.toInt();
+      }  else if (key == ClockwiseParams::getInstance()->PREF_I2CSPEED) {
+        ClockwiseParams::getInstance()->i2cSpeed = value.toInt();
+      }  else if (key == ClockwiseParams::getInstance()->PREF_E_PIN) {
+        ClockwiseParams::getInstance()->E_pin = value.toInt();
       }
       ClockwiseParams::getInstance()->save();
       client.println("HTTP/1.0 204 No Content");
@@ -154,6 +162,7 @@ struct ClockwiseWebServer
     client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MIN, ClockwiseParams::getInstance()->autoBrightMin);
     client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_DISPLAY_ABC_MAX, ClockwiseParams::getInstance()->autoBrightMax);
     client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_SWAP_BLUE_GREEN, ClockwiseParams::getInstance()->swapBlueGreen);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_SWAP_BLUE_RED, ClockwiseParams::getInstance()->swapBlueRed);
     client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_USE_24H_FORMAT, ClockwiseParams::getInstance()->use24hFormat);
     client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_LDR_PIN, ClockwiseParams::getInstance()->ldrPin);    
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_TIME_ZONE, ClockwiseParams::getInstance()->timeZone.c_str());
@@ -163,6 +172,9 @@ struct ClockwiseWebServer
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_CANVAS_SERVER, ClockwiseParams::getInstance()->canvasServer.c_str());
     client.printf(HEADER_TEMPLATE_S, ClockwiseParams::getInstance()->PREF_MANUAL_POSIX, ClockwiseParams::getInstance()->manualPosix.c_str());
     client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_DISPLAY_ROTATION, ClockwiseParams::getInstance()->displayRotation);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_DRIVER, ClockwiseParams::getInstance()->driver);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_I2CSPEED, ClockwiseParams::getInstance()->i2cSpeed);
+    client.printf(HEADER_TEMPLATE_D, ClockwiseParams::getInstance()->PREF_E_PIN, ClockwiseParams::getInstance()->E_pin);
 
     client.printf(HEADER_TEMPLATE_S, "CW_FW_VERSION", CW_FW_VERSION);
     client.printf(HEADER_TEMPLATE_S, "CW_FW_NAME", CW_FW_NAME);

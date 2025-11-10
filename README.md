@@ -1,138 +1,100 @@
-> ![News 90s GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif)[2024-04-21] [Version 1.4.2 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.2) Check the [change log](https://github.com/jnthas/clockwise/blob/main/CHANGELOG.md#142---2024-04-21) to see the fixes and new features added. Be part of the [Clock Club](https://github.com/jnthas/clock-club) and create your own clockface using Canvas.
+![News GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) **[Latest version 1.4.2 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.2)** | [See full change log](https://github.com/jnthas/clockwise/blob/main/CHANGELOG.md#142---2024-04-21)
 
-[![Clockwise CI/CD](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml/badge.svg)](https://github.com/jnthas/clockwise/actions/workflows/clockwise-ci.yml)
+![Clockwise Logo](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/clockwise_logo.png "Clockwise Logo")
 
-![Logo](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/clockwise_logo.png "Logo")
+---
 
-> The DIY smart wall clock device
+**Clockwise** is an open-source smart wall clock that you can easily build yourself.  
+It only needs:
 
-Clockwise was an idea I had while working with 64x64 LED matrices.
-These displays are about the size of a wall clock and with the ESP32, besides controlling the content presented on the display we also gain the functionality of 
-WiFi, Bluetooth, touch buttons and other sensors, which gives us basically a smart wall clock. 
-From there I started to develop a platform to create the _Clockfaces_, or skins that the clock can have. The possibilities are many and I hope that with help from contributors, we can grow the options even more.
+- 64x64 RGB LED Matrix (HUB75 or HUB75E)
+- ESP32 dev board
+- 5V 3A power supply
+- Jumpers
 
-### ⏰ New Clockfaces
-Create a new custom Clockface starting from [here](https://github.com/jnthas/cw-cf-0x00) or take a look at the [Clock Club](https://github.com/jnthas/clock-club) and discover how to create new ones using just a JSON file with no coding.
+To simplify assembly, you can also use the [**WiseShield-32 DIY PCB kit**](https://www.elecrow.com/clockwise-diy-kit.html) — created in partnership with Elecrow especially for Clockwise.
 
+---
 
-## Available clockfaces
+## Features
 
-Mario Bros. Clock | Time in Words
-:----------------:|:------------:
-![Mario Bros. Clockface](https://github.com/jnthas/cw-cf-0x01/blob/main/cf_0x01_thumb.jpg "Mario Bros. Clockface") | ![Time in Words Clockface](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg "Time in Words Clockface") 
-https://github.com/jnthas/cw-cf-0x01 | https://github.com/jnthas/cw-cf-0x02
+- Real-time clock with customizable themes ("Clockfaces")
+- Web-based interface for configuration
+- Open-source hardware and firmware
+- Compatible with various PCBs or just simple wiring
+- Community-driven
 
-World Map Clock | Castlevania Clock Tower
-:--------------:|:----------------------:
-![World Map Clockface](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg "World Map Clockface") | ![Castlevania Clockface](https://github.com/jnthas/cw-cf-0x04/blob/main/cf_0x04_thumb.jpg "Castlevania Clockface") 
-https://github.com/jnthas/cw-cf-0x03 | https://github.com/jnthas/cw-cf-0x04
+---
 
-Pacman | Pokedex
-:-----:|:------:
-![Pacman Clockface](https://github.com/jnthas/cw-cf-0x05/blob/main/cf_0x05_thumb.jpg "Pacman Clockface") | ![Pokedex Clockface](https://github.com/jnthas/cw-cf-0x06/blob/main/cf_0x06_thumb.jpg "Pokedex Clockface") 
-https://github.com/jnthas/cw-cf-0x05 | https://github.com/jnthas/cw-cf-0x06
+## Quick Start
 
-Canvas | Description
-:-----:|:------:
-<img id="cw-cf-0x07" src="https://github.com/jnthas/cw-cf-0x07/raw/main/cf_0x07_thumb.jpg" width="200" alt="Canvas Clockface"> | Canvas is a special type of Clockface<br>that is capable of rendering different<br>themes described in a JSON file.<br>Find out more [here](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface).
-https://github.com/jnthas/cw-cf-0x07 |
+### 1. Required Hardware
 
+If you want to build it from scratch, you will need at least these components below. Follow the instructions on [Wiki]() to assemble it. 
+- 64x64 RGB LED matrix (HUB75 or HUB75E)
+- ESP32 Dev Board
+- 5V 3A power supply
+- Jumpers
 
-## Driving the led matrix
+Alternatively, we created a custom PCB that simplifies this process a lot. The kit includes not only the PCB but all components including sensors to make your clock smarter. Check the [WiseShield-32 PCB kit](https://www.elecrow.com/clockwise-diy-kit.html) out now!
 
-The three main hardware components of Clockwise are: 
-- HUB75/HUB75E compatible LED matrix 64x64
-- an ESP32; and 
-- a power supply of 3A or more
+### 2. Flash Firmware
 
-With these components in hand, just follow the wiring instructions according to the library used, by default Clockwise uses the [ESP32-HUB75-MatrixPanel-I2S-DMA](https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA#2-wiring-esp32-with-the-led-matrix-panel) but any Adafruit GFX compatible library should work. The default wiring connection is showed below.
+- Go to: [https://clockwise.page](https://clockwise.page)
+- Follow the on-screen steps to flash Clockwise and configure WiFi
 
-![ESP32-HUB75-MatrixPanel-I2S-DMA wiring](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/display_esp32_wiring_thumb.png "ESP32-HUB75-MatrixPanel-I2S-DMA wiring")
+For detailed instructions:  
+👉 [See Wiki: Getting Started](https://github.com/jnthas/clockwise/wiki/%F0%9F%9A%80-Getting-Started)
 
-[Full size](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/display_esp32_wiring_bb.png)
+---
 
-- In case you want something ready to use, I recommend Brian Lough's [ESP32 Trinity](https://github.com/witnessmenow/ESP32-Trinity), basically it's connecting the board and uploading the firmware, as simple as that.
-- If you want a designed PCB, I recommend this project from @Alexvanheu. It's compatible with HUB75/HUB75E led matrices and already tested with Clockwise https://github.com/Alexvanheu/Mario-Clock-PCB-ESP32
-- [ESP32 D1 Mini D1 RGB Matrix Shield](https://github.com/hallard/WeMos-Matrix-Shield-DMA) from @hallard is another option
+## Clockfaces Gallery
 
+You can choose from many creative Clockfaces — or make your own:
 
-## How to change the clockface (web flashing)
+Mario Bros | Words | World Map | Castlevania | Pacman | Pokedex | Canvas
+:--:|:--:|:--:|:--:|:--:|:--:|:--:
+[![](https://github.com/jnthas/cw-cf-0x01/blob/main/cf_0x01_thumb.jpg)](https://github.com/jnthas/cw-cf-0x01) | [![](https://github.com/jnthas/cw-cf-0x02/blob/main/cf_0x02_thumb.jpg)](https://github.com/jnthas/cw-cf-0x02) | [![](https://github.com/jnthas/cw-cf-0x03/blob/main/cf_0x03_thumb.jpg)](https://github.com/jnthas/cw-cf-0x03) | [![](https://github.com/jnthas/cw-cf-0x04/blob/main/cf_0x04_thumb.jpg)](https://github.com/jnthas/cw-cf-0x04) | [![](https://github.com/jnthas/cw-cf-0x05/blob/main/cf_0x05_thumb.jpg)](https://github.com/jnthas/cw-cf-0x05) | [![](https://github.com/jnthas/cw-cf-0x06/blob/main/cf_0x06_thumb.jpg)](https://github.com/jnthas/cw-cf-0x06) | [![](https://github.com/jnthas/cw-cf-0x07/raw/main/cf_0x07_thumb.jpg)](https://github.com/jnthas/cw-cf-0x07)
 
-1) Go to https://clockwise.page/ and select the desired clockface
-2) Connect the ESP32 device on your computer's USB port 
-3) Click on the Flash button
-4) A dialog will appear, select the correct USB port and click in Connect ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step1.png))
-5) Select the INSTALL and INSTALL again ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step2.png))
-6) Wait while the flash tool uploads the firmware and finish ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step3.png))
-7) From the version 1.1.0, click in NEXT on step 6, Improv will start looking for available WiFi networks to connect
-8) Select your local network (must be a 2.4GHz) and enter with your password ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step4.png))
-9) If connection was successful, a message with button VISIT DEVICE will pop up and you can visit the Clockwise setting page  ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step5.png))
+> Canvas is a special type of Clockface that is capable of rendering different themes described in a JSON file. More about **Canvas Clockface**: [Wiki page](https://github.com/jnthas/clockwise/wiki/Canvas-Clockface)
 
+---
 
-### Configuring only WiFi
-After flashing your clockface, you will have a step to configure the WiFi. But in case you change your access point or password, you can set up just the WiFi connecting the Clockwise on USB, opening https://clockwise.page and clicking in Flash button, a window will pop up with a few options where you can re-configure your WiFi network ([screenshot](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/usb-step6.png)) as well as open the Settings page to change preferences using button VISIT DEVICE. Remember: it is important to use a 2.4GHz WiFi, it will not work on 5GHz.
+## How to Build
 
+You can start developing and customizing Clockwise in two different ways:
 
-### Settings page
-The settings page have the following options
-- *Timezone*: The timezone must be in the format America/New_York, America/Sao_Paulo, Europe/Paris, Asia/Dubai, etc. so that the clock can connect to an NTP server to get the correct time.
-- *NTP Server*: By default the clock will sync with `pool.ntp.org`, but you can configure your own (local) NTP server to be used.
-- *Swap Blue/Green pins*: Some displays have the RGB order different, in this case RBG. You can use this options to change the order.
-- *Display Bright*: Change the display bright.
-- *Use 24h format*: You can choose between 20:00 or 8:00PM in your device.
-- *Automatic Bright*: Once you connect a LDR in the ESP32, Clockwise will be able to control the display bright based on the ambient light. Check the [Wiki](
-https://github.com/jnthas/clockwise/wiki/Connecting-the-LDR) about that.
-- *NTP Server*: Configure your prefered NTP Server. You can use one of the [NTP Pool Project](https://www.ntppool.org/) pools or a local one. Default is `time.google.com`.
-- *LDR Pin*: The ESP32 GPIO pin where the LDR is connected to. The default is 35. There is a link there where you can read the current value of LDR and test if it's working.
-- *Posix Timezone String*: To avoid remote lookups of ezTime, provide a Posix string that corresponds to your timezone ([explanation](https://github.com/ropg/ezTime#timezones-1)). Leave empty to obtain this automatically from the server. 
-- *Display Rotation*: Allows you to rotate the display. This is useful if you need to adjust the direction in which cables protrude relative to the displayed image.
+1. **PlatformIO** — advanced usage for developers  
+2. **ESP-IDF** — for full control  
 
-## How to change the clockface (PlatformIO)
+👉 [Both are described in the Flashing section of the Wiki](https://github.com/jnthas/clockwise/wiki/%F0%9F%92%BE-Flashing-the-Firmware)
 
-Clockwise uses PlatformIO as IDE, so the configuration is already done if you use the same. The Clockwise structure consists mainly of three folders
-- clockfaces: contains the collection of available clockfaces. This folder is not included when compiling
-- lib: contains the basic code for Clockwise to work and in addition a symbolic link to the current clockface
-- src: contains the entry point for the clock code
+---
 
-```
-.
-├── clockfaces
-│   ├── cw-cf-0x01
-│   ├── cw-cf-0x02
-│   └── cw-cf-0x03
-├── lib
-│   ├── cw-commons
-│   ├── cw-gfx-engine
-│   └── timeinwords -> ../clockfaces/cw-cf-0x02/
-└── src
-    └── main.cpp
+## Advanced Configuration
 
-```
-Clone this repository and then run the following command to clone the clockface submodules 
+Clockwise offers a flexible set of options that you can adjust through its built-in Settings page:
 
-``.../clockwise$ git submodule update --init firmware/clockfaces``
+* **WiFi settings** — easily update your network details without reflashing
+* **Timezone & NTP server** — sync the clock accurately for your region
+* **Display brightness** — manual or automatic control (with optional LDR sensor)
+* **Display rotation** — adjust orientation to match your wall setup
+* **Clockface selection** — switch between installed Clockfaces or use Canvas themes
+* **RGB order correction** — fix color mismatch on certain LED matrices
+* **POSIX timezone string** — fine-tune timezone behavior
 
-To create the symbolic link run the following command inside lib/ folder:
+👉 See the full guide here: [Advanced Configuration Wiki](https://github.com/jnthas/clockwise/wiki/%E2%9A%99%EF%B8%8F-Configuring-Clockwise)
 
-``.../clockwise/firmware/lib$ ln -s ../clockfaces/cw-cf-0x02/ timeinwords``
+---
 
-Or, if you prefer, you can get the same result by copying the desired clockface folder into lib/
+## Community & Contributions
 
-The same way as web flashing, when connecting for the first time you will have to configure the wifi, follow the instructions in Configuring WiFi section above. 
+- Join the [Clock Club](https://github.com/jnthas/clock-club) to create your own Clockfaces
+- Contributions and pull requests are welcome!  
+👉 [Contributing Guide](https://github.com/jnthas/clockwise/wiki/%F0%9F%A4%9D-Contributing)
 
-## How to change the clockface (esp-idf)
+---
 
-You can use the [official Esspressif IoT Development Framekwork (aka esp-idf)](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/) to build and upload this project to an ESP32 device, including the [ESP32-Trinity board](https://esp32trinity.com/).
+## License
 
-### Install esp-idf
-Follow the [Step By Step installation instructions](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/#installation-step-by-step).
-
-### Setup the environment variables
-Follow the [instructions here](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/get-started/#step-4-set-up-the-environment-variables).
-
-### Clone and build this project
-* `git clone --recurse-submodules https://github.com/jnthas/clockwise.git`
-* `idf.py reconfigure`
-* `idf.py menuconfig` (select `Clockwise Configuration` and choose the clockface)
-* `idf.py flash`
-* `idf.py monitor`
+Clockwise is released under the MIT License.
