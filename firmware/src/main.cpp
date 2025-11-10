@@ -8,6 +8,7 @@
 #include <CWDateTime.h>
 #include <CWPreferences.h>
 #include <CWWebServer.h>
+#include <CWBLEServer.h>
 #include <StatusController.h>
 
 #define MIN_BRIGHT_DISPLAY_ON 4
@@ -96,6 +97,10 @@ void setup()
 
   StatusController::getInstance()->clockwiseLogo();
   delay(1000);
+
+  // Initialize BLE Server
+  Serial.println("Starting BLE Server...");
+  CWBLEServer::getInstance()->begin();
 
   StatusController::getInstance()->wifiConnecting();
   if (wifi.begin())
