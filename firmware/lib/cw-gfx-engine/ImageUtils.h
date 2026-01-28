@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include "Locator.h"
 
 
 struct ImageUtils {
@@ -45,4 +46,20 @@ struct ImageUtils {
     static void clone(uint16_t* src, uint16_t* dst, int len) {
       memcpy(dst, src, sizeof(src[0])*len);
     }
+
+    static void drawTransparent(int x, int y, const uint16_t* bitmap, int width, int height, uint16_t maskColor) {
+      // Draw bitmap pixel by pixel, skipping mask pixels (TRANSPARENT)
+      const unsigned short TRANSPARENT = 0xFEFE;
+      for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
+          uint16_t pixel = pgm_read_word(&bitmap[j * width + i]);
+          if (pixel != TRANSPARENT) {  // Only draw non-transparent pixels
+            Locator::getDisplay()->drawPixel(x + i, y + j, pixel);
+          } else {
+            // Optionally, fill with maskColor if you want to erase background
+            // Locator::getDisplay()->drawPixel(x + i, y + j, maskColor);
+          }
+        }
+      }
+  }    
 };
