@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
+#include <ESP32-VirtualMatrixPanel-I2S-DMA.h>
 
 // Clockface
 #include <Clockface.h>
@@ -15,7 +15,22 @@
 
 #define ESP32_LED_BUILTIN 2
 
+// Single 64x64 LED panel use case
+#define PANEL_RES_X 64
+#define PANEL_RES_Y 64
+#define NUM_COLS 1
+#define NUM_ROWS 1
+
+// Chained 64x32 panels use case
+// #define CHAINED_PANEL_RES_X 64
+#define CHAINED_PANEL_RES_Y 32
+#define CHAINED_NUM_ROWS 2
+// #define CHAINED_NUM_COLS 1
+
+#define VIRTUAL_MATRIX_CHAIN_TYPE CHAIN_BOTTOM_LEFT_UP
+
 MatrixPanel_I2S_DMA *dma_display = nullptr;
+VirtualMatrixPanel  *virtualDisp = nullptr;
 
 Clockface *clockface;
 
@@ -38,7 +53,11 @@ bool isValidDriver(uint32_t drv) {
 
 void displaySetup(bool swapBlueGreen, bool swapBlueRed, uint8_t displayBright, uint8_t displayRotation, uint8_t driver, uint32_t i2cSpeed, uint8_t E_pin)
 {
-  HUB75_I2S_CFG mxconfig(64, 64, 1);
+  HUB75_I2S_CFG mxconfig(
+    PANEL_RES_X,
+    ClockwiseParams::getInstance()->chain ? CHAINED_PANEL_RES_Y : PANEL_RES_Y,
+    ClockwiseParams::getInstance()->chain ? (CHAINED_NUM_ROWS * NUM_COLS) : (NUM_ROWS * NUM_COLS)
+  );
 
   if (swapBlueGreen)
   {
@@ -76,8 +95,10 @@ void displaySetup(bool swapBlueGreen, bool swapBlueRed, uint8_t displayBright, u
   dma_display = new MatrixPanel_I2S_DMA(mxconfig);
   dma_display->begin();
   dma_display->setBrightness8(displayBright);
-  dma_display->clearScreen();
-  dma_display->setRotation(displayRotation);
+
+  virtualDisp = new VirtualMatrixPanel((*dma_display), NUM_ROWS, NUM_COLS, PANEL_RES_X, PANEL_RES_Y, VIRTUAL_MATRIX_CHAIN_TYPE);
+  virtualDisp->clearScreen();
+  virtualDisp->setRotation(displayRotation);
 }
 
 void automaticBrightControl()
