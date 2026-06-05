@@ -18,47 +18,11 @@
 	path = firmware/clockfaces/cw-cf-0x05
 	url = https://github.com/jnthas/cw-cf-0x05
 	shallow = true
-[submodule "components/ezTime"]
-	path = components/ezTime
-	url = https://github.com/ropg/ezTime.git
-	shallow = true
-[submodule "components/ESP32-HUB75-MatrixPanel-I2S-DMA"]
-	path = components/ESP32-HUB75-MatrixPanel-I2S-DMA
-	url = https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-I2S-DMA.git
-	shallow = true
-[submodule "components/Adafruit_BusIO"]
-	path = components/Adafruit_BusIO
-	url = https://github.com/adafruit/Adafruit_BusIO.git
-	shallow = true
-[submodule "components/Adafruit-GFX-Library"]
-	path = components/Adafruit-GFX-Library
-	url = https://github.com/adafruit/Adafruit-GFX-Library.git
-	shallow = true
-[submodule "components/arduino"]
-	path = components/arduino
-	url = https://github.com/espressif/arduino-esp32.git
-	shallow = true
-[submodule "components/Improv-WiFi-Library"]
-	path = components/Improv-WiFi-Library
-	url = https://github.com/jnthas/Improv-WiFi-Library.git
-	shallow = true
 [submodule "firmware/clockfaces/cw-cf-0x06"]
 	path = firmware/clockfaces/cw-cf-0x06
 	url = https://github.com/jnthas/cw-cf-0x06.git
 	shallow = true
-[submodule "components/WiFiManager"]
-	path = components/WiFiManager
-	url = https://github.com/tzapu/WiFiManager
-	shallow = true
 [submodule "firmware/clockfaces/cw-cf-0x07"]
 	path = firmware/clockfaces/cw-cf-0x07
 	url = https://github.com/jnthas/cw-cf-0x07.git
-	shallow = true
-[submodule "components/ArduinoJson"]
-	path = components/ArduinoJson
-	url = https://github.com/bblanchon/ArduinoJson
-	shallow = true
-[submodule "components/PNGdec"]
-	path = components/PNGdec
-	url = https://github.com/bitbank2/PNGdec
 	shallow = true
