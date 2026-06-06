@@ -12,7 +12,5 @@ Just a checklist to follow the steps to be done when releasing a new version of 
 - [ ] For new clockfaces
   - [ ] Add new folder with the clockface code in the branch [gh-pages](https://github.com/jnthas/clockwise/tree/gh-pages/static/firmware/cw-cf-0x01)
   - [ ] Include the new clockface in the [CI/CD file](https://github.com/jnthas/clockwise/blob/main/.github/workflows/clockwise-ci.yml)
-  - [ ] Add the [CMakeLists.txt](https://github.com/jnthas/cw-cf-0x07/blob/12eb5e70f0d4993d8531b871ad02f3964b76e582/CMakeLists.txt) in the new clokface repository 
-- [ ] Check if [ESP-IDF CI](https://github.com/jnthas/clockwise/actions) is passing without errors 
 - [ ] Create a branch called releases/1.x.x (it will trigger the build and release)
 - [ ] Create a tag (add the same description of the CHANGELOG)

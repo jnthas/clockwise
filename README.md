@@ -62,12 +62,9 @@ Mario Bros | Words | World Map | Castlevania | Pacman | Pokedex | Canvas
 
 ## How to Build
 
-You can start developing and customizing Clockwise in two different ways:
+You can start developing and customizing Clockwise using **PlatformIO** — advanced usage for developers.  
 
-1. **PlatformIO** — advanced usage for developers  
-2. **ESP-IDF** — for full control  
-
-👉 [Both are described in the Flashing section of the Wiki](https://github.com/jnthas/clockwise/wiki/%F0%9F%92%BE-Flashing-the-Firmware)
+👉 [It is described in the Flashing section of the Wiki](https://github.com/jnthas/clockwise/wiki/%F0%9F%92%BE-Flashing-the-Firmware)
 
 ---
 
