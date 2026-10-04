@@ -13,6 +13,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid use extensive of String in CWWebServer.cpp
 
 
+## [1.4.3] - 2026-10-04
+
+### Added
+
+- Web configuration for Matrix Shift Driver (`FM6124`, `FM6126A`, `ICN2038S`, `MBI5124`, `DP3246`). Thanks @aschoelzhorn!
+- Web configuration for I2S clock speed (`8MHz`, `16MHz`, `20MHz`). Thanks @aschoelzhorn!
+- Web configuration for E Address Line Pin (default: GPIO 18). Thanks @aschoelzhorn!
+- Web configuration to swap Blue and Red pins for BGR panels. Thanks @aschoelzhorn!
+- Persistent NVS caching for POSIX timezone rules (`cachedPosix` and `cachedTz`) to ensure reliable local time on boot.
+- Retry loop with backoff for remote timezone lookups.
+- Technical architecture documentation (`docs/ARCHITECTURE.md`).
+- Agent developer guidelines and operational standards (`AGENTS.md`).
+
+### Changed
+
+- Automatic Brightness Control (ABC) upgraded to 10 slots with hysteresis to prevent flickering. Thanks @yuan910715!
+
+### Fixed
+
+- Intermittent UTC time fallback when querying `timezoned.rop.nl:2342` over lossy UDP paths.
+- WiFi AP configuration portal failing to start when SSID was empty on newly flashed devices. Thanks @aschoelzhorn!
+- ESP-IDF build errors and matrix panel library dependencies.
+
+
 ## [1.4.2] - 2024-04-21
 
 ### Added 

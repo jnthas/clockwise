@@ -1,4 +1,4 @@
-![News GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) **[Latest version 1.4.2 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.2)** | [See full change log](https://github.com/jnthas/clockwise/blob/main/CHANGELOG.md#142---2024-04-21)
+![News GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) **[Latest version 1.4.3 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.3)** | [See full change log](https://github.com/jnthas/clockwise/blob/main/CHANGELOG.md#143---2026-10-04)
 
 ![Clockwise Logo](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/clockwise_logo.png "Clockwise Logo")
 
@@ -76,12 +76,13 @@ You can start developing and customizing Clockwise in two different ways:
 Clockwise offers a flexible set of options that you can adjust through its built-in Settings page:
 
 * **WiFi settings** — easily update your network details without reflashing
-* **Timezone & NTP server** — sync the clock accurately for your region
-* **Display brightness** — manual or automatic control (with optional LDR sensor)
-* **Display rotation** — adjust orientation to match your wall setup
+* **Timezone & NTP server** — sync the clock accurately with automated NVS POSIX caching
+* **Display brightness** — manual or smoothed automatic control (with optional LDR sensor)
+* **Display rotation** — adjust orientation (0°, 90°, 180°, 270°) to match your setup
 * **Clockface selection** — switch between installed Clockfaces or use Canvas themes
-* **RGB order correction** — fix color mismatch on certain LED matrices
-* **POSIX timezone string** — fine-tune timezone behavior
+* **RGB order correction** — swap Blue/Green or Blue/Red pins to fix color mismatches
+* **Hardware settings** — configure matrix shift driver (FM6124, etc.), I2S clock speed, and E-line pin
+* **POSIX timezone string** — fine-tune timezone behavior or use offline overrides
 
 👉 See the full guide here: [Advanced Configuration Wiki](https://github.com/jnthas/clockwise/wiki/%E2%9A%99%EF%B8%8F-Configuring-Clockwise)
 
