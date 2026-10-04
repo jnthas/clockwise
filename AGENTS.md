@@ -46,9 +46,11 @@ These rules are strictly mandatory and must be followed on every task:
 2. **Git & VCS Discipline (MANDATORY)**:
    * **Never commit or push anything unless explicitly ordered by the developer.**
    * For all changes, leave modified files uncommitted in the working tree for developer review and validation first.
+   * When authorized to commit, work must be placed on a **separate branch** (never directly on `main`), and a **Pull Request targeting `main`** should be created.
 3. **GitHub Issue & PR Integration**:
    * If a task originates from a GitHub Issue, integrate the fix with the Issue reference (e.g. `Fixes #...`).
-   * Prepare the PR description and drafting comments for the Issue, but **the developer must explicitly review and approve before any PR is created or comment is posted.**
+   * Ensure changes are on a dedicated branch with a PR targeting `main`.
+   * Prepare the PR description and draft comments for the Issue, but **the developer must explicitly review and approve before any branch is pushed, PR is created, or comment is posted.**
 4. **Release Process**:
    * Releases must strictly follow the checklist defined in [`CHECKLIST.md`](CHECKLIST.md).
 
