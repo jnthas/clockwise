@@ -132,20 +132,26 @@ void setup()
   delay(1000);
 
   StatusController::getInstance()->wifiConnecting();
-  if (wifi.begin())
-  {
-    StatusController::getInstance()->ntpConnecting();
-    cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), 
-        ClockwiseParams::getInstance()->use24hFormat, 
-        ClockwiseParams::getInstance()->ntpServer.c_str(),
-        ClockwiseParams::getInstance()->manualPosix.c_str());
-    clockface->setup(&cwDateTime);
-  }
+  wifi.begin(); // non-blocking; provisioning continues in loop()
+}
+
+// Runs once, as soon as Wi-Fi is up (stored credentials, Improv or AP portal).
+void onNetworkReady()
+{
+  StatusController::getInstance()->ntpConnecting();
+  cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), 
+      ClockwiseParams::getInstance()->use24hFormat, 
+      ClockwiseParams::getInstance()->ntpServer.c_str(),
+      ClockwiseParams::getInstance()->manualPosix.c_str());
+  clockface->setup(&cwDateTime);
 }
 
 void loop()
 {
-  wifi.handleImprovWiFi();
+  if (wifi.update()) // also services Improv Serial on every pass
+  {
+    onNetworkReady();
+  }
 
   if (wifi.isConnected())
   {

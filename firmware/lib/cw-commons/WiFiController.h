@@ -6,13 +6,52 @@
 #include "CWWebServer.h"
 #include "StatusController.h"
 #include <WiFiManager.h>
+#include "WiFiSetupStateMachine.h"
 
 ImprovWiFi improvSerial(&Serial);
 
+/**
+ * Non-blocking Wi-Fi provisioning.
+ *
+ * begin() returns immediately and update() must be called on every loop().
+ * Improv Serial is serviced on every pass in every state, so ESP-Web-Tools can
+ * always talk to the device (including while the WiFiManager AP portal runs).
+ * Timing decisions live in cw::WiFiSetupStateMachine (unit tested natively);
+ * this struct only performs the side effects.
+ */
 struct WiFiController
 {
   long elapsedTimeOffline = 0;
-  bool connectionSucessfulOnce;
+  bool connectionSucessfulOnce = false;
+
+  // Upper bound of bytes parsed per loop() pass to keep rendering responsive.
+  static const uint16_t IMPROV_MAX_BYTES_PER_PASS = 256;
+
+  cw::WiFiSetupStateMachine setupFsm;
+
+  static WiFiManager &wifiManager()
+  {
+    // Must outlive begin() because the portal now runs in non-blocking mode.
+    static WiFiManager wm;
+    return wm;
+  }
+
+  static bool &networkReady()
+  {
+    static bool ready = false;
+    return ready;
+  }
+
+  static void persistCredentials(const char *ssid, const char *password)
+  {
+    ClockwiseParams *params = ClockwiseParams::getInstance();
+    params->load();
+    if (params->wifiSsid == ssid && params->wifiPwd == password)
+      return; // avoid needless NVS writes
+    params->wifiSsid = String(ssid);
+    params->wifiPwd = String(password);
+    params->save();
+  }
 
   static void onImprovWiFiErrorCb(ImprovTypes::Error err)
   {
@@ -20,19 +59,17 @@ struct WiFiController
     StatusController::getInstance()->blink_led(2000, 3);
   }
 
+  // Runs inside improvSerial.handleSerial() after a successful WIFI_SETTINGS.
+  // First-time setup (web server, mDNS, clockface) is driven by update() once
+  // the state machine reports the connection, so it never races the WiFiManager
+  // portal for port 80. When re-provisioning an already running clock, the web
+  // server is restarted here as before.
   static void onImprovWiFiConnectedCb(const char *ssid, const char *password)
   {
-    ClockwiseParams::getInstance()->load();
-    ClockwiseParams::getInstance()->wifiSsid = String(ssid);
-    ClockwiseParams::getInstance()->wifiPwd = String(password);
-    ClockwiseParams::getInstance()->save();
+    persistCredentials(ssid, password);
 
-    ClockwiseWebServer::getInstance()->startWebServer();
-
-    if (MDNS.begin("clockwise"))
-    {
-      MDNS.addService("http", "tcp", 80);
-    }
+    if (networkReady() && !wifiManager().getConfigPortalActive())
+      ClockwiseWebServer::getInstance()->startWebServer();
   }
 
   bool isConnected()
@@ -41,6 +78,10 @@ struct WiFiController
       elapsedTimeOffline = 0;
       return true;
     } else {
+      // While provisioning, the state machine owns the timeouts (portal -> restart).
+      if (setupFsm.isSettingUp())
+        return false;
+
       if (elapsedTimeOffline == 0 && !connectionSucessfulOnce)
         elapsedTimeOffline = millis();
       
@@ -51,29 +92,53 @@ struct WiFiController
     }
   }
 
-  static void handleImprovWiFi()
+  // Returns true if any byte was received (used to detect an Improv session).
+  static bool handleImprovWiFi()
   {
-    improvSerial.handleSerial();
+    bool activity = false;
+    for (uint16_t i = 0; i < IMPROV_MAX_BYTES_PER_PASS && Serial.available() > 0; i++)
+    {
+      improvSerial.handleSerial();
+      activity = true;
+    }
+    return activity;
   }
 
-  bool alternativeSetupMethod()
+  void startApPortal()
   {
-    WiFiManager wifiManager;
-    wifiManager.setConfigPortalTimeout(300); //Wait 5min to configure wifi via AP
+    StatusController::getInstance()->wifiConnectionFailed("Setup WiFi via AP");
 
-    bool success = wifiManager.startConfigPortal("Clockwise-Wifi");
+    WiFiManager &wm = wifiManager();
+    wm.setConfigPortalBlocking(false);
+    wm.setConfigPortalTimeout(0); // timeout is owned by WiFiSetupStateMachine
+    wm.startConfigPortal("Clockwise-Wifi");
 
-    if (success)
+    Serial.println("[WiFi] AP 'Clockwise-Wifi' started; Improv Serial still available");
+  }
+
+  void onConnected()
+  {
+    // Persist first: covers the portal path (Improv already saved its own).
+    persistCredentials(WiFi.SSID().c_str(), WiFi.psk().c_str());
+
+    WiFiManager &wm = wifiManager();
+    if (wm.getConfigPortalActive())
+      wm.stopConfigPortal(); // frees the AP and port 80
+
+    connectionSucessfulOnce = true;
+    networkReady() = true;
+
+    ClockwiseWebServer::getInstance()->startWebServer();
+    if (MDNS.begin("clockwise"))
     {
-      onImprovWiFiConnectedCb(WiFi.SSID().c_str(), WiFi.psk().c_str());
-      Serial.printf("[WiFi] Connected via WiFiManager to %s, IP address %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
-      connectionSucessfulOnce = success;
+      MDNS.addService("http", "tcp", 80);
     }
 
-    return success;
+    Serial.printf("[WiFi] Connected to %s, IP address %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
   }
 
-  bool begin()
+  // Non-blocking: starts the provisioning flow and returns immediately.
+  void begin()
   {
     WiFi.mode(WIFI_STA);
     WiFi.disconnect();
@@ -82,23 +147,52 @@ struct WiFiController
     improvSerial.onImprovError(onImprovWiFiErrorCb);
     improvSerial.onImprovConnected(onImprovWiFiConnectedCb);
 
-    ClockwiseParams::getInstance()->load();
+    ClockwiseParams *params = ClockwiseParams::getInstance();
+    params->load();
 
-    if (!ClockwiseParams::getInstance()->wifiSsid.isEmpty())
+    if (setupFsm.begin(!params->wifiSsid.isEmpty(), millis()) == cw::WiFiSetupAction::StartStationConnect)
     {
-      if (improvSerial.tryConnectToWifi(ClockwiseParams::getInstance()->wifiSsid.c_str(), ClockwiseParams::getInstance()->wifiPwd.c_str()))
-      {
-        connectionSucessfulOnce = true;
-        ClockwiseWebServer::getInstance()->startWebServer();
-        Serial.printf("[WiFi] Connected to %s, IP address %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str());
-        return true;
-      }
-    }      
+      Serial.printf("[WiFi] Connecting to %s\n", params->wifiSsid.c_str());
+      WiFi.begin(params->wifiSsid.c_str(), params->wifiPwd.c_str());
+    }
+    else
+    {
+      Serial.println("[WiFi] No stored credentials, waiting for Improv Serial");
+    }
+  }
 
-    StatusController::getInstance()->wifiConnectionFailed("Setup WiFi via AP");
-    alternativeSetupMethod();
+  // Call on every loop(). Returns true exactly once, when the network is ready.
+  bool update()
+  {
+    const bool improvActivity = handleImprovWiFi();
 
-    StatusController::getInstance()->wifiConnectionFailed("WiFi Failed");
+    WiFiManager &wm = wifiManager();
+    if (wm.getConfigPortalActive())
+      wm.process();
+
+    switch (setupFsm.update(millis(), improvSerial.isConnected(), improvActivity))
+    {
+    case cw::WiFiSetupAction::EnterImprovWait:
+      Serial.println("[WiFi] Stored credentials failed, waiting for Improv Serial");
+      WiFi.disconnect(); // stop retrying stale credentials in the background
+      break;
+
+    case cw::WiFiSetupAction::StartApPortal:
+      startApPortal();
+      break;
+
+    case cw::WiFiSetupAction::Connected:
+      onConnected();
+      return true;
+
+    case cw::WiFiSetupAction::Restart:
+      StatusController::getInstance()->wifiConnectionFailed("WiFi Failed");
+      StatusController::getInstance()->forceRestart();
+      break;
+
+    default:
+      break;
+    }
     return false;
   }
 };
