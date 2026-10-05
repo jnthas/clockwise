@@ -8,9 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
 
-- Avoid use extensive of String in CWWebServer.cpp
+## [1.4.4] - 2026-10-05
+
+### Fixed
+
+- Non-blocking Wi-Fi provisioning architecture (`WiFiSetupStateMachine`) to resolve Improv Wi-Fi serial starvation during ESP-Web-Tools installation.
+- Prevented premature fallback to Access Point mode on clean firmware installations.
+- Fixed missing clockface initialization when provisioning over Improv Wi-Fi.
+
 
 
 ## [1.4.3] - 2026-10-04

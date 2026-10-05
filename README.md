@@ -1,4 +1,4 @@
-![News GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) **[Latest version 1.4.3 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.3)** | [See full change log](https://github.com/jnthas/clockwise/blob/main/CHANGELOG.md#143---2026-10-04)
+![News GIF](https://github.com/jnthas/clockwise/raw/gh-pages/static/images/news.gif) **[Latest version 1.4.4 released!](https://github.com/jnthas/clockwise/releases/tag/v1.4.4)** | [See full change log](https://github.com/jnthas/clockwise/blob/main/CHANGELOG.md#144---2026-10-05)
 
 ![Clockwise Logo](https://github.com/jnthas/clockwise/blob/gh-pages/static/images/clockwise_logo.png "Clockwise Logo")
 
