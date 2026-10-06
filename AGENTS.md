@@ -30,7 +30,7 @@ clockwise/
 ├── main/                       # ESP-IDF CMake wrapper and Kconfig.projbuild
 ├── components/                 # Git submodules for external libraries (DMA panel, ezTime, etc.)
 ├── docs/ARCHITECTURE.md        # Comprehensive technical architecture & design reference
-├── CHECKLIST.md                # Release procedure and checklist
+├── RELEASE.md                  # Release procedure and guide
 └── get-platformio.py           # PlatformIO installation script
 ```
 
@@ -52,7 +52,7 @@ These rules are strictly mandatory and must be followed on every task:
    * Ensure changes are on a dedicated branch with a PR targeting `main`.
    * Prepare the PR description and draft comments for the Issue, but **the developer must explicitly review and approve before any branch is pushed, PR is created, or comment is posted.**
 4. **Release Process**:
-   * Releases must strictly follow the checklist defined in [`CHECKLIST.md`](CHECKLIST.md).
+   * Releases must strictly follow the guide defined in [`RELEASE.md`](RELEASE.md).
 
 ---
 
