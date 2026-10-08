@@ -11,6 +11,7 @@ class EventBus {
 
   public:
     void broadcast(EventType event, Sprite* sender);
+    void broadcast(EventType event, Sprite* sender, uint16_t value);
     void subscribe(EventTask* task);
     
 };

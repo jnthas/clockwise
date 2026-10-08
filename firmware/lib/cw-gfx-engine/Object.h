@@ -1,5 +1,6 @@
 #pragma once
 #include "Locator.h"
+#include "ImageUtils.h"
 
 struct Object {
   const unsigned short *_image;
@@ -13,6 +14,10 @@ struct Object {
   }
   
   void draw(int x, int y) {
-    Locator::getDisplay()->drawRGBBitmap(x, y, _image, _width, _height);  
+    Locator::getDisplay()->drawRGBBitmap(x, y, _image, _width, _height);
+  }
+
+  void drawTransparent(int x, int y, uint16_t transparentColor) {
+    ImageUtils::drawTransparent(x, y, _image, _width, _height, transparentColor);
   }
 };
