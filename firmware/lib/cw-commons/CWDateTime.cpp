@@ -1,10 +1,16 @@
 #include "CWDateTime.h"
 #include "CWPreferences.h"
 
+namespace
+{
+  const uint32_t TIMEZONE_LOOKUP_RETRY_INTERVAL_MS = 60000;
+}
+
 void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpServer = NTP_SERVER, const char *posixTZ = "")
 {
   Serial.printf("[Time] NTP Server: %s, Timezone: %s\n", ntpServer, timeZone);
   ezt::setServer(String(ntpServer));
+  timezoneLookupPending = false;
 
   if (strlen(posixTZ) > 1) {
     // An empty value still contains a null character so not empty is a value greater than 1.
@@ -47,7 +53,10 @@ void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpSe
         myTZ.setPosix(params->cachedPosix.c_str());
         Serial.println("[Time] Remote lookup failed, but cached POSIX is active. Local time is preserved!");
       } else {
-        Serial.println("[Time] WARNING: Timezone lookup failed and no cache available! Running in UTC.");
+        retryTimeZone = String(timeZone);
+        nextTimezoneLookupMillis = millis() + TIMEZONE_LOOKUP_RETRY_INTERVAL_MS;
+        timezoneLookupPending = true;
+        Serial.println("[Time] WARNING: Timezone lookup failed and no cache available! Running in UTC until lookup succeeds.");
       }
     }
   }
@@ -55,6 +64,32 @@ void CWDateTime::begin(const char *timeZone, bool use24format, const char *ntpSe
   this->use24hFormat = use24format;
   ezt::updateNTP();
   waitForSync(10);
+}
+
+void CWDateTime::update()
+{
+  if (!timezoneLookupPending || static_cast<int32_t>(millis() - nextTimezoneLookupMillis) < 0)
+    return;
+
+  nextTimezoneLookupMillis = millis() + TIMEZONE_LOOKUP_RETRY_INTERVAL_MS;
+  if (!myTZ.setLocation(retryTimeZone)) {
+    Serial.printf("[Time] Timezone lookup for %s failed; retrying in 60 seconds.\n", retryTimeZone.c_str());
+    return;
+  }
+
+  ClockwiseParams *params = ClockwiseParams::getInstance();
+  String resolved = myTZ.getPosix();
+  if (resolved.length() == 0) {
+    Serial.printf("[Time] Timezone lookup for %s returned an empty POSIX timezone; retrying.\n", retryTimeZone.c_str());
+    return;
+  }
+
+  Serial.printf("[Time] Resolved POSIX: %s -> %s\n", retryTimeZone.c_str(), resolved.c_str());
+  params->cachedTz = retryTimeZone;
+  params->cachedPosix = resolved;
+  params->save();
+  timezoneLookupPending = false;
+  Serial.println("[Time] Saved resolved POSIX to NVS cache.");
 }
 
 String CWDateTime::getFormattedTime()

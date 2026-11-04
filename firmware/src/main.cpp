@@ -148,6 +148,8 @@ void onNetworkReady()
 
 void loop()
 {
+  cwDateTime.update();
+
   if (wifi.update()) // also services Improv Serial on every pass
   {
     onNetworkReady();

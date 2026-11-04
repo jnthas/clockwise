@@ -9,9 +9,13 @@ class CWDateTime
 private:
   Timezone myTZ;
   bool use24hFormat = true;
+  String retryTimeZone;
+  uint32_t nextTimezoneLookupMillis = 0;
+  bool timezoneLookupPending = false;
 
 public:
   void begin(const char *timeZone, bool use24format, const char *ntpServer, const char *posixTZ);
+  void update();
   String getFormattedTime();
   String getFormattedTime(const char* format);
 
