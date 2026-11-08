@@ -111,6 +111,7 @@ The software architecture is separated into distinct abstraction layers:
   * Syncs against NTP asynchronously.
   * Supports geographical timezone strings (e.g., `Europe/London`, `America/New_York`) synced via ezTime timezone lookup.
   * Supports manual POSIX timezone strings (e.g., `EST5EDT,M3.2.0/2,M11.1.0/2`) to operate independently without relying on external timezone lookup servers.
+  * Retries a failed timezone lookup once per minute when no cached timezone is available, so a temporary internet outage at startup does not leave the clock in UTC.
   * Formatted output (`getFormattedTime()`, `getHour()`, `getMinute()`, AM/PM detection, etc.).
 
 ### 3.4 Web Configuration Server (`ClockwiseWebServer`)
