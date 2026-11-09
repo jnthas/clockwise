@@ -8,6 +8,7 @@
 #include <CWDateTime.h>
 #include <CWPreferences.h>
 #include <CWWebServer.h>
+#include <CWMcp.h>
 #include <StatusController.h>
 
 #define MIN_BRIGHT_DISPLAY_ON 4
@@ -101,7 +102,7 @@ void automaticBrightControl()
       if(abs(currentBrightSlot - mapLDR ) >= 2 || mapBright == 0){
            dma_display->setBrightness8(mapBright);
            currentBrightSlot=mapLDR;
-          //  Serial.printf("setBrightness: %d , Update currentBrightSlot to %d\n", mapBright, mapLDR);
+          //  Serial.printf("setBrightness: %d , Update currentBrightSlot to %d\n", mapBright, currentBrightSlot);
       }
       autoBrightMillis = millis();
     }
@@ -126,6 +127,10 @@ void setup()
   displaySetup(ClockwiseParams::getInstance()->swapBlueGreen, ClockwiseParams::getInstance()->swapBlueRed, ClockwiseParams::getInstance()->displayBright, ClockwiseParams::getInstance()->displayRotation, driver, i2cSpeed, E_pin);
   clockface = new Clockface(dma_display);
 
+  // MCP server runtime hooks: local time and immediate brightness apply.
+  mcpSetTimeProvider([]() -> String { return cwDateTime.getFormattedTime(); });
+  mcpSetBrightnessHandler([](uint8_t level) { dma_display->setBrightness8(level); });
+
   autoBrightEnabled = (ClockwiseParams::getInstance()->autoBrightMax > 0);
 
   StatusController::getInstance()->clockwiseLogo();
@@ -138,6 +143,12 @@ void setup()
 // Runs once, as soon as Wi-Fi is up (stored credentials, Improv or AP portal).
 void onNetworkReady()
 {
+  // Keep the radio awake now that Wi-Fi is initialized: modem sleep buffers
+  // AP-side TCP handshakes (SYN) for whole beacon intervals, which stalls
+  // the embedded web server. Must run after Wi-Fi init, otherwise
+  // esp_wifi_set_ps() fails with ESP_ERR_WIFI_NOT_INIT and the call is lost.
+  WiFi.setSleep(false);
+
   StatusController::getInstance()->ntpConnecting();
   cwDateTime.begin(ClockwiseParams::getInstance()->timeZone.c_str(), 
       ClockwiseParams::getInstance()->use24hFormat, 

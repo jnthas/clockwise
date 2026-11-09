@@ -1,0 +1,337 @@
+#pragma once
+
+// Clockwise MCP server — firmware adapter.
+//
+// Bridges the platform-independent MCP core (McpJsonRpc.h) to Clockwise
+// hardware: NVS parameters (ClockwiseParams), Wi-Fi status, LDR sensor and
+// restart. main.cpp registers two runtime hooks:
+//   - time provider     -> CWDateTime::getFormattedTime()
+//   - brightness applier -> dma_display->setBrightness8()
+//
+// HTTP plumbing: POST /mcp is dispatched here from ClockwiseWebServer.
+
+#include <Arduino.h>
+#include <WiFi.h>
+#include <esp_system.h>
+#include "CWPreferences.h"
+#include "StatusController.h"
+#include "McpJsonRpc.h"
+
+#ifndef CW_FW_VERSION
+  #define CW_FW_VERSION "0.0.0"
+#endif
+#ifndef CLOCKFACE_NAME
+  #define CLOCKFACE_NAME "UNKNOWN"
+#endif
+
+// Runtime hooks registered by main.cpp (kept as plain function pointers so
+// this header stays free of display/date-time dependencies).
+typedef String (*McpTimeProvider)();
+typedef void (*McpBrightnessHandler)(uint8_t level);
+
+// Runtime hooks registered by main.cpp (kept as plain function pointers so
+// this header stays free of display/date-time dependencies). Slots live in
+// inline functions so all translation units share the same instance.
+inline McpTimeProvider& mcpTimeProviderSlot() { static McpTimeProvider fn = nullptr; return fn; }
+inline McpBrightnessHandler& mcpBrightnessHandlerSlot() { static McpBrightnessHandler fn = nullptr; return fn; }
+inline void mcpSetTimeProvider(McpTimeProvider fn) { mcpTimeProviderSlot() = fn; }
+inline void mcpSetBrightnessHandler(McpBrightnessHandler fn) { mcpBrightnessHandlerSlot() = fn; }
+
+// ----- parsing helpers -------------------------------------------------------
+
+inline bool mcpParseBool(const std::string& v, bool& out)
+{
+  if (v == "1" || v == "true" || v == "on") { out = true; return true; }
+  if (v == "0" || v == "false" || v == "off") { out = false; return true; }
+  char* end = nullptr;
+  long l = strtol(v.c_str(), &end, 10);
+  if (end && *end == '\0') { out = (l != 0); return true; }
+  return false;
+}
+
+inline bool mcpParseUIntRange(const std::string& v, long min, long max, long& out)
+{
+  char* end = nullptr;
+  long l = strtol(v.c_str(), &end, 10);
+  if (!end || *end != '\0' || l < min || l > max)
+    return false;
+  out = l;
+  return true;
+}
+
+// ----- device adapter --------------------------------------------------------
+
+class ClockwiseMcpDevice : public cw::mcp::McpDevice
+{
+public:
+  std::vector<std::string> paramNames() override
+  {
+    ClockwiseParams* p = ClockwiseParams::getInstance();
+    return {
+        p->PREF_DISPLAY_BRIGHT,
+        p->PREF_DISPLAY_ABC_MIN,
+        p->PREF_DISPLAY_ABC_MAX,
+        p->PREF_LDR_PIN,
+        p->PREF_TIME_ZONE,
+        p->PREF_NTP_SERVER,
+        p->PREF_USE_24H_FORMAT,
+        p->PREF_SWAP_BLUE_GREEN,
+        p->PREF_SWAP_BLUE_RED,
+        p->PREF_DISPLAY_ROTATION,
+        p->PREF_DRIVER,
+        p->PREF_I2CSPEED,
+        p->PREF_E_PIN,
+        p->PREF_WIFI_SSID,
+        p->PREF_WIFI_PASSWORD,
+        p->PREF_CANVAS_FILE,
+        p->PREF_CANVAS_SERVER,
+        p->PREF_MANUAL_POSIX,
+    };
+  }
+
+  bool getParam(const std::string& name, std::string& value) override
+  {
+    ClockwiseParams* p = ClockwiseParams::getInstance();
+    p->load();
+
+    if (name == p->PREF_DISPLAY_BRIGHT) value = std::to_string(p->displayBright);
+    else if (name == p->PREF_DISPLAY_ABC_MIN) value = std::to_string(p->autoBrightMin);
+    else if (name == p->PREF_DISPLAY_ABC_MAX) value = std::to_string(p->autoBrightMax);
+    else if (name == p->PREF_LDR_PIN) value = std::to_string(p->ldrPin);
+    else if (name == p->PREF_TIME_ZONE) value = p->timeZone.c_str();
+    else if (name == p->PREF_NTP_SERVER) value = p->ntpServer.c_str();
+    else if (name == p->PREF_USE_24H_FORMAT) value = p->use24hFormat ? "1" : "0";
+    else if (name == p->PREF_SWAP_BLUE_GREEN) value = p->swapBlueGreen ? "1" : "0";
+    else if (name == p->PREF_SWAP_BLUE_RED) value = p->swapBlueRed ? "1" : "0";
+    else if (name == p->PREF_DISPLAY_ROTATION) value = std::to_string(p->displayRotation);
+    else if (name == p->PREF_DRIVER) value = std::to_string(p->driver);
+    else if (name == p->PREF_I2CSPEED) value = std::to_string((unsigned long)p->i2cSpeed);
+    else if (name == p->PREF_E_PIN) value = std::to_string(p->E_pin);
+    else if (name == p->PREF_WIFI_SSID) value = p->wifiSsid.c_str();
+    else if (name == p->PREF_WIFI_PASSWORD) value = p->wifiPwd.length() > 0 ? "********" : "";
+    else if (name == p->PREF_CANVAS_FILE) value = p->canvasFile.c_str();
+    else if (name == p->PREF_CANVAS_SERVER) value = p->canvasServer.c_str();
+    else if (name == p->PREF_MANUAL_POSIX) value = p->manualPosix.c_str();
+    else return false;
+
+    return true;
+  }
+
+  bool setParam(const std::string& name, const std::string& value) override
+  {
+    ClockwiseParams* p = ClockwiseParams::getInstance();
+    p->load();
+    long num = 0;
+    bool flag = false;
+
+    if (name == p->PREF_DISPLAY_BRIGHT)
+    {
+      if (!mcpParseUIntRange(value, 0, 255, num)) return false;
+      p->displayBright = (uint8_t)num;
+    }
+    else if (name == p->PREF_DISPLAY_ABC_MIN)
+    {
+      if (!mcpParseUIntRange(value, 0, 4095, num)) return false;
+      p->autoBrightMin = (uint16_t)num;
+    }
+    else if (name == p->PREF_DISPLAY_ABC_MAX)
+    {
+      if (!mcpParseUIntRange(value, 0, 4095, num)) return false;
+      p->autoBrightMax = (uint16_t)num;
+    }
+    else if (name == p->PREF_LDR_PIN)
+    {
+      if (!mcpParseUIntRange(value, 0, 39, num)) return false;
+      p->ldrPin = (uint8_t)num;
+    }
+    else if (name == p->PREF_TIME_ZONE)
+    {
+      if (value.empty() || value.length() > 64) return false;
+      p->timeZone = value.c_str();
+    }
+    else if (name == p->PREF_NTP_SERVER)
+    {
+      if (value.length() > 64) return false;
+      p->ntpServer = value.c_str();
+    }
+    else if (name == p->PREF_USE_24H_FORMAT)
+    {
+      if (!mcpParseBool(value, flag)) return false;
+      p->use24hFormat = flag;
+    }
+    else if (name == p->PREF_SWAP_BLUE_GREEN)
+    {
+      if (!mcpParseBool(value, flag)) return false;
+      p->swapBlueGreen = flag;
+    }
+    else if (name == p->PREF_SWAP_BLUE_RED)
+    {
+      if (!mcpParseBool(value, flag)) return false;
+      p->swapBlueRed = flag;
+    }
+    else if (name == p->PREF_DISPLAY_ROTATION)
+    {
+      if (!mcpParseUIntRange(value, 0, 270, num)) return false;
+      if (num != 0 && num != 90 && num != 180 && num != 270) return false;
+      p->displayRotation = (uint8_t)num;
+    }
+    else if (name == p->PREF_DRIVER)
+    {
+      if (!mcpParseUIntRange(value, 0, 5, num)) return false;
+      p->driver = (uint8_t)num;
+    }
+    else if (name == p->PREF_I2CSPEED)
+    {
+      if (!mcpParseUIntRange(value, 0, 20000000, num)) return false;
+      if (num != 8000000 && num != 16000000 && num != 20000000) return false;
+      p->i2cSpeed = (uint32_t)num;
+    }
+    else if (name == p->PREF_E_PIN)
+    {
+      if (!mcpParseUIntRange(value, 0, 39, num)) return false;
+      p->E_pin = (uint8_t)num;
+    }
+    else if (name == p->PREF_WIFI_SSID)
+    {
+      if (value.length() > 32) return false;
+      p->wifiSsid = value.c_str();
+    }
+    else if (name == p->PREF_WIFI_PASSWORD)
+    {
+      if (value.length() > 64) return false;
+      p->wifiPwd = value.c_str();
+    }
+    else if (name == p->PREF_CANVAS_FILE)
+    {
+      if (value.length() > 128) return false;
+      p->canvasFile = value.c_str();
+    }
+    else if (name == p->PREF_CANVAS_SERVER)
+    {
+      if (value.length() > 64) return false;
+      p->canvasServer = value.c_str();
+    }
+    else if (name == p->PREF_MANUAL_POSIX)
+    {
+      if (value.length() > 64) return false;
+      p->manualPosix = value.c_str();
+    }
+    else
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  void saveParams() override
+  {
+    ClockwiseParams::getInstance()->save();
+  }
+
+  void applyBrightness(int level) override
+  {
+    if (mcpBrightnessHandlerSlot())
+      mcpBrightnessHandlerSlot()((uint8_t)level);
+  }
+
+  int readLightSensor() override
+  {
+    return analogRead(ClockwiseParams::getInstance()->ldrPin);
+  }
+
+  void requestRestart() override
+  {
+    StatusController::getInstance()->forceRestart();
+  }
+
+  std::string statusJson() override
+  {
+    ClockwiseParams* p = ClockwiseParams::getInstance();
+    p->load();
+
+    DynamicJsonDocument doc(1024);
+    doc["firmware"] = CW_FW_VERSION;
+    doc["clockface"] = CLOCKFACE_NAME;
+    doc["protocol"] = cw::mcp::kProtocolVersion;
+
+    bool connected = (WiFi.status() == WL_CONNECTED);
+    doc["wifiConnected"] = connected;
+    if (connected)
+    {
+      doc["ip"] = WiFi.localIP().toString();
+      doc["rssi"] = WiFi.RSSI();
+      doc["ssid"] = WiFi.SSID();
+    }
+    doc["freeHeap"] = (long)ESP.getFreeHeap();
+    doc["uptimeMs"] = (long)(millis() / 1000);
+    doc["timezone"] = p->timeZone;
+    doc["ntpServer"] = p->ntpServer;
+    doc["localTime"] = currentTime();
+    doc["lightSensor"] = readLightSensor();
+
+    std::string out;
+    serializeJson(doc, out);
+    return out;
+  }
+
+  std::string currentTime() override
+  {
+    if (!mcpTimeProviderSlot())
+      return "";
+    String t = mcpTimeProviderSlot()();
+    return std::string(t.c_str());
+  }
+};
+
+// ----- server singleton & HTTP plumbing --------------------------------------
+
+inline cw::mcp::McpServer& mcpGetServer()
+{
+  static ClockwiseMcpDevice device;
+  static cw::mcp::McpServer server(device, CW_FW_VERSION);
+  return server;
+}
+
+// Stable per-boot session id advertised in the Mcp-Session-Id header.
+inline const char* mcpSessionId()
+{
+  static char sid[17];
+  if (sid[0] == '\0')
+  {
+    snprintf(sid, sizeof(sid), "%08lx%08lx",
+             (unsigned long)esp_random(), (unsigned long)esp_random());
+  }
+  return sid;
+}
+
+// POST /mcp entry point, invoked from ClockwiseWebServer. The HTTP status is
+// decided first so headers are written in a single block:
+//   200 + JSON body   -> request/response
+//   202, empty body   -> notification
+// keepAlive=true omits "Connection: close" so the MCP bridge can pipeline
+// multiple JSON-RPC messages over one persistent TCP connection.
+inline void mcpHandleHttpRequest(WiFiClient& client, const String& body, bool keepAlive)
+{
+  std::string response =
+      mcpGetServer().handleMessage(std::string(body.c_str(), body.length()));
+
+  if (response.empty())
+  {
+    client.println("HTTP/1.1 202 Accepted");
+    client.println("Content-Length: 0");
+  }
+  else
+  {
+    client.println("HTTP/1.1 200 OK");
+    client.println("Content-Type: application/json");
+    client.printf("Content-Length: %u\r\n", (unsigned)response.size());
+  }
+  client.printf("Mcp-Session-Id: %s\r\n", mcpSessionId());
+  if (!keepAlive)
+    client.println("Connection: close");
+  client.println();
+
+  if (!response.empty())
+    client.write(response.c_str(), response.size());
+}
