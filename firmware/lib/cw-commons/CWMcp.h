@@ -12,6 +12,9 @@
 
 #include <Arduino.h>
 #include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
+#include <Update.h>
 #include <esp_system.h>
 #include "CWPreferences.h"
 #include "StatusController.h"
@@ -179,6 +182,71 @@ public:
       return "";
     String t = mcpTimeProviderSlot()();
     return std::string(t.c_str());
+  }
+
+  std::string updateFirmware(const std::string& url) override
+  {
+    HTTPClient http;
+    WiFiClient plain;
+    WiFiClientSecure secure;
+    bool isHttps = url.find("https://") == 0;
+
+    // No CA store on device: https images are accepted as-is. Images should
+    // come from a trusted LAN host or release pipeline anyway.
+    if (isHttps)
+    {
+      secure.setInsecure();
+      http.begin(secure, url.c_str());
+    }
+    else
+    {
+      http.begin(plain, url.c_str());
+    }
+    http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
+    http.setTimeout(30000);
+
+    int code = http.GET();
+    if (code != 200)
+    {
+      http.end();
+      return std::string("{\"error\":\"HTTP GET failed with code ") +
+             std::to_string(code) + "\"}";
+    }
+
+    int total = http.getSize();
+    if (total <= 0)
+    {
+      http.end();
+      return "{\"error\":\"Missing Content-Length\"}";
+    }
+
+    Update.onProgress([](unsigned int progress, unsigned int size) {
+      Serial.printf("[OTA] Flash progress: %u%%\r", (progress * 100) / size);
+    });
+
+    if (!Update.begin(total))
+    {
+      http.end();
+      return "{\"error\":\"Not enough space for the update\"}";
+    }
+
+    WiFiClient* data = http.getStreamPtr();
+    size_t written = Update.writeStream(*data);
+    http.end();
+
+    if (written != (size_t)total || !Update.end() || !Update.isFinished())
+    {
+      Update.abort();
+      return std::string("{\"error\":\"Flash write failed (") +
+             std::to_string(written) + "/" + std::to_string(total) + " bytes)\"}";
+    }
+
+    Serial.printf("[OTA] Flashed %u bytes, rebooting\n", (unsigned)written);
+    // Let the JSON-RPC answer flush to the client before the reboot.
+    delay(500);
+    StatusController::getInstance()->forceRestart();
+    return std::string("{\"updated\":true,\"bytes\":") +
+           std::to_string(written) + "}";
   }
 private:
   McpConfig<ClockwiseParams> config_;

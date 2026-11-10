@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <ArduinoOTA.h>
 #include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
 
 // Clockface
@@ -128,6 +129,23 @@ void automaticBrightControl()
   }
 }
 
+void setupArduinoOta()
+{
+  ArduinoOTA.setHostname("clockwise");
+  ArduinoOTA.onStart([]() {
+    String type = (ArduinoOTA.getCommand() == U_FLASH) ? "sketch" : "filesystem";
+    Serial.printf("[OTA] Start updating %s\n", type.c_str());
+  });
+  ArduinoOTA.onEnd([]() { Serial.println("[OTA] Done, rebooting"); });
+  ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+    Serial.printf("[OTA] Progress: %u%%\r", (progress * 100) / total);
+  });
+  ArduinoOTA.onError([](ota_error_t error) {
+    Serial.printf("[OTA] Error %u\n", error);
+  });
+  ArduinoOTA.begin();
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -175,6 +193,8 @@ void onNetworkReady()
       ClockwiseParams::getInstance()->ntpServer.c_str(),
       ClockwiseParams::getInstance()->manualPosix.c_str());
   clockface->setup(&cwDateTime);
+
+  setupArduinoOta();
 }
 
 void loop()
@@ -189,6 +209,7 @@ void loop()
   if (wifi.isConnected())
   {
     ClockwiseWebServer::getInstance()->handleHttpRequest();
+    ArduinoOTA.handle();
     ezt::events();
   }
 

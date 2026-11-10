@@ -65,6 +65,11 @@ public:
 
   // Current local time "HH:MM:SS", empty when not synced.
   virtual std::string currentTime() = 0;
+
+  // Downloads a firmware image from `url` and flashes it to the OTA partition.
+  // Returns a serialized JSON object: {"updated":true,...} on success (a
+  // restart follows), or {"error":"..."} on failure.
+  virtual std::string updateFirmware(const std::string& url) = 0;
 };
 
 class McpServer
@@ -220,7 +225,7 @@ private:
 
   std::string handleToolsList(JsonVariantConst id)
   {
-    return respond(id, 4096, [&](JsonObject result) {
+    return respond(id, 6144, [&](JsonObject result) {
       JsonArray tools = result.createNestedArray("tools");
 
       addTool(tools, "get_config",
@@ -289,6 +294,19 @@ private:
               "Reboot the clock. Required for rotation, RGB swap, driver, I2S speed "
               "and E-pin changes to take effect.",
               [](JsonObject schema) { schema.createNestedObject("properties"); });
+
+      addTool(tools, "update_firmware",
+              "Download a firmware .bin from a URL (http or https) and flash it "
+              "to the OTA partition, then reboot into the new firmware. Serve the "
+              "bin over the LAN (a local HTTP server or a release asset). The "
+              "call blocks until the update finishes or fails.",
+              [](JsonObject schema) {
+                JsonObject props = schema.createNestedObject("properties");
+                JsonObject url = props.createNestedObject("url");
+                url["type"] = "string";
+                url["description"] = "Firmware .bin download URL.";
+                schema.createNestedArray("required").add("url");
+              });
     });
   }
 
@@ -323,6 +341,9 @@ private:
       device_.requestRestart();
       return toolResult(id, "Restarting Clockwise...", false);
     }
+
+    if (name == "update_firmware")
+      return callUpdateFirmware(id, args);
 
     return errorResponse(id, true, -32602, "Unknown tool: " + name);
   }
@@ -436,6 +457,26 @@ private:
     if (value < 0)
       return toolResult(id, "Light sensor not available", true);
     return toolResult(id, std::string("{\"ldrValue\":") + std::to_string(value) + "}", false);
+  }
+
+  std::string callUpdateFirmware(JsonVariantConst id, JsonVariantConst args)
+  {
+    if (!args["url"].is<const char*>())
+      return errorResponse(id, true, -32602, "Invalid params: expected {url: \"...\"}");
+
+    const std::string url = args["url"].as<const char*>();
+    if (url.length() < 8 ||
+        (url.find("http://") != 0 && url.find("https://") != 0))
+      return toolResult(id, "url must start with http:// or https://", true);
+
+    // The adapter blocks here for the whole download + flash, then the device
+    // reboots into the new firmware shortly after we answer.
+    std::string result = device_.updateFirmware(url);
+    DynamicJsonDocument doc(512);
+    DeserializationError err = deserializeJson(doc, result);
+    if (err || (doc.containsKey("error") && doc["error"].as<bool>()))
+      return toolResult(id, err ? result : doc["error"].as<std::string>(), true);
+    return toolResult(id, result, false);
   }
 };
 
