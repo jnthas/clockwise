@@ -1,0 +1,2 @@
+# The bridge uses the v1 FastMCP API, which was removed in mcp 2.x.
+mcp==1.30.0

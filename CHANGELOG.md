@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- MCP (Model Context Protocol) server at `POST /mcp` — control the clock from AI assistants: read config and status, set brightness, timezone, NTP, rotation, restart, and more. See `docs/MCP.md`.
 
 ## [1.4.4] - 2026-10-05
 
