@@ -25,12 +25,12 @@ Clockwise 固件内置的 MCP（Model Context Protocol）服务器，让 AI 助�
 | 工具 | 说明 |
 |---|---|
 | `get_config` | 读取全部配置参数（数字返回 JSON number，其余 string） |
-| `set_config` | 批量更新参数并写入 Flash，非法参数返回 `isError` |
+| `set_config` | 批量验证并更新参数，全部合法后写入 Flash；非法参数返回 `isError` 且不修改配置。`displayRotation` 使用现有配置值 `0/1/2/3`（对应 `0°/90°/180°/270°`） |
 | `set_brightness` | 设置亮度 0-255 并立即生效（自动亮度开启时可能被 LDR 覆盖） |
-| `set_auto_brightness` | 设置 LDR 自动亮度量程 0-4095，`max=0` 关闭自动亮度 |
+| `set_auto_brightness` | 设置 LDR 自动亮度量程 0-4095 并立即生效；启用时须 `max>min`，`max=0` 关闭自动亮度 |
 | `read_light_sensor` | 读取 LDR 原始 ADC 值 |
 | `get_status` | 固件版本、表盘、Wi-Fi/IP/信号、堆内存、运行时间、当前时间 |
-| `restart_device` | 重启设备（旋转/驱动/RGB 交换等参数改后需要） |
+| `restart_device` | 先发送成功响应，再安排重启设备（旋转/驱动/RGB 交换等参数改后需要） |
 
 ## 手动测试（curl）
 
@@ -66,13 +66,20 @@ ESP32 的 TCP **连接建立**在高频请求下不稳定（SYN 可能被静默�
 但已建立的连接非常可靠。因此：
 
 - `POST /mcp` 支持 HTTP/1.1 **keep-alive**：带 `Connection: keep-alive` 时连接保持
-  打开，空闲 15 秒超时；其余端点仍按请求关闭
+  打开，空闲 15 秒超时；其余端点仍按请求关闭。请求分次读取，等待期间仍更新表盘与自动亮度
 - MCP 客户端应通过 `tools/clockwise_mcp_bridge.py`（stdio MCP 服务器）连接，
   桥接内部用单条持久 TCP 连接顺序发送 JSON-RPC，空闲断线自动重连
 
 ## 在 MCP 客户端中配置
 
-桥接依赖 Python 3.10+ 与 `mcp` 包（`pip install mcp`）。以 Claude Desktop 为例
+桥接依赖 Python 3.10+ 与 v1 `FastMCP` API。先在运行桥接的 Python 环境中安装已验证的依赖：
+
+```bash
+python -m pip install -r tools/requirements-mcp.txt
+```
+
+依赖固定为 `mcp==1.30.0`；直接安装不限定版本的 `mcp` 会选到不兼容的 2.x API。
+以 Claude Desktop 为例
 （`claude_desktop_config.json`）：
 
 ```json
@@ -95,8 +102,11 @@ ESP32 的 TCP **连接建立**在高频请求下不稳定（SYN 可能被静默�
 ## 构建与测试
 
 ```bash
-# 原生单元测试（26 个用例，含 15 个 MCP 用例）
+# 原生单元测试（含 JSON-RPC、配置事务与 HTTP 增量读取回归用例）
 pio test -d firmware/ -e native
+
+# 桥接集成测试（本机 HTTP fixture + 真实 stdio MCP 客户端，无需连接时钟）
+python -m unittest discover -s tools -p 'test_*.py' -v
 
 # 固件编译（先链接表盘，以马里奥为例）
 cd firmware/lib && ln -sfn ../clockfaces/cw-cf-0x01 cw-cf-0x01 && cd ../..

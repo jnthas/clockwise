@@ -24,7 +24,7 @@ WiFiController wifi;
 CWDateTime cwDateTime;
 
 bool autoBrightEnabled;
-long autoBrightMillis = 0;
+uint32_t autoBrightMillis = 0;
 uint8_t currentBrightSlot = -1;
 
 bool isValidI2SSpeed(uint32_t speed) {
@@ -81,6 +81,17 @@ void displaySetup(bool swapBlueGreen, bool swapBlueRed, uint8_t displayBright, u
   dma_display->setRotation(displayRotation);
 }
 
+void refreshAutoBrightness()
+{
+  ClockwiseParams* params = ClockwiseParams::getInstance();
+  autoBrightEnabled = params->autoBrightMax > params->autoBrightMin;
+  currentBrightSlot = 255; // Force the next sensor sample to apply its result.
+  autoBrightMillis = millis() - 3001U;
+  pinMode(params->ldrPin, INPUT);
+  if (!autoBrightEnabled)
+    dma_display->setBrightness8(params->displayBright);
+}
+
 void automaticBrightControl()
 {
   if (autoBrightEnabled) {
@@ -91,11 +102,19 @@ void automaticBrightControl()
       uint16_t ldrMin = ClockwiseParams::getInstance()->autoBrightMin;
       uint16_t ldrMax = ClockwiseParams::getInstance()->autoBrightMax;
 
+      // Defend against invalid settings left by older firmware or the web UI.
+      if (ldrMax == 0 || ldrMax <= ldrMin)
+      {
+        refreshAutoBrightness();
+        return;
+      }
+
       const uint8_t minBright = (currentValue < ldrMin ? MIN_BRIGHT_DISPLAY_OFF : MIN_BRIGHT_DISPLAY_ON);
       uint8_t maxBright = ClockwiseParams::getInstance()->displayBright;
 
       uint8_t slots = 10; //10 slots
-      uint8_t mapLDR = map(currentValue > ldrMax ? ldrMax : currentValue, ldrMin, ldrMax, 1, slots);
+      const int16_t boundedValue = currentValue < ldrMin ? ldrMin : (currentValue > ldrMax ? ldrMax : currentValue);
+      uint8_t mapLDR = map(boundedValue, ldrMin, ldrMax, 1, slots);
       uint8_t mapBright = map(mapLDR, 1, slots, minBright, maxBright);
 
       // Serial.printf("LDR: %d, mapLDR: %d, Bright: %d\n", currentValue, mapLDR, mapBright);
@@ -131,7 +150,8 @@ void setup()
   mcpSetTimeProvider([]() -> String { return cwDateTime.getFormattedTime(); });
   mcpSetBrightnessHandler([](uint8_t level) { dma_display->setBrightness8(level); });
 
-  autoBrightEnabled = (ClockwiseParams::getInstance()->autoBrightMax > 0);
+  mcpSetAutoBrightnessHandler(refreshAutoBrightness);
+  refreshAutoBrightness();
 
   StatusController::getInstance()->clockwiseLogo();
   delay(1000);

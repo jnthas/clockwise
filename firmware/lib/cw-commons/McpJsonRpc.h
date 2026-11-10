@@ -11,8 +11,13 @@
 // and compiled into the ESP32 firmware unchanged. Hardware access is
 // abstracted behind cw::mcp::McpDevice; see CWMcp.h for the firmware adapter.
 
+// ESP32 long is 32-bit; JSON-RPC integer IDs must survive a full round trip.
+#ifndef ARDUINOJSON_USE_LONG_LONG
+#define ARDUINOJSON_USE_LONG_LONG 1
+#endif
 #include <ArduinoJson.h>
 #include <ctype.h>
+#include <stdint.h>
 #include <functional>
 #include <stdlib.h>
 #include <string.h>
@@ -36,11 +41,15 @@ public:
   // Reads a parameter as a string (numbers as decimal). Returns false if unknown.
   virtual bool getParam(const std::string& name, std::string& value) = 0;
 
+  // Starts/aborts a batch of edits against the persisted configuration.
+  virtual void beginParams() = 0;
+  virtual void cancelParams() = 0;
+
   // Sets a parameter from its string form. Returns false if unknown or invalid.
   virtual bool setParam(const std::string& name, const std::string& value) = 0;
 
-  // Persists parameters after a successful update.
-  virtual void saveParams() = 0;
+  // Validates the whole configuration and persists it, or rolls back on error.
+  virtual bool saveParams() = 0;
 
   // Runtime-applies display brightness (may be a no-op when unsupported).
   virtual void applyBrightness(int level) = 0;
@@ -72,14 +81,16 @@ public:
     DynamicJsonDocument doc(2048);
     DeserializationError err = deserializeJson(doc, body);
     if (err)
-      return errorResponse(0, false, -32700, "Parse error");
+      return errorResponse(JsonVariantConst(), false, -32700, "Parse error");
 
     // A message carrying result/error is a client response; ignore it.
     if (doc.containsKey("result") || doc.containsKey("error"))
       return "";
 
     bool hasId = doc.containsKey("id") && !doc["id"].isNull();
-    long id = hasId ? doc["id"].as<long>() : 0;
+    JsonVariantConst id = doc["id"];
+    if (hasId && !id.is<const char*>() && !id.is<int64_t>() && !id.is<uint64_t>())
+      return errorResponse(JsonVariantConst(), false, -32600, "Invalid request id");
 
     if (!doc.containsKey("method") || !doc["method"].is<const char*>())
       return errorResponse(id, hasId, -32600, "Invalid Request");
@@ -108,12 +119,14 @@ private:
 
   // ----- response builders -------------------------------------------------
 
-  static std::string errorResponse(long id, bool hasId, int code, const std::string& message)
+  static std::string errorResponse(JsonVariantConst id, bool hasId, int code, const std::string& message)
   {
-    DynamicJsonDocument doc(256);
+    DynamicJsonDocument doc(256 + measureJson(id));
     doc["jsonrpc"] = "2.0";
     if (hasId)
-      doc["id"] = id;
+      doc["id"].set(id);
+    else
+      doc["id"] = nullptr;
     JsonObject err = doc.createNestedObject("error");
     err["code"] = code;
     err["message"] = message;
@@ -122,11 +135,11 @@ private:
     return out;
   }
 
-  static std::string respond(long id, size_t capacity, std::function<void(JsonObject result)> fill)
+  static std::string respond(JsonVariantConst id, size_t capacity, std::function<void(JsonObject result)> fill)
   {
-    DynamicJsonDocument doc(capacity);
+    DynamicJsonDocument doc(capacity + measureJson(id));
     doc["jsonrpc"] = "2.0";
-    doc["id"] = id;
+    doc["id"].set(id);
     JsonObject result = doc.createNestedObject("result");
     fill(result);
     std::string out;
@@ -134,7 +147,7 @@ private:
     return out;
   }
 
-  static std::string toolResult(long id, const std::string& text, bool isError)
+  static std::string toolResult(JsonVariantConst id, const std::string& text, bool isError)
   {
     return respond(id, 1024 + text.size(), [&](JsonObject result) {
       JsonArray content = result.createNestedArray("content");
@@ -179,7 +192,7 @@ private:
 
   // ----- MCP methods -------------------------------------------------------
 
-  std::string handleInitialize(long id, JsonVariantConst params)
+  std::string handleInitialize(JsonVariantConst id, JsonVariantConst params)
   {
     return respond(id, 512, [&](JsonObject result) {
       // Echo the client's protocol version when we recognise it.
@@ -205,7 +218,7 @@ private:
     fillSchema(schema);
   }
 
-  std::string handleToolsList(long id)
+  std::string handleToolsList(JsonVariantConst id)
   {
     return respond(id, 4096, [&](JsonObject result) {
       JsonArray tools = result.createNestedArray("tools");
@@ -218,7 +231,7 @@ private:
       addTool(tools, "set_config",
               "Update configuration parameters, persisted to flash. Keys: displayBright "
               "(0-255), timeZone (Olson, e.g. Asia/Shanghai), manualPosix (e.g. CST-8), "
-              "ntpServer, use24hFormat, displayRotation (0/90/180/270), autoBrightMin/"
+              "ntpServer, use24hFormat, displayRotation (0/1/2/3 quarter-turns), autoBrightMin/"
               "autoBrightMax (0-4095; max>0 enables auto brightness), ldrPin, "
               "swapBlueGreen, swapBlueRed, wifiSsid, wifiPwd, canvasFile, canvasServer, "
               "driver (0-5), i2cSpeed (8000000/16000000/20000000), E_pin. Changes to "
@@ -247,7 +260,7 @@ private:
 
       addTool(tools, "set_auto_brightness",
               "Configure auto brightness from the LDR sensor: min/max raw ADC range "
-              "(0-4095). Set max to 0 to disable auto brightness.",
+              "(0-4095; max must exceed min when enabled). Set max to 0 to disable auto brightness.",
               [](JsonObject schema) {
                 JsonObject props = schema.createNestedObject("properties");
                 JsonObject mn = props.createNestedObject("min");
@@ -279,7 +292,7 @@ private:
     });
   }
 
-  std::string handleToolsCall(long id, JsonVariantConst params)
+  std::string handleToolsCall(JsonVariantConst id, JsonVariantConst params)
   {
     if (!params.is<JsonObjectConst>() || !params["name"].is<const char*>())
       return errorResponse(id, true, -32602, "Invalid params: missing tool name");
@@ -316,7 +329,7 @@ private:
 
   // ----- individual tools --------------------------------------------------
 
-  std::string callGetConfig(long id)
+  std::string callGetConfig(JsonVariantConst id)
   {
     DynamicJsonDocument cfg(1536);
     JsonObject root = cfg.to<JsonObject>();
@@ -331,11 +344,12 @@ private:
     return toolResult(id, text, false);
   }
 
-  std::string callSetConfig(long id, JsonVariantConst args)
+  std::string callSetConfig(JsonVariantConst id, JsonVariantConst args)
   {
     if (!args.is<JsonObjectConst>() || !args["params"].is<JsonObjectConst>())
       return errorResponse(id, true, -32602, "Invalid params: expected {params: {...}}");
 
+    device_.beginParams();
     std::vector<std::string> updated, failed;
     for (JsonPairConst kv : args["params"].as<JsonObjectConst>())
     {
@@ -347,9 +361,13 @@ private:
     }
 
     if (!failed.empty())
+    {
+      device_.cancelParams();
       return toolResult(id, "Unknown or invalid parameter(s): " + join(failed), true);
+    }
 
-    device_.saveParams();
+    if (!device_.saveParams())
+      return toolResult(id, "Invalid configuration: autoBrightMax must exceed autoBrightMin when enabled", true);
     std::string text = "{\"updated\":[";
     for (size_t i = 0; i < updated.size(); i++)
     {
@@ -361,7 +379,7 @@ private:
     return toolResult(id, text, false);
   }
 
-  std::string callSetBrightness(long id, JsonVariantConst args)
+  std::string callSetBrightness(JsonVariantConst id, JsonVariantConst args)
   {
     if (!args["level"].is<int>())
       return errorResponse(id, true, -32602, "Invalid params: expected {level: 0-255}");
@@ -370,15 +388,21 @@ private:
     if (level < 0 || level > 255)
       return toolResult(id, "level must be between 0 and 255", true);
 
-    device_.setParam("displayBright", std::to_string(level));
+    device_.beginParams();
+    if (!device_.setParam("displayBright", std::to_string(level)))
+    {
+      device_.cancelParams();
+      return toolResult(id, "Unable to set display brightness", true);
+    }
+    if (!device_.saveParams())
+      return toolResult(id, "Invalid configuration: autoBrightMax must exceed autoBrightMin when enabled", true);
     device_.applyBrightness(level);
-    device_.saveParams();
     return toolResult(id, std::string("{\"displayBright\":") + std::to_string(level) +
                                ",\"applied\":true}",
                       false);
   }
 
-  std::string callSetAutoBrightness(long id, JsonVariantConst args)
+  std::string callSetAutoBrightness(JsonVariantConst id, JsonVariantConst args)
   {
     if (!args["min"].is<int>() || !args["max"].is<int>())
       return errorResponse(id, true, -32602, "Invalid params: expected {min, max}");
@@ -388,16 +412,25 @@ private:
     if (mn < 0 || mn > 4095 || mx < 0 || mx > 4095)
       return toolResult(id, "min/max must be between 0 and 4095", true);
 
-    device_.setParam("autoBrightMin", std::to_string(mn));
-    device_.setParam("autoBrightMax", std::to_string(mx));
-    device_.saveParams();
+    if (mx > 0 && mx <= mn)
+      return toolResult(id, "max must exceed min when auto brightness is enabled", true);
+
+    device_.beginParams();
+    if (!device_.setParam("autoBrightMin", std::to_string(mn)) ||
+        !device_.setParam("autoBrightMax", std::to_string(mx)))
+    {
+      device_.cancelParams();
+      return toolResult(id, "Unable to set auto brightness range", true);
+    }
+    if (!device_.saveParams())
+      return toolResult(id, "Invalid auto brightness range", true);
     return toolResult(id, std::string("{\"autoBrightMin\":") + std::to_string(mn) +
                                ",\"autoBrightMax\":" + std::to_string(mx) +
                                ",\"enabled\":" + (mx > 0 ? "true" : "false") + "}",
                       false);
   }
 
-  std::string callReadLightSensor(long id)
+  std::string callReadLightSensor(JsonVariantConst id)
   {
     int value = device_.readLightSensor();
     if (value < 0)

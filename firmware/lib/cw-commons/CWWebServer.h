@@ -5,6 +5,7 @@
 #include "StatusController.h"
 #include "SettingsWebPage.h"
 #include "CWMcp.h"
+#include "HttpRequestReader.h"
 
 #ifndef CLOCKFACE_NAME
   #define CLOCKFACE_NAME "UNKNOWN"
@@ -14,10 +15,7 @@ WiFiServer server(80);
 
 struct ClockwiseWebServer
 {
-  String httpBuffer;
-  bool force_restart;
-  int contentLength;
-  size_t headerEnd;
+  HttpRequestSession<WiFiClient> session;
   const char* HEADER_TEMPLATE_D = "X-%s: %d\r\n";
   const char* HEADER_TEMPLATE_S = "X-%s: %s\r\n";
 
@@ -39,152 +37,60 @@ struct ClockwiseWebServer
 
   void stopWebServer()
   {
+    session.close();
     server.stop();
-  }
-
-  // Reads the whole request: headers up to the blank line, then the body when
-  // a Content-Length is present. Returns false on timeout/oversize (response
-  // already sent in that case).
-  bool readRequest(WiFiClient &client, unsigned long timeoutMs)
-  {
-    httpBuffer = "";
-    const unsigned long timeout = millis() + timeoutMs;
-    contentLength = 0;
-    headerEnd = 0;
-
-    while (client.connected() && millis() < timeout)
-    {
-      if (!client.available())
-      {
-        delay(1);
-        continue;
-      }
-
-      char c = (char)client.read();
-      httpBuffer.concat(c);
-
-      if (httpBuffer.length() > 4096)
-      {
-        client.println("HTTP/1.1 413 Request Entity Too Large");
-        client.println();
-        return false;
-      }
-
-      // Header terminator may arrive together with the body bytes, so it
-      // must be searched for, not matched at the end of the buffer.
-      if (headerEnd == 0)
-      {
-        int idx = httpBuffer.indexOf("\r\n\r\n");
-        if (idx >= 0)
-        {
-          headerEnd = (size_t)idx + 4;
-          contentLength = parseContentLength(httpBuffer);
-          if (contentLength > MCP_MAX_BODY)
-          {
-            client.println("HTTP/1.1 413 Request Entity Too Large");
-            client.println();
-            return false;
-          }
-        }
-      }
-
-      if (headerEnd != 0 &&
-          (int)(httpBuffer.length() - headerEnd) >= contentLength)
-      {
-        return true;
-      }
-    }
-    return false; // timeout
-  }
-
-  int parseContentLength(const String &headers)
-  {
-    int idx = headers.indexOf("Content-Length:");
-    if (idx < 0)
-      idx = headers.indexOf("content-length:");
-    if (idx < 0)
-      return 0;
-    int start = headers.indexOf(':', idx) + 1;
-    int end = headers.indexOf("\r\n", start);
-    if (start <= 0 || end < 0)
-      return 0;
-    return headers.substring(start, end).toInt();
   }
 
   void handleHttpRequest()
   {
-    if (force_restart)
+    const uint32_t now = millis();
+    if (session.restartReady(now))
+    {
+      session.close();
       StatusController::getInstance()->forceRestart();
-
-    WiFiClient client = server.available();
-    if (!client)
+      return;
+    }
+    if (session.restarting())
       return;
 
-    StatusController::getInstance()->blink_led(100, 1);
-
-    // Keep-alive loop for the MCP endpoint: connection establishment towards
-    // an ESP32 is the flaky part (SYNs get dropped under load), so the MCP
-    // bridge holds one persistent connection and pipelines requests.
-    bool keepAlive = true;
-    bool firstRead = true;
-    while (keepAlive && client.connected())
+    if (!session.active())
     {
-      keepAlive = false;
+      WiFiClient client = server.available();
+      if (!client)
+        return;
+      session.accept(client, now);
+    }
 
-      // First read on a fresh connection gets a short timeout; an idle
-      // keep-alive connection gets a long one so the MCP client can "think"
-      // between tool calls.
-      unsigned long readTimeout = firstRead ? 1500UL : 15000UL;
-      firstRead = false;
-      if (!readRequest(client, readTimeout))
-        break;
-
-      int8_t method_pos = httpBuffer.indexOf(' ');
-      int8_t path_pos = httpBuffer.indexOf(' ', method_pos + 1);
-      if (method_pos < 0 || path_pos < 0)
-        break;
-
+    session.poll(now, [this](WiFiClient& client, const HttpRequestReader& request) {
+      String httpBuffer(request.request().c_str());
+      const int method_pos = httpBuffer.indexOf(' ');
+      const int path_pos = httpBuffer.indexOf(' ', method_pos + 1);
+      if (method_pos <= 0 || path_pos <= method_pos)
+      {
+        client.print("HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\nConnection: close\r\n\r\n");
+        return false;
+      }
       String method = httpBuffer.substring(0, method_pos);
       String path = httpBuffer.substring(method_pos + 1, path_pos);
       String key = "";
       String value = "";
-
       if (path.indexOf('?') > 0)
       {
         key = path.substring(path.indexOf('?') + 1, path.indexOf('='));
         value = path.substring(path.indexOf('=') + 1);
         path = path.substring(0, path.indexOf('?'));
       }
-
-      String body = (contentLength > 0)
-                        ? httpBuffer.substring(headerEnd, headerEnd + contentLength)
-                        : "";
-
-      // Keep-alive is honoured on the MCP endpoint only.
-      String lowered = httpBuffer;
-      lowered.toLowerCase();
-      bool wantsKeepAlive =
-          path == "/mcp" && lowered.indexOf("connection: keep-alive") >= 0;
-
-      processRequest(client, method, path, key, value, body, wantsKeepAlive);
-      httpBuffer = "";
-
-      if (wantsKeepAlive)
-      {
-        keepAlive = true;
-        continue;
-      }
-
-      // Let the client close first: the ESP side then performs a passive
-      // close and avoids TIME_WAIT, whose ~60 s PCB occupation would
-      // otherwise exhaust lwIP's small pool of TCP slots after a burst of
-      // requests and stall the server (new SYNs stop being accepted).
-      unsigned long closeDeadline = millis() + 300;
-      while (client.connected() && millis() < closeDeadline)
-        delay(1);
-    }
-
-    client.stop();
+      String body = httpBuffer.substring(request.headerEnd());
+      String headers = httpBuffer.substring(0, request.headerEnd());
+      headers.toLowerCase();
+      const bool keepAlive = method == "POST" && path == "/mcp" &&
+          headers.indexOf("\r\nconnection: keep-alive\r\n") >= 0;
+      processRequest(client, method, path, key, value, body, keepAlive);
+      // Both MCP and the settings page schedule restart after the response.
+      if (mcpTakeRestartRequest())
+        session.requestRestart(millis());
+      return keepAlive;
+    });
   }
 
   void processRequest(WiFiClient client, String method, String path, String key, String value, String body, bool keepAlive)
@@ -208,8 +114,8 @@ struct ClockwiseWebServer
       client.println("Allow: POST");
       client.println();
     } else if (method == "POST" && path == "/restart") {
-      client.println("HTTP/1.0 204 No Content");
-      force_restart = true;
+      client.print("HTTP/1.0 204 No Content\r\n\r\n");
+      session.requestRestart(millis());
     } else if (method == "POST" && path == "/set") {
       ClockwiseParams::getInstance()->load();
       //a baby seal has died due this ifs

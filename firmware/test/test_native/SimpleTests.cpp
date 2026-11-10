@@ -17,12 +17,14 @@ void run_wifi_setup_state_machine_tests(void);
 
 // Defined in McpJsonRpcTests.cpp
 void run_mcp_json_rpc_tests(void);
+void run_http_request_tests(void);
 
 int runUnityTests(void) {
   UNITY_BEGIN();
   RUN_TEST(test_function_should_be_true);
   run_wifi_setup_state_machine_tests();
   run_mcp_json_rpc_tests();
+  run_http_request_tests();
   return UNITY_END();
 }
 
