@@ -4,6 +4,8 @@
 #include <CWPreferences.h>
 #include "StatusController.h"
 #include "SettingsWebPage.h"
+#include "CWMcp.h"
+#include "HttpRequestReader.h"
 
 #ifndef CLOCKFACE_NAME
   #define CLOCKFACE_NAME "UNKNOWN"
@@ -13,10 +15,13 @@ WiFiServer server(80);
 
 struct ClockwiseWebServer
 {
-  String httpBuffer;
-  bool force_restart;
+  HttpRequestSession<WiFiClient> session;
   const char* HEADER_TEMPLATE_D = "X-%s: %d\r\n";
   const char* HEADER_TEMPLATE_S = "X-%s: %s\r\n";
+
+#ifndef MCP_MAX_BODY
+  #define MCP_MAX_BODY 2048
+#endif
  
   static ClockwiseWebServer *getInstance()
   {
@@ -32,56 +37,63 @@ struct ClockwiseWebServer
 
   void stopWebServer()
   {
+    session.close();
     server.stop();
   }
 
   void handleHttpRequest()
   {
-    if (force_restart)
-      StatusController::getInstance()->forceRestart();
-
-
-    WiFiClient client = server.available();
-    if (client)
+    const uint32_t now = millis();
+    if (session.restartReady(now))
     {
-      StatusController::getInstance()->blink_led(100, 1);
-
-      while (client.connected())
-      {
-        if (client.available())
-        {
-          char c = client.read();
-          httpBuffer.concat(c);
-
-          if (c == '\n')
-          {
-            uint8_t method_pos = httpBuffer.indexOf(' ');
-            uint8_t path_pos = httpBuffer.indexOf(' ', method_pos + 1);
-
-            String method = httpBuffer.substring(0, method_pos);
-            String path = httpBuffer.substring(method_pos + 1, path_pos);
-            String key = "";
-            String value = "";
-
-            if (path.indexOf('?') > 0)
-            {
-              key = path.substring(path.indexOf('?') + 1, path.indexOf('='));
-              value = path.substring(path.indexOf('=') + 1);
-              path = path.substring(0, path.indexOf('?'));
-            }
-
-            processRequest(client, method, path, key, value);
-            httpBuffer = "";
-            break;
-          }
-        }
-      }
-      delay(1);
-      client.stop();
+      session.close();
+      StatusController::getInstance()->forceRestart();
+      return;
     }
+    if (session.restarting())
+      return;
+
+    if (!session.active())
+    {
+      WiFiClient client = server.available();
+      if (!client)
+        return;
+      session.accept(client, now);
+    }
+
+    session.poll(now, [this](WiFiClient& client, const HttpRequestReader& request) {
+      String httpBuffer(request.request().c_str());
+      const int method_pos = httpBuffer.indexOf(' ');
+      const int path_pos = httpBuffer.indexOf(' ', method_pos + 1);
+      if (method_pos <= 0 || path_pos <= method_pos)
+      {
+        client.print("HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\nConnection: close\r\n\r\n");
+        return false;
+      }
+      String method = httpBuffer.substring(0, method_pos);
+      String path = httpBuffer.substring(method_pos + 1, path_pos);
+      String key = "";
+      String value = "";
+      if (path.indexOf('?') > 0)
+      {
+        key = path.substring(path.indexOf('?') + 1, path.indexOf('='));
+        value = path.substring(path.indexOf('=') + 1);
+        path = path.substring(0, path.indexOf('?'));
+      }
+      String body = httpBuffer.substring(request.headerEnd());
+      String headers = httpBuffer.substring(0, request.headerEnd());
+      headers.toLowerCase();
+      const bool keepAlive = method == "POST" && path == "/mcp" &&
+          headers.indexOf("\r\nconnection: keep-alive\r\n") >= 0;
+      processRequest(client, method, path, key, value, body, keepAlive);
+      // Both MCP and the settings page schedule restart after the response.
+      if (mcpTakeRestartRequest())
+        session.requestRestart(millis());
+      return keepAlive;
+    });
   }
 
-  void processRequest(WiFiClient client, String method, String path, String key, String value)
+  void processRequest(WiFiClient client, String method, String path, String key, String value, String body, bool keepAlive)
   {
     if (method == "GET" && path == "/") {
       client.println("HTTP/1.0 200 OK");
@@ -94,9 +106,16 @@ struct ClockwiseWebServer
       if (key == "pin") {
         readPin(client, key, value.toInt());
       }
+    } else if (method == "POST" && path == "/mcp") {
+      mcpHandleHttpRequest(client, body, keepAlive);
+    } else if (method == "GET" && path == "/mcp") {
+      // No server-initiated messages: the SSE stream is intentionally absent.
+      client.println("HTTP/1.1 405 Method Not Allowed");
+      client.println("Allow: POST");
+      client.println();
     } else if (method == "POST" && path == "/restart") {
-      client.println("HTTP/1.0 204 No Content");
-      force_restart = true;
+      client.print("HTTP/1.0 204 No Content\r\n\r\n");
+      session.requestRestart(millis());
     } else if (method == "POST" && path == "/set") {
       ClockwiseParams::getInstance()->load();
       //a baby seal has died due this ifs

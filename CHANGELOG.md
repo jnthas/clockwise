@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- MCP (Model Context Protocol) server at `POST /mcp` — control the clock from AI assistants: read config and status, set brightness, timezone, NTP, rotation, restart, and more. See `docs/MCP.md`.
+- Over-the-air firmware updates: new `update_firmware` MCP tool (the clock downloads an image over HTTP(S), flashes it, and reboots) and ArduinoOTA for wireless flashing via `pio run -e esp32dev-ota -t upload`.
 
 ## [1.4.4] - 2026-10-05
 
