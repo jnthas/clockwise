@@ -101,6 +101,13 @@ public:
   void requestRestart() override { restartRequested = true; }
   std::string statusJson() override { return "{\"mock\":true}"; }
   std::string currentTime() override { return "21:59:00"; }
+  std::string updateFirmware(const std::string &url) override
+  {
+    lastUpdateUrl = url;
+    return updateResult;
+  }
+  std::string updateResult = "{\"updated\":true,\"bytes\":123456}";
+  std::string lastUpdateUrl;
 };
 
 struct FakeConfigState
@@ -167,15 +174,15 @@ public:
 };
 
 // Parses `body` and returns a heap-allocated document (caller deletes).
-StaticJsonDocument<4096> *parse(const std::string &body)
+StaticJsonDocument<6144> *parse(const std::string &body)
 {
-  auto *doc = new StaticJsonDocument<4096>();
+  auto *doc = new StaticJsonDocument<6144>();
   DeserializationError err = deserializeJson(*doc, body);
   TEST_ASSERT_TRUE_MESSAGE(!err, err.c_str());
   return doc;
 }
 
-std::string extractText(StaticJsonDocument<4096> &doc)
+std::string extractText(StaticJsonDocument<6144> &doc)
 {
   return doc["result"]["content"][0]["text"].as<std::string>();
 }
@@ -222,7 +229,7 @@ void test_tools_list_contains_all_tools(void)
       "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}"));
 
   JsonArray tools = (*resp)["result"]["tools"].as<JsonArray>();
-  TEST_ASSERT_EQUAL(7, tools.size());
+  TEST_ASSERT_EQUAL(8, tools.size());
 
   std::vector<std::string> names;
   for (JsonObject tool : tools)
@@ -230,7 +237,8 @@ void test_tools_list_contains_all_tools(void)
 
   for (const char *expected : {"get_config", "set_config", "set_brightness",
                                "set_auto_brightness", "read_light_sensor",
-                               "get_status", "restart_device"})
+                               "get_status", "restart_device",
+                               "update_firmware"})
   {
     bool found = false;
     for (auto &n : names)
@@ -567,6 +575,41 @@ void test_long_string_request_id_survives_response_allocation(void)
   }
 }
 
+void test_update_firmware_returns_device_result(void)
+{
+  MockDevice device;
+  McpServer server(device, "1.0.0");
+
+  auto *resp = parse(server.handleMessage(
+      "{\"jsonrpc\":\"2.0\",\"id\":13,\"method\":\"tools/call\","
+      "\"params\":{\"name\":\"update_firmware\",\"arguments\":"
+      "{\"url\":\"http://192.168.31.100/firmware.bin\"}}}"));
+
+  TEST_ASSERT_FALSE((*resp)["result"]["isError"] | false);
+  TEST_ASSERT_EQUAL_STRING("http://192.168.31.100/firmware.bin",
+                           device.lastUpdateUrl.c_str());
+  TEST_ASSERT_TRUE(strstr((*resp)["result"]["content"][0]["text"].as<std::string>().c_str(),
+                          "\"updated\":true") != nullptr);
+
+  delete resp;
+}
+
+void test_update_firmware_rejects_bad_url(void)
+{
+  MockDevice device;
+  McpServer server(device, "1.0.0");
+
+  auto *resp = parse(server.handleMessage(
+      "{\"jsonrpc\":\"2.0\",\"id\":14,\"method\":\"tools/call\","
+      "\"params\":{\"name\":\"update_firmware\",\"arguments\":"
+      "{\"url\":\"ftp://example.com/firmware.bin\"}}}"));
+
+  TEST_ASSERT_TRUE((*resp)["result"]["isError"] | false);
+  TEST_ASSERT_TRUE(device.lastUpdateUrl.empty());
+
+  delete resp;
+}
+
 void run_mcp_json_rpc_tests(void)
 {
   RUN_TEST(test_initialize_returns_server_info_and_protocol);
@@ -593,4 +636,6 @@ void run_mcp_json_rpc_tests(void)
   RUN_TEST(test_rotation_uses_quarter_turns_without_truncation);
   RUN_TEST(test_string_request_id_is_preserved_on_tool_and_error_responses);
   RUN_TEST(test_long_string_request_id_survives_response_allocation);
+  RUN_TEST(test_update_firmware_returns_device_result);
+  RUN_TEST(test_update_firmware_rejects_bad_url);
 }

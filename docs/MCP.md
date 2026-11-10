@@ -1,62 +1,52 @@
-# Clockwise MCP Server
+# Clockwise MCP server
 
-Clockwise exposes configuration, brightness controls, device status, and restart
-through a small Model Context Protocol (MCP) server. Desktop MCP clients can use
-the supplied Python stdio bridge to communicate with the clock over local HTTP.
+Clockwise can expose an embedded MCP (Model Context Protocol) server so that
+MCP-capable assistants (Claude Desktop, Kimi, Cursor, ...) can control the
+clock directly: change brightness, switch timezone, read the light sensor,
+restart the device, and more.
 
-This is an embedded implementation of a limited MCP tools interface, not a claim
-of full MCP or Streamable HTTP conformance. The endpoint is included in the
-firmware in this branch and is available whenever the existing web server runs;
-there is currently no separate build flag or setting to disable MCP.
+The firmware implements an embedded-friendly subset of the MCP Streamable
+HTTP transport:
+
+- Endpoint: `POST http://<clock-ip>/mcp` (JSON-RPC 2.0, `application/json`
+  responses).
+- Notifications receive `202 Accepted` with an empty body.
+- `GET /mcp` answers `405 Method Not Allowed`; there is no SSE stream and no
+  server-initiated messaging.
+- Every response carries an informational `Mcp-Session-Id` header, generated
+  once per boot.
 
 ## Connect a desktop client
 
-Use Python 3.10 or newer. From the repository root, create a virtual environment
-and install the bridge's tested dependency version:
+The stdio bridge in `tools/clockwise_mcp_bridge.py` discovers the clock's
+tool catalog at startup and mirrors it 1:1, so desktop clients need no
+firmware-specific configuration. It requires Python 3.10+ and the `mcp` SDK
+(`pip install -r tools/requirements-mcp.txt`). Start it with the device URL
+as its first argument; there is no default:
 
 ```bash
-python3 -m venv .venv-mcp
-.venv-mcp/bin/python -m pip install -r tools/requirements-mcp.txt
+python tools/clockwise_mcp_bridge.py http://192.168.31.119/mcp
 ```
 
-On Windows, use `.venv-mcp\Scripts\python.exe` instead. The requirements file pins
-`mcp==1.30.0` because the bridge uses the v1 `FastMCP` API.
-
-The clock URL is required; the bridge does not assume a device address. Replace
-`<clock-ip>` with the address shown by your clock or router:
-
-```bash
-.venv-mcp/bin/python tools/clockwise_mcp_bridge.py 'http://<clock-ip>/mcp'
-```
-
-The bridge uses stdin and stdout for MCP messages. Normally, a desktop client
-launches it rather than a person interacting with it in a terminal.
-
-For example, add this entry to a client that accepts `mcpServers` configuration,
-such as Claude Desktop. Replace both filesystem paths with absolute paths for
-your checkout and the Python environment used above, and replace `<clock-ip>`:
+For Claude Desktop (`claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "clockwise": {
-      "command": "/absolute/path/to/clockwise/.venv-mcp/bin/python",
+      "command": "python",
       "args": [
-        "/absolute/path/to/clockwise/tools/clockwise_mcp_bridge.py",
-        "http://<clock-ip>/mcp"
+        "C:\\path\\to\\clockwise\\tools\\clockwise_mcp_bridge.py",
+        "http://192.168.31.119/mcp"
       ]
     }
   }
 }
 ```
 
-On Windows, use the corresponding absolute paths with escaped backslashes in
-JSON. The client must use the same Python environment in which the requirements
-were installed. The bridge currently accepts plain `http://` URLs only.
-
-Once connected, try requests such as “set the clock brightness to 120” or “read
-the light sensor.” Configuration changes that require a reboot should be followed
-by `restart_device`, as described below.
+Once connected, plain language works: "set the clock brightness to 120",
+"what time is it" (uses `get_status`), "switch to 24-hour format" (uses
+`set_config`).
 
 ## Tools
 
@@ -72,6 +62,7 @@ arguments can produce a JSON-RPC error or a tool result with `isError: true`.
 | `read_light_sensor` | Reads the LDR pin's raw ADC value. Requires a correctly connected and configured sensor. |
 | `get_status` | Reads firmware and clockface identifiers, Wi-Fi status, network details when connected, free heap, local time, and sensor data. |
 | `restart_device` | Writes the success response first, then schedules a restart after a 250 ms response-drain grace period. |
+| `update_firmware` | Takes a `url` pointing at a firmware `.bin` (http or https). Downloads it, flashes it to the OTA partition, answers, and reboots into the new firmware. Blocks for the whole download and flash. |
 
 `set_config` accepts these keys:
 
@@ -109,29 +100,34 @@ individual JSON-RPC requests to the clock. Replace the placeholder before runnin
 these commands:
 
 ```bash
-CLOCK_URL='http://<clock-ip>/mcp'
+# Set the clock IP first.
+IP=192.168.1.42
 
 # Initialize.
-curl -s -X POST "$CLOCK_URL" \
+curl -s -X POST http://$IP/mcp \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json, text/event-stream' \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}}}'
 
-# List available tools.
-curl -s -X POST "$CLOCK_URL" -H 'Content-Type: application/json' \
+# Tool list.
+curl -s -X POST http://$IP/mcp -H 'Content-Type: application/json' \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
 
-# Save time-zone settings. Restart the clock to apply them.
-curl -s -X POST "$CLOCK_URL" -H 'Content-Type: application/json' \
+# Set the timezone.
+curl -s -X POST http://$IP/mcp -H 'Content-Type: application/json' \
   -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"set_config","arguments":{"params":{"timeZone":"Asia/Shanghai","manualPosix":"CST-8"}}}}'
 
-# Apply manual brightness immediately.
-curl -s -X POST "$CLOCK_URL" -H 'Content-Type: application/json' \
+# Apply brightness immediately.
+curl -s -X POST http://$IP/mcp -H 'Content-Type: application/json' \
   -d '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"set_brightness","arguments":{"level":120}}}'
 
-# Read device status.
-curl -s -X POST "$CLOCK_URL" -H 'Content-Type: application/json' \
+# Device status.
+curl -s -X POST http://$IP/mcp -H 'Content-Type: application/json' \
   -d '{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"get_status","arguments":{}}}'
+
+# Flash a firmware image served on the LAN, then reboot into it.
+curl -s -X POST http://$IP/mcp -H 'Content-Type: application/json' \
+  -d '{"jsonrpc":"2.0","id":6,"method":"tools/call","params":{"name":"update_firmware","arguments":{"url":"http://192.168.1.10:8000/firmware.bin"}}}'
 ```
 
 ## Transport and limits
@@ -168,12 +164,50 @@ it only on a trusted local network and do not expose it directly to the internet
 Masking the Wi-Fi password in `get_config` does not provide access control or
 protect HTTP traffic in transit.
 
+`update_firmware` has the same trust model: anyone on the LAN can point the
+clock at an arbitrary `.bin` and reflash it. HTTPS image URLs are accepted
+without certificate validation (the device has no CA store), so prefer plain
+HTTP from a trusted LAN host.
+
 Configuration updates write ESP32 NVS flash. Use them for settings changes,
 not for high-frequency animation or continuous sensor-control loops. Request
 limits bound accepted HTTP input, but parsing and response serialization still
 require heap memory. The implementation also disables Wi-Fi modem sleep after
 the network becomes ready; power consumption and network behavior should be
 checked on the intended hardware.
+
+## Over-the-air updates
+
+Two complementary wireless update paths, both LAN-only and unauthenticated:
+
+1. **`update_firmware` tool (pull)**: serve the built image
+   (`.pio/build/esp32dev/firmware.bin`) from any HTTP server — a local
+   `python -m http.server`, or a release asset URL — then call the tool:
+
+   ```json
+   {"name": "update_firmware", "arguments": {"url": "http://<pc-ip>:8000/firmware.bin"}}
+   ```
+
+   The clock downloads the image into the OTA partition (rendering pauses for
+   the download and flash, roughly 30–60 seconds over Wi-Fi), answers, and
+   reboots into the new firmware. HTTPS URLs are accepted without certificate
+   validation.
+
+2. **ArduinoOTA (push, development)**: once Wi-Fi is up, the clock runs
+   ArduinoOTA under the hostname `clockwise`. Flash over the network without
+   a USB cable:
+
+   ```bash
+   pio run -d firmware/ -e esp32dev-ota -t upload
+   ```
+
+   `upload_port` defaults to the clock's IP; use `clockwise.local` if mDNS
+   is available.
+
+The ESP32 OTA partition scheme leaves the running firmware untouched until
+the new image is fully written, so a failed transfer cannot brick the clock;
+it simply boots the old firmware. A power loss *during* the final flash write
+does require recovery over USB serial.
 
 ## Implementation layout
 
