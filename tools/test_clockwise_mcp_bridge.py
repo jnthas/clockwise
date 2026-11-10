@@ -9,6 +9,7 @@ import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import sys
+import subprocess
 import threading
 import unittest
 
@@ -57,6 +58,50 @@ class ClockHandler(BaseHTTPRequestHandler):
 
 
 class BridgeTests(unittest.TestCase):
+    def run_cli_without_network(self, *arguments):
+        # Fail on any connect attempt, including ones to an accidental default
+        # device, rather than relying on an unreachable address or a timeout.
+        probe = """
+import runpy, socket, sys
+def reject_connect(*args, **kwargs):
+    raise AssertionError('UNEXPECTED_NETWORK_CONNECTION')
+socket.socket.connect = reject_connect
+sys.argv = sys.argv[1:]
+runpy.run_path(sys.argv[0], run_name='__main__')
+"""
+        return subprocess.run(
+            [sys.executable, "-c", probe,
+             str(Path(__file__).with_name("clockwise_mcp_bridge.py")), *arguments],
+            capture_output=True, text=True, timeout=5,
+        )
+
+    def test_missing_clock_url_prints_usage_without_connecting(self):
+        result = self.run_cli_without_network()
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("usage:", result.stderr)
+        self.assertIn("clock_url", result.stderr)
+        self.assertNotIn("UNEXPECTED_NETWORK_CONNECTION", result.stderr)
+
+    def test_help_succeeds_without_connecting(self):
+        result = self.run_cli_without_network("--help")
+        self.assertEqual(result.returncode, 0)
+        self.assertIn("http://<clock-ip>/mcp", result.stdout)
+        self.assertNotIn("UNEXPECTED_NETWORK_CONNECTION", result.stderr)
+
+    def test_invalid_urls_are_rejected_before_connecting(self):
+        for url in (
+            "https://clock.local/mcp", "clock.local/mcp", "http:///mcp",
+            "http://clock.local:abc/mcp", "http://clock.local:65536/mcp",
+            "http://clock.local:0/mcp", "http://bad host/mcp",
+            "http://user:password@clock.local/mcp", "http://clock.local/mcp?token=x",
+            "http://clock.local/mcp#fragment",
+        ):
+            with self.subTest(url=url):
+                result = self.run_cli_without_network(url)
+                self.assertEqual(result.returncode, 2)
+                self.assertIn("error:", result.stderr)
+                self.assertNotIn("UNEXPECTED_NETWORK_CONNECTION", result.stderr)
+
     def test_supported_dependency_starts_and_forwards_tools_over_stdio(self):
         server = ThreadingHTTPServer(("127.0.0.1", 0), ClockHandler)
         server.requests = []

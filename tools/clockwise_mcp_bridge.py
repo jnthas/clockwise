@@ -5,20 +5,53 @@ as a stdio MCP server, so desktop MCP clients (Claude Desktop, Cursor, ...)
 can control the clock directly.
 
 Usage (client config):
-    python clockwise_mcp_bridge.py http://192.168.31.119/mcp
+    python clockwise_mcp_bridge.py "http://<clock-ip>/mcp"
 """
 
+import argparse
+import ipaddress
 import json
-import sys
 import http.client
+import re
 from urllib.parse import urlparse
+
+
+def clock_url(value: str):
+    """Validate the HTTP endpoint before loading the SDK or opening a socket."""
+    try:
+        parsed = urlparse(value)
+        host = parsed.hostname
+        port = parsed.port
+        if parsed.scheme != "http" or not host:
+            raise ValueError("expected http://<clock-ip>/mcp")
+        if port is not None and not 1 <= port <= 65535:
+            raise ValueError("port must be between 1 and 65535")
+        if parsed.username is not None or parsed.password is not None:
+            raise ValueError("URL credentials are not supported")
+        if parsed.query or parsed.fragment:
+            raise ValueError("URL queries and fragments are not supported")
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            ascii_host = host.encode("idna").decode("ascii").rstrip(".")
+            if len(ascii_host) > 253 or not all(
+                re.fullmatch(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?", label)
+                for label in ascii_host.split(".")
+            ):
+                raise ValueError("invalid clock hostname")
+        return parsed
+    except (ValueError, UnicodeError) as error:
+        raise argparse.ArgumentTypeError(str(error)) from error
+
+
+parser = argparse.ArgumentParser(description="Connect a stdio MCP client to a Clockwise HTTP endpoint.")
+parser.add_argument("clock_url", type=clock_url, metavar="clock_url",
+                    help="clock endpoint, e.g. http://<clock-ip>/mcp (required; no default device)")
+_url = parser.parse_args().clock_url
+CLOCK_URL = _url.geturl()
 
 from mcp.server.fastmcp import FastMCP
 
-# Clock URL: default to the known clock on the LAN (DHCP reservation
-# recommended so 192.168.31.119 stays stable).
-CLOCK_URL = sys.argv[1] if len(sys.argv) > 1 else "http://192.168.31.119/mcp"
-_url = urlparse(CLOCK_URL)
 _conn: http.client.HTTPConnection | None = None
 _req_id = 0
 

@@ -20,6 +20,7 @@ To simplify assembly, you can also use the [**WiseShield-32 DIY PCB kit**](https
 
 - Real-time clock with customizable themes ("Clockfaces")
 - Web-based interface for configuration
+- [MCP tools and a desktop-client bridge](docs/MCP.md) for local AI-assisted control
 - Open-source hardware and firmware
 - Compatible with various PCBs or just simple wiring
 - Community-driven
